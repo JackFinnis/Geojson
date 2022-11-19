@@ -24,6 +24,11 @@ class ViewModel: NSObject, ObservableObject {
         status == .authorizedWhenInUse
     }
     
+    override init() {
+        super.init()
+        manager.delegate = self
+    }
+    
     func importData(from url: URL) {
         guard let data = try? Data(contentsOf: url),
               let features = try? MKGeoJSONDecoder().decode(data) as? [MKGeoJSONFeature]

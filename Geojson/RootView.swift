@@ -34,7 +34,7 @@ struct RootView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    FloatingButtons(showFileImporter: $showFileImporter)
+                    FloatingButtons(showFileImporter: $showFileImporter, showWelcomeView: $showWelcomeView)
                 }
             }
             .alert("Access Denied", isPresented: $vm.showAuthAlert) {

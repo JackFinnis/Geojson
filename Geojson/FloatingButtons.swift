@@ -12,17 +12,27 @@ struct FloatingButtons: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var vm: ViewModel
     @Binding var showFileImporter: Bool
+    @Binding var showWelcomeView: Bool
     
     var background: Material { colorScheme == .light ? .regularMaterial : .thickMaterial }
     
     var body: some View {
         VStack(spacing: 20) {
-            VStack {
+            VStack(spacing: 0) {
+                Button {
+                    showWelcomeView = true
+                } label: {
+                    Image(systemName: "info.circle")
+                        .frame(width: SIZE, height: SIZE)
+                }
+                
+                Divider().frame(width: SIZE)
+                
                 Button {
                     showFileImporter = true
                 } label: {
                     Image(systemName: "square.and.arrow.down")
-                        .frame(width: 48, height: 48)
+                        .frame(width: SIZE, height: SIZE)
                 }
             }
             .background(background)
@@ -33,22 +43,22 @@ struct FloatingButtons: View {
                     updateTrackingMode()
                 } label: {
                     Image(systemName: trackingModeImage)
-                        .frame(width: 48, height: 48)
+                        .frame(width: SIZE, height: SIZE)
                 }
                 
-                Divider().frame(width: 48)
+                Divider().frame(width: SIZE)
                 
                 Button {
                     updateMapType()
                 } label: {
                     Image(systemName: mapTypeImage)
-                        .frame(width: 48, height: 48)
+                        .frame(width: SIZE, height: SIZE)
                 }
             }
             .background(background)
             .cornerRadius(10)
         }
-        .font(.system(size: 24))
+        .font(.system(size: SIZE/2))
         .compositingGroup()
         .shadow(color: Color(.systemFill), radius: 5)
         .padding(10)

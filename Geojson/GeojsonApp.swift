@@ -8,6 +8,7 @@
 import SwiftUI
 
 let NAME = "Geojson Viewer"
+let SIZE = 48.0
 
 @main
 struct GeojsonApp: App {
