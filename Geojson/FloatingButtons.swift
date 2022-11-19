@@ -11,7 +11,7 @@ import MapKit
 struct FloatingButtons: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var vm: ViewModel
-    @State var showFileImporter = true
+    @Binding var showFileImporter: Bool
     
     var background: Material { colorScheme == .light ? .regularMaterial : .thickMaterial }
     
@@ -21,16 +21,8 @@ struct FloatingButtons: View {
                 Button {
                     showFileImporter = true
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "square.and.arrow.down")
                         .frame(width: 48, height: 48)
-                }
-                .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json]) { result in
-                    switch result {
-                    case .success(let url):
-                        vm.loadData(from: url)
-                    case .failure(let error):
-                        debugPrint(error)
-                    }
                 }
             }
             .background(background)
@@ -63,7 +55,11 @@ struct FloatingButtons: View {
     }
     
     func updateTrackingMode() {
-        vm.trackingMode = vm.trackingMode == .none ? .follow : .none
+        if vm.authorized {
+            vm.trackingMode = vm.trackingMode == .none ? .follow : .none
+        } else {
+            vm.showAuthAlert = true
+        }
     }
     
     func updateMapType() {

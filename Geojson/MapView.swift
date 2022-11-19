@@ -29,5 +29,8 @@ struct MapView: UIViewRepresentable {
         if mapView.userTrackingMode != vm.trackingMode {
             mapView.setUserTrackingMode(vm.trackingMode, animated: true)
         }
+        
+        mapView.removeOverlays(mapView.overlays)
+        mapView.addOverlays(vm.polylines, level: .aboveRoads)
     }
 }

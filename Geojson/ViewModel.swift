@@ -14,25 +14,45 @@ class ViewModel: NSObject, ObservableObject {
     @Published var mapType = MKMapType.standard
     @Published var polylines = [MKPolyline]()
     
-    var mapView: MKMapView?
+    @Published var showImportFailedAlert = false
+    @Published var showAuthAlert = false
     
-    func loadData(from url: URL) {
+    var mapView: MKMapView?
+    var manager = CLLocationManager()
+    var status = CLAuthorizationStatus.notDetermined
+    var authorized: Bool {
+        status == .authorizedWhenInUse
+    }
+    
+    func importData(from url: URL) {
         guard let data = try? Data(contentsOf: url),
               let features = try? MKGeoJSONDecoder().decode(data) as? [MKGeoJSONFeature]
-        else { return }
+        else { showImportFailedAlert = true; return }
         
+        var newPolylines = [MKPolyline]()
         for feature in features {
             guard let geometry = feature.geometry.first else { continue }
             if let polyline = geometry as? MKPolyline {
-                polylines.append(polyline)
+                newPolylines.append(polyline)
             } else if let multiPolyline = geometry as? MKMultiPolyline {
-                polylines.append(contentsOf: multiPolyline.polylines)
+                newPolylines.append(contentsOf: multiPolyline.polylines)
             }
         }
         
-        mapView?.addOverlays(polylines, level: .aboveRoads)
+        guard newPolylines.isNotEmpty else {
+            showImportFailedAlert = true
+            return
+        }
+        
+        polylines.append(contentsOf: newPolylines)
         let padding = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        mapView?.setVisibleMapRect(MKMultiPolyline(polylines).boundingMapRect, edgePadding: padding, animated: true)
+        mapView?.setVisibleMapRect(MKMultiPolyline(newPolylines).boundingMapRect, edgePadding: padding, animated: true)
+    }
+    
+    func openSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 
@@ -42,7 +62,7 @@ extension ViewModel: MKMapViewDelegate {
         if let polyline = overlay as? MKPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.lineWidth = 2
-            renderer.strokeColor = .systemBlue
+            renderer.strokeColor = mapType == .standard ? .systemBlue : .blue
             return renderer
         }
         return MKOverlayRenderer(overlay: overlay)
@@ -53,6 +73,23 @@ extension ViewModel: MKMapViewDelegate {
             DispatchQueue.main.async {
                 self.trackingMode = .none
             }
+        }
+    }
+}
+
+// MARK: - CLLocationManagerDelegate
+extension ViewModel: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        status = manager.authorizationStatus
+        switch status {
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse:
+            manager.startUpdatingLocation()
+        case .denied:
+            showAuthAlert = true
+        default:
+            break
         }
     }
 }

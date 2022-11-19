@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let NAME = "Geojson Viewer"
+
 @main
 struct GeojsonApp: App {
     var body: some Scene {
