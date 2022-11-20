@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     @Environment(\.dismiss) var dismiss
+    @Binding var shouldShowFileImporter: Bool
     
     var body: some View {
         NavigationView {
@@ -34,6 +35,7 @@ struct WelcomeView: View {
                 Spacer()
                 Button {
                     dismiss()
+                    shouldShowFileImporter = true
                 } label: {
                     Text("Import")
                         .bold()

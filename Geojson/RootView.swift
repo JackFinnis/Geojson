@@ -12,6 +12,7 @@ struct RootView: View {
     @AppStorage("launchedBefore") var launchedBefore = false
     @State var showWelcomeView = false
     @State var showFileImporter = false
+    @State var shouldShowFileImporter = false
 
     var body: some View {
         ZStack {
@@ -60,9 +61,10 @@ struct RootView: View {
             }
         }
         .sheet(isPresented: $showWelcomeView, onDismiss: {
-            showFileImporter = true
+            showFileImporter = shouldShowFileImporter
+            shouldShowFileImporter = false
         }) {
-            WelcomeView()
+            WelcomeView(shouldShowFileImporter: $shouldShowFileImporter)
         }
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json]) { result in
             switch result {
