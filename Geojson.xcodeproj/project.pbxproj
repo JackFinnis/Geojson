@@ -80,6 +80,7 @@
 				049C0F892929384D00C6521A /* MapView.swift */,
 				049C0F8B2929384D00C6521A /* FloatingButtons.swift */,
 				049C0F852929384D00C6521A /* ViewModel.swift */,
+				049C0FB4292A687500C6521A /* Data */,
 				049C0FA129295C4C00C6521A /* Extra */,
 			);
 			path = Geojson;
@@ -101,6 +102,13 @@
 				049C0FA229295C5A00C6521A /* View.swift */,
 			);
 			path = Extra;
+			sourceTree = "<group>";
+		};
+		049C0FB4292A687500C6521A /* Data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -314,6 +322,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = GeoJSON;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -354,6 +363,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = GeoJSON;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

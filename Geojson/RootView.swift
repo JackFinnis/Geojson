@@ -14,7 +14,15 @@ struct RootView: View {
     @State var showFileImporter = false
     @State var firstLaunch = false
     @State var shouldShowFileImporter = false
-
+    
+    var message: String {
+        if #available(iOS 16, *) {
+            return "Please ensure this file is valid GeoJSON and try again."
+        } else {
+            return "Please ensure this file is valid GeoJSON and has the extension .json"
+        }
+    }
+    
     var body: some View {
         ZStack {
             MapView()
@@ -29,7 +37,7 @@ struct RootView: View {
             .alert("Import Failed", isPresented: $vm.showImportFailedAlert) {
                 Button("Ok", role: .cancel) {}
             } message: {
-                Text("Please ensure this file is valid GeoJSON and try again.")
+                Text(message)
             }
             
             VStack {
@@ -65,7 +73,7 @@ struct RootView: View {
         }) {
             WelcomeView(shouldShowFileImporter: $shouldShowFileImporter, firstLaunch: firstLaunch)
         }
-        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json]) { result in
+        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json, .plainText]) { result in
             switch result {
             case .success(let url):
                 vm.importData(from: url)
