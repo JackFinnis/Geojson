@@ -17,6 +17,7 @@
 		049C0F9C292953A400C6521A /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F9B292953A400C6521A /* Collection.swift */; };
 		049C0FA029295C0300C6521A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F9E29295C0300C6521A /* WelcomeView.swift */; };
 		049C0FA329295C5A00C6521A /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA229295C5A00C6521A /* View.swift */; };
+		049C0FA52929A2D100C6521A /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA42929A2D100C6521A /* Storage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,8 @@
 		049C0F9B292953A400C6521A /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		049C0F9E29295C0300C6521A /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		049C0FA229295C5A00C6521A /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		049C0FA42929A2D100C6521A /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		049C0FA82929B0D500C6521A /* testing.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = testing.geojson; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +69,8 @@
 				049C0F74292936F600C6521A /* GeojsonApp.swift */,
 				049C0F78292936F700C6521A /* Assets.xcassets */,
 				049C0F872929384D00C6521A /* RootView.swift */,
-				049C0F9E29295C0300C6521A /* WelcomeView.swift */,
 				049C0F892929384D00C6521A /* MapView.swift */,
+				049C0FA82929B0D500C6521A /* testing.geojson */,
 				049C0F8B2929384D00C6521A /* FloatingButtons.swift */,
 				049C0F852929384D00C6521A /* ViewModel.swift */,
 				049C0FA129295C4C00C6521A /* Extra */,
@@ -78,7 +81,9 @@
 		049C0FA129295C4C00C6521A /* Extra */ = {
 			isa = PBXGroup;
 			children = (
+				049C0F9E29295C0300C6521A /* WelcomeView.swift */,
 				049C0F9B292953A400C6521A /* Collection.swift */,
+				049C0FA42929A2D100C6521A /* Storage.swift */,
 				049C0F992929415300C6521A /* Blur.swift */,
 				049C0FA229295C5A00C6521A /* View.swift */,
 			);
@@ -161,6 +166,7 @@
 				049C0FA029295C0300C6521A /* WelcomeView.swift in Sources */,
 				049C0FA329295C5A00C6521A /* View.swift in Sources */,
 				049C0F952929384D00C6521A /* FloatingButtons.swift in Sources */,
+				049C0FA52929A2D100C6521A /* Storage.swift in Sources */,
 				049C0F9C292953A400C6521A /* Collection.swift in Sources */,
 				049C0F912929384D00C6521A /* RootView.swift in Sources */,
 			);

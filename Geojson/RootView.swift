@@ -27,7 +27,7 @@ struct RootView: View {
             .alert("Import Failed", isPresented: $vm.showImportFailedAlert) {
                 Button("Ok", role: .cancel) {}
             } message: {
-                Text("Please ensure this file is valid geojson and try again.")
+                Text("Please ensure this file is valid Geojson and try again.")
             }
             
             VStack {
@@ -51,7 +51,11 @@ struct RootView: View {
             if !launchedBefore {
                 launchedBefore = true
                 showWelcomeView = true
-            } else{
+            }
+            if let urlString = vm.recentURL, let url = URL(string: urlString) {
+                vm.importData(from: url)
+            }
+            if vm.polylines.isEmpty {
                 showFileImporter = true
             }
         }

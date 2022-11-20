@@ -27,9 +27,9 @@ struct WelcomeView: View {
                     .horizontallyCentred()
                     .padding(.bottom, 50)
                 
-                WelcomeRow("Import Geojson", description: "Import polylines from any Geojson file", systemName: "square.and.arrow.down")
-                WelcomeRow("Browse Data", description: "Browse polylines on an interactive map", systemName: "map")
-                WelcomeRow("Locate Yourself", description: "Easily find your current location", systemName: "location")
+                WelcomeRow("Import Geojson", description: "Import polylines, polygons and points from any Geojson file", systemName: "square.and.arrow.down")
+                WelcomeRow("Browse Data", description: "Browse your Geojson data on an interactive satellite map", systemName: "map")
+                WelcomeRow("Locate Yourself", description: "Easily find your current location and determine your heading", systemName: "location")
                 
                 Spacer()
                 Button {
@@ -73,6 +73,6 @@ struct WelcomeRow: View {
                     .foregroundColor(.secondary)
             }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical)
     }
 }

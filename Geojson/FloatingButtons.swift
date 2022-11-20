@@ -28,11 +28,32 @@ struct FloatingButtons: View {
                 
                 Divider().frame(width: SIZE)
                 
-                Button {
-                    showFileImporter = true
-                } label: {
-                    Image(systemName: "square.and.arrow.down")
-                        .frame(width: SIZE, height: SIZE)
+                if vm.recentURLs.isEmpty {
+                    Button {
+                        showFileImporter = true
+                    } label: {
+                        Image(systemName: "square.and.arrow.down")
+                            .frame(width: SIZE, height: SIZE)
+                    }
+                } else {
+                    Menu {
+                        Button {
+                            showFileImporter = true
+                        } label: {
+                           Label("Import File", systemImage: "doc.badge.plus")
+                        }
+                        Divider()
+                        ForEach(vm.recentURLs, id: \.self) { urlString in
+                            if let url = URL(string: urlString) {
+                                Button(url.lastPathComponent.replacingOccurrences(of: "%20", with: " ")) {
+                                    vm.importData(from: url)
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "square.and.arrow.down")
+                            .frame(width: SIZE, height: SIZE)
+                    }
                 }
             }
             .background(background)
@@ -44,6 +65,7 @@ struct FloatingButtons: View {
                 } label: {
                     Image(systemName: trackingModeImage)
                         .frame(width: SIZE, height: SIZE)
+                        .scaleEffect(vm.scale)
                 }
                 
                 Divider().frame(width: SIZE)
@@ -53,6 +75,8 @@ struct FloatingButtons: View {
                 } label: {
                     Image(systemName: mapTypeImage)
                         .frame(width: SIZE, height: SIZE)
+                        .rotation3DEffect(.degrees(vm.mapType == .standard ? 0 : 180), axis: (x: 0, y: 1, z: 0))
+                        .rotation3DEffect(.degrees(vm.degrees), axis: (x: 0, y: 1, z: 0))
                 }
             }
             .background(background)
@@ -65,22 +89,52 @@ struct FloatingButtons: View {
     }
     
     func updateTrackingMode() {
-        if vm.authorized {
-            vm.trackingMode = vm.trackingMode == .none ? .follow : .none
-        } else {
+        if !vm.authorized {
             vm.showAuthAlert = true
+        } else {
+            let nextTrackingMode: MKUserTrackingMode = {
+                switch vm.mapView?.userTrackingMode ?? .none {
+                case .none:
+                    return .follow
+                case .follow:
+                    return .followWithHeading
+                default:
+                    return .none
+                }
+            }()
+            vm.updateTrackingMode(nextTrackingMode)
         }
     }
     
     func updateMapType() {
-        vm.mapType = vm.mapType == .standard ? .hybrid : .standard
+        let nextMapType: MKMapType = {
+            switch vm.mapView?.mapType ?? .standard {
+            case .standard:
+                return .hybrid
+            default:
+                return .standard
+            }
+        }()
+        vm.updateMapType(nextMapType)
     }
     
     var trackingModeImage: String {
-        vm.trackingMode == .none ? "location" : "location.fill"
+        switch vm.trackingMode {
+        case .none:
+            return "location"
+        case .follow:
+            return "location.fill"
+        default:
+            return "location.north.line.fill"
+        }
     }
     
     var mapTypeImage: String {
-        vm.mapType == .standard ? "globe.europe.africa.fill" : "map"
+        switch vm.mapType {
+        case .standard:
+            return "globe.europe.africa.fill"
+        default:
+            return "map"
+        }
     }
 }

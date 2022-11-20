@@ -31,6 +31,8 @@ struct MapView: UIViewRepresentable {
         }
         
         mapView.removeOverlays(mapView.overlays)
+        mapView.addAnnotations(vm.points)
         mapView.addOverlays(vm.polylines, level: .aboveRoads)
+        mapView.addOverlays(vm.polygons, level: .aboveRoads)
     }
 }
