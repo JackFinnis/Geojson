@@ -54,12 +54,8 @@ struct RootView: View {
                 launchedBefore = true
                 firstLaunch = true
                 showWelcomeView = true
-            }
-            if let urlString = vm.recentURL, let url = URL(string: urlString) {
+            } else if let urlString = vm.recentURL, let url = URL(string: urlString) {
                 vm.importData(from: url)
-            }
-            if vm.polylines.isEmpty {
-                showFileImporter = true
             }
         }
         .sheet(isPresented: $showWelcomeView, onDismiss: {

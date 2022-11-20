@@ -22,6 +22,7 @@
 		049C0FAC2929B98E00C6521A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAB2929B98E00C6521A /* Store.swift */; };
 		049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAD2929BC0800C6521A /* DismissCross.swift */; };
 		049C0FB02929BCAD00C6521A /* DraggableBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAF2929BCAD00C6521A /* DraggableBar.swift */; };
+		049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FB12929BEFE00C6521A /* Haptics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		049C0FAB2929B98E00C6521A /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		049C0FAD2929BC0800C6521A /* DismissCross.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissCross.swift; sourceTree = "<group>"; };
 		049C0FAF2929BCAD00C6521A /* DraggableBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableBar.swift; sourceTree = "<group>"; };
+		049C0FB12929BEFE00C6521A /* Haptics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 			children = (
 				049C0F78292936F700C6521A /* Assets.xcassets */,
 				049C0F9E29295C0300C6521A /* WelcomeView.swift */,
+				049C0FB12929BEFE00C6521A /* Haptics.swift */,
 				049C0FAD2929BC0800C6521A /* DismissCross.swift */,
 				049C0FAF2929BCAD00C6521A /* DraggableBar.swift */,
 				049C0FAB2929B98E00C6521A /* Store.swift */,
@@ -181,6 +184,7 @@
 				049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */,
 				049C0F952929384D00C6521A /* FloatingButtons.swift in Sources */,
 				049C0FA52929A2D100C6521A /* Storage.swift in Sources */,
+				049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */,
 				049C0F9C292953A400C6521A /* Collection.swift in Sources */,
 				049C0F912929384D00C6521A /* RootView.swift in Sources */,
 			);

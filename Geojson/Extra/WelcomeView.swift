@@ -28,25 +28,25 @@ struct WelcomeView: View {
                     .font(.largeTitle.bold())
                     .multilineTextAlignment(.center)
                     .horizontallyCentred()
-                    .padding(.bottom, firstLaunch ? 50 : 5)
+                    .padding(.bottom, 5)
                 if !firstLaunch {
                     Text("Version " + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""))
                         .foregroundColor(.secondary)
-                        .padding(.bottom, 50)
                         .horizontallyCentred()
                 }
                 
+                Spacer()
                 WelcomeRow("Import GeoJSON", description: "Import polylines, polygons and points from any GeoJSON file", systemName: "square.and.arrow.down")
                 WelcomeRow("Browse Data", description: "Browse your GeoJSON data on an interactive satellite map", systemName: "map")
                 WelcomeRow("Locate Yourself", description: "Easily find your current location and determine your heading", systemName: "location")
-                
                 Spacer()
+                
                 if firstLaunch {
                     Button {
                         dismiss()
                         shouldShowFileImporter = true
                     } label: {
-                        Text("Import")
+                        Text("Import GeoJSON")
                             .bigButton()
                     }
                 } else {

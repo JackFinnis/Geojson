@@ -14,6 +14,9 @@ class ViewModel: NSObject, ObservableObject {
     @Published var points = [MKPointAnnotation]()
     @Published var polylines = [MKPolyline]()
     @Published var polygons = [MKPolygon]()
+    var empty: Bool {
+        points.isEmpty && polylines.isEmpty && polygons.isEmpty
+    }
     
     // Map
     var mapView: MKMapView?
@@ -36,6 +39,7 @@ class ViewModel: NSObject, ObservableObject {
     @Published var scale = 1.0
     
     // Location Manager
+    var zoomed = false
     var manager = CLLocationManager()
     var status = CLAuthorizationStatus.notDetermined
     var authorized: Bool {
@@ -53,6 +57,7 @@ class ViewModel: NSObject, ObservableObject {
             showImportFailedAlert = true
             recentURL = nil
             recentURLs.removeAll { $0 == url.absoluteString }
+            Haptics.error()
         }
         
         guard let data = try? Data(contentsOf: url),
@@ -69,12 +74,9 @@ class ViewModel: NSObject, ObservableObject {
             }
         }
         
-        guard points.isNotEmpty || polylines.isNotEmpty || polygons.isNotEmpty else {
-            failed()
-            return
-        }
-        
+        guard !empty else { failed(); return }
         zoom()
+        Haptics.tap()
         
         let urlString = url.absoluteString
         recentURL = urlString
@@ -168,6 +170,12 @@ extension ViewModel: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
         if !animated {
             updateTrackingMode(.none)
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        if !zoomed, empty {
+            updateTrackingMode(.follow)
         }
     }
 }
