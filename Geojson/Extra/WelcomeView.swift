@@ -9,7 +9,10 @@ import SwiftUI
 
 struct WelcomeView: View {
     @Environment(\.dismiss) var dismiss
+    @State var showShareSheet = false
+    
     @Binding var shouldShowFileImporter: Bool
+    let firstLaunch: Bool
     
     var body: some View {
         NavigationView {
@@ -20,34 +23,72 @@ struct WelcomeView: View {
                     .frame(width: 70, height: 70)
                     .cornerRadius(15)
                     .horizontallyCentred()
-                    .padding(.top, 50)
                     .padding(.bottom)
-                Text("Welcome to\n\(NAME)")
+                Text((firstLaunch ? "Welcome to\n" : "") + NAME)
                     .font(.largeTitle.bold())
                     .multilineTextAlignment(.center)
                     .horizontallyCentred()
-                    .padding(.bottom, 50)
+                    .padding(.bottom, firstLaunch ? 50 : 5)
+                if !firstLaunch {
+                    Text("Version " + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""))
+                        .foregroundColor(.secondary)
+                        .padding(.bottom, 50)
+                        .horizontallyCentred()
+                }
                 
-                WelcomeRow("Import Geojson", description: "Import polylines, polygons and points from any Geojson file", systemName: "square.and.arrow.down")
-                WelcomeRow("Browse Data", description: "Browse your Geojson data on an interactive satellite map", systemName: "map")
+                WelcomeRow("Import GeoJSON", description: "Import polylines, polygons and points from any GeoJSON file", systemName: "square.and.arrow.down")
+                WelcomeRow("Browse Data", description: "Browse your GeoJSON data on an interactive satellite map", systemName: "map")
                 WelcomeRow("Locate Yourself", description: "Easily find your current location and determine your heading", systemName: "location")
                 
                 Spacer()
-                Button {
-                    dismiss()
-                    shouldShowFileImporter = true
-                } label: {
-                    Text("Import")
-                        .bold()
-                        .padding()
-                        .horizontallyCentred()
-                        .foregroundColor(.white)
-                        .background(Color.accentColor)
-                        .cornerRadius(15)
+                if firstLaunch {
+                    Button {
+                        dismiss()
+                        shouldShowFileImporter = true
+                    } label: {
+                        Text("Import")
+                            .bigButton()
+                    }
+                } else {
+                    Menu {
+                        Button {
+                            Store.writeReview()
+                        } label: {
+                            Label("Write a Review", systemImage: "quote.bubble")
+                        }
+                        Button {
+                            Store.requestRating()
+                        } label: {
+                            Label("Rate the App", systemImage: "star")
+                        }
+                        Button {
+                            showShareSheet = true
+                        } label: {
+                            Label("Share with a Friend", systemImage: "person.badge.plus")
+                        }
+                    } label: {
+                        Text("Contribute...")
+                            .bigButton()
+                    }
                 }
             }
             .padding()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        DismissCross()
+                    }
+                    .buttonStyle(.plain)
+                }
+                ToolbarItem(placement: .principal) {
+                    DraggableBar()
+                }
+            }
         }
+        .shareSheet(url: APP_URL, isPresented: $showShareSheet)
     }
 }
 

@@ -30,8 +30,10 @@ struct MapView: UIViewRepresentable {
             mapView.setUserTrackingMode(vm.trackingMode, animated: true)
         }
         
-        mapView.removeOverlays(mapView.overlays)
+        mapView.removeAnnotations(mapView.annotations)
         mapView.addAnnotations(vm.points)
+        
+        mapView.removeOverlays(mapView.overlays)
         mapView.addOverlays(vm.polylines, level: .aboveRoads)
         mapView.addOverlays(vm.polygons, level: .aboveRoads)
     }

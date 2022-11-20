@@ -18,6 +18,10 @@
 		049C0FA029295C0300C6521A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F9E29295C0300C6521A /* WelcomeView.swift */; };
 		049C0FA329295C5A00C6521A /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA229295C5A00C6521A /* View.swift */; };
 		049C0FA52929A2D100C6521A /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA42929A2D100C6521A /* Storage.swift */; };
+		049C0FAA2929B86500C6521A /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA92929B86500C6521A /* ShareView.swift */; };
+		049C0FAC2929B98E00C6521A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAB2929B98E00C6521A /* Store.swift */; };
+		049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAD2929BC0800C6521A /* DismissCross.swift */; };
+		049C0FB02929BCAD00C6521A /* DraggableBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAF2929BCAD00C6521A /* DraggableBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +37,10 @@
 		049C0F9E29295C0300C6521A /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		049C0FA229295C5A00C6521A /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		049C0FA42929A2D100C6521A /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		049C0FA92929B86500C6521A /* ShareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		049C0FAB2929B98E00C6521A /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		049C0FAD2929BC0800C6521A /* DismissCross.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissCross.swift; sourceTree = "<group>"; };
+		049C0FAF2929BCAD00C6521A /* DraggableBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +88,10 @@
 			children = (
 				049C0F78292936F700C6521A /* Assets.xcassets */,
 				049C0F9E29295C0300C6521A /* WelcomeView.swift */,
+				049C0FAD2929BC0800C6521A /* DismissCross.swift */,
+				049C0FAF2929BCAD00C6521A /* DraggableBar.swift */,
+				049C0FAB2929B98E00C6521A /* Store.swift */,
+				049C0FA92929B86500C6521A /* ShareView.swift */,
 				049C0F9B292953A400C6521A /* Collection.swift */,
 				049C0FA42929A2D100C6521A /* Storage.swift */,
 				049C0F992929415300C6521A /* Blur.swift */,
@@ -158,11 +170,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				049C0F9A2929415300C6521A /* Blur.swift in Sources */,
+				049C0FB02929BCAD00C6521A /* DraggableBar.swift in Sources */,
 				049C0F932929384D00C6521A /* MapView.swift in Sources */,
+				049C0FAA2929B86500C6521A /* ShareView.swift in Sources */,
+				049C0FAC2929B98E00C6521A /* Store.swift in Sources */,
 				049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */,
 				049C0F8F2929384D00C6521A /* ViewModel.swift in Sources */,
 				049C0FA029295C0300C6521A /* WelcomeView.swift in Sources */,
 				049C0FA329295C5A00C6521A /* View.swift in Sources */,
+				049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */,
 				049C0F952929384D00C6521A /* FloatingButtons.swift in Sources */,
 				049C0FA52929A2D100C6521A /* Storage.swift in Sources */,
 				049C0F9C292953A400C6521A /* Collection.swift in Sources */,
@@ -305,7 +321,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -345,7 +361,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;

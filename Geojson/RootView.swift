@@ -12,6 +12,7 @@ struct RootView: View {
     @AppStorage("launchedBefore") var launchedBefore = false
     @State var showWelcomeView = false
     @State var showFileImporter = false
+    @State var firstLaunch = false
     @State var shouldShowFileImporter = false
 
     var body: some View {
@@ -28,7 +29,7 @@ struct RootView: View {
             .alert("Import Failed", isPresented: $vm.showImportFailedAlert) {
                 Button("Ok", role: .cancel) {}
             } message: {
-                Text("Please ensure this file is valid Geojson and try again.")
+                Text("Please ensure this file is valid GeoJSON and try again.")
             }
             
             VStack {
@@ -51,6 +52,7 @@ struct RootView: View {
         .task {
             if !launchedBefore {
                 launchedBefore = true
+                firstLaunch = true
                 showWelcomeView = true
             }
             if let urlString = vm.recentURL, let url = URL(string: urlString) {
@@ -63,8 +65,9 @@ struct RootView: View {
         .sheet(isPresented: $showWelcomeView, onDismiss: {
             showFileImporter = shouldShowFileImporter
             shouldShowFileImporter = false
+            firstLaunch = false
         }) {
-            WelcomeView(shouldShowFileImporter: $shouldShowFileImporter)
+            WelcomeView(shouldShowFileImporter: $shouldShowFileImporter, firstLaunch: firstLaunch)
         }
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json]) { result in
             switch result {

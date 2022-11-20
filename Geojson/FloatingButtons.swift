@@ -40,7 +40,7 @@ struct FloatingButtons: View {
                         Button {
                             showFileImporter = true
                         } label: {
-                           Label("Import File", systemImage: "doc.badge.plus")
+                           Label("Import GeoJSON File", systemImage: "doc.badge.plus")
                         }
                         Divider()
                         ForEach(vm.recentURLs, id: \.self) { urlString in

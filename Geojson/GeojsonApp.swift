@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-let NAME = "Geojson Viewer"
+let NAME = "GeoJSON Viewer"
 let SIZE = 48.0
+let APP_URL = URL(string: "https://apps.apple.com/app/id6444589175")!
 
 @main
 struct GeojsonApp: App {
