@@ -23,6 +23,9 @@
 		049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAD2929BC0800C6521A /* DismissCross.swift */; };
 		049C0FB02929BCAD00C6521A /* DraggableBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAF2929BCAD00C6521A /* DraggableBar.swift */; };
 		049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FB12929BEFE00C6521A /* Haptics.swift */; };
+		049C0FB9292A88CD00C6521A /* Starbucks.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB6292A88CD00C6521A /* Starbucks.geojson */; };
+		049C0FBA292A88CD00C6521A /* ULEZ.json in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB7292A88CD00C6521A /* ULEZ.json */; };
+		049C0FBB292A88CD00C6521A /* Cycle Lanes.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +46,9 @@
 		049C0FAD2929BC0800C6521A /* DismissCross.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissCross.swift; sourceTree = "<group>"; };
 		049C0FAF2929BCAD00C6521A /* DraggableBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableBar.swift; sourceTree = "<group>"; };
 		049C0FB12929BEFE00C6521A /* Haptics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		049C0FB6292A88CD00C6521A /* Starbucks.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Starbucks.geojson; sourceTree = "<group>"; };
+		049C0FB7292A88CD00C6521A /* ULEZ.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ULEZ.json; sourceTree = "<group>"; };
+		049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Cycle Lanes.geojson"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +86,7 @@
 				049C0F892929384D00C6521A /* MapView.swift */,
 				049C0F8B2929384D00C6521A /* FloatingButtons.swift */,
 				049C0F852929384D00C6521A /* ViewModel.swift */,
-				049C0FB4292A687500C6521A /* Data */,
+				049C0FB5292A88B300C6521A /* Data */,
 				049C0FA129295C4C00C6521A /* Extra */,
 			);
 			path = Geojson;
@@ -104,9 +110,12 @@
 			path = Extra;
 			sourceTree = "<group>";
 		};
-		049C0FB4292A687500C6521A /* Data */ = {
+		049C0FB5292A88B300C6521A /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */,
+				049C0FB6292A88CD00C6521A /* Starbucks.geojson */,
+				049C0FB7292A88CD00C6521A /* ULEZ.json */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -169,7 +178,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				049C0FB9292A88CD00C6521A /* Starbucks.geojson in Resources */,
+				049C0FBB292A88CD00C6521A /* Cycle Lanes.geojson in Resources */,
 				049C0F79292936F700C6521A /* Assets.xcassets in Resources */,
+				049C0FBA292A88CD00C6521A /* ULEZ.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

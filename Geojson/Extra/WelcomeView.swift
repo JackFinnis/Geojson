@@ -40,6 +40,7 @@ struct WelcomeView: View {
                 WelcomeRow("Browse Data", description: "Browse your GeoJSON data on an interactive satellite map", systemName: "map")
                 WelcomeRow("Locate Yourself", description: "Easily find your current location and determine your heading", systemName: "location")
                 Spacer()
+                Spacer()
                 
                 if firstLaunch {
                     Button {

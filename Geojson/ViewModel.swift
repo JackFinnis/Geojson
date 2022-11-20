@@ -167,6 +167,36 @@ extension ViewModel: MKMapViewDelegate {
         return MKOverlayRenderer(overlay: overlay)
     }
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let point = annotation as? MKPointAnnotation {
+            let view = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: point)
+            view.clusteringIdentifier = "cluster"
+            return view
+        } else if let user = annotation as? MKUserLocation {
+            let view = MKUserLocationView(annotation: user, reuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+            
+            let config = UIImage.SymbolConfiguration(font: .systemFont(ofSize: SIZE/2))
+            let openBtn = UIButton()
+            let openImg = UIImage(systemName: "arrow.triangle.turn.up.right.circle", withConfiguration: config)
+            openBtn.setImage(openImg, for: .normal)
+            openBtn.frame.size = CGSize(width: SIZE, height: SIZE)
+            view.rightCalloutAccessoryView = openBtn
+            view.leftCalloutAccessoryView = UILabel()
+            
+            return view
+        }
+        return nil
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if let coord = view.annotation?.coordinate {
+            let placemark = MKPlacemark(coordinate: coord)
+            let mapItem = MKMapItem(placemark: placemark)
+            mapItem.name = "My Location"
+            mapItem.openInMaps()
+        }
+    }
+    
     func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
         if !animated {
             updateTrackingMode(.none)
