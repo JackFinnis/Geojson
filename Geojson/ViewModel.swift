@@ -60,18 +60,26 @@ class ViewModel: NSObject, ObservableObject {
             Haptics.error()
         }
         
-        guard let data = try? Data(contentsOf: url),
-              let features = try? MKGeoJSONDecoder().decode(data) as? [MKGeoJSONFeature]
-        else { failed(); return }
+        guard url.startAccessingSecurityScopedResource() else { failed(); return }
         
-        points = []
-        polylines = []
-        polygons = []
-        
-        for feature in features {
-            for geometry in feature.geometry {
-                handleGeometry(geometry)
+        do {
+            let data = try Data(contentsOf: url)
+            url.stopAccessingSecurityScopedResource()
+            let features = try MKGeoJSONDecoder().decode(data) as? [MKGeoJSONFeature] ?? []
+            
+            points = []
+            polylines = []
+            polygons = []
+            
+            for feature in features {
+                for geometry in feature.geometry {
+                    handleGeometry(geometry)
+                }
             }
+        } catch {
+            debugPrint(error)
+            failed()
+            return
         }
         
         guard !empty else { failed(); return }
