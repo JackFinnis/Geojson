@@ -26,6 +26,8 @@
 		049C0FB9292A88CD00C6521A /* Starbucks.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB6292A88CD00C6521A /* Starbucks.geojson */; };
 		049C0FBA292A88CD00C6521A /* ULEZ.json in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB7292A88CD00C6521A /* ULEZ.json */; };
 		049C0FBB292A88CD00C6521A /* Cycle Lanes.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */; };
+		04A65587293D58DC0084CC6A /* Emails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A65586293D58DC0084CC6A /* Emails.swift */; };
+		04A65589293D597F0084CC6A /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A65588293D597F0084CC6A /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,8 @@
 		049C0FB6292A88CD00C6521A /* Starbucks.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Starbucks.geojson; sourceTree = "<group>"; };
 		049C0FB7292A88CD00C6521A /* ULEZ.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ULEZ.json; sourceTree = "<group>"; };
 		049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Cycle Lanes.geojson"; sourceTree = "<group>"; };
+		04A65586293D58DC0084CC6A /* Emails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emails.swift; sourceTree = "<group>"; };
+		04A65588293D597F0084CC6A /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,38 +90,56 @@
 				049C0F892929384D00C6521A /* MapView.swift */,
 				049C0F8B2929384D00C6521A /* FloatingButtons.swift */,
 				049C0F852929384D00C6521A /* ViewModel.swift */,
-				049C0FB5292A88B300C6521A /* Data */,
-				049C0FA129295C4C00C6521A /* Extra */,
+				04A65583293D589E0084CC6A /* Views */,
+				04A65585293D58C00084CC6A /* Helpers */,
+				04A65584293D58B30084CC6A /* Extensions */,
+				049C0FB5292A88B300C6521A /* Resources */,
 			);
 			path = Geojson;
 			sourceTree = "<group>";
 		};
-		049C0FA129295C4C00C6521A /* Extra */ = {
-			isa = PBXGroup;
-			children = (
-				049C0F78292936F700C6521A /* Assets.xcassets */,
-				049C0F9E29295C0300C6521A /* WelcomeView.swift */,
-				049C0FB12929BEFE00C6521A /* Haptics.swift */,
-				049C0FAD2929BC0800C6521A /* DismissCross.swift */,
-				049C0FAF2929BCAD00C6521A /* DraggableBar.swift */,
-				049C0FAB2929B98E00C6521A /* Store.swift */,
-				049C0FA92929B86500C6521A /* ShareView.swift */,
-				049C0F9B292953A400C6521A /* Collection.swift */,
-				049C0FA42929A2D100C6521A /* Storage.swift */,
-				049C0F992929415300C6521A /* Blur.swift */,
-				049C0FA229295C5A00C6521A /* View.swift */,
-			);
-			path = Extra;
-			sourceTree = "<group>";
-		};
-		049C0FB5292A88B300C6521A /* Data */ = {
+		049C0FB5292A88B300C6521A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */,
 				049C0FB6292A88CD00C6521A /* Starbucks.geojson */,
 				049C0FB7292A88CD00C6521A /* ULEZ.json */,
+				049C0F78292936F700C6521A /* Assets.xcassets */,
 			);
-			path = Data;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		04A65583293D589E0084CC6A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				049C0F9E29295C0300C6521A /* WelcomeView.swift */,
+				049C0FAD2929BC0800C6521A /* DismissCross.swift */,
+				049C0FAF2929BCAD00C6521A /* DraggableBar.swift */,
+				049C0FA92929B86500C6521A /* ShareView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		04A65584293D58B30084CC6A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				049C0F9B292953A400C6521A /* Collection.swift */,
+				04A65588293D597F0084CC6A /* String.swift */,
+				049C0FA229295C5A00C6521A /* View.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		04A65585293D58C00084CC6A /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				04A65586293D58DC0084CC6A /* Emails.swift */,
+				049C0FB12929BEFE00C6521A /* Haptics.swift */,
+				049C0FAB2929B98E00C6521A /* Store.swift */,
+				049C0FA42929A2D100C6521A /* Storage.swift */,
+				049C0F992929415300C6521A /* Blur.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,6 +216,7 @@
 			files = (
 				049C0F9A2929415300C6521A /* Blur.swift in Sources */,
 				049C0FB02929BCAD00C6521A /* DraggableBar.swift in Sources */,
+				04A65587293D58DC0084CC6A /* Emails.swift in Sources */,
 				049C0F932929384D00C6521A /* MapView.swift in Sources */,
 				049C0FAA2929B86500C6521A /* ShareView.swift in Sources */,
 				049C0FAC2929B98E00C6521A /* Store.swift in Sources */,
@@ -205,6 +228,7 @@
 				049C0F952929384D00C6521A /* FloatingButtons.swift in Sources */,
 				049C0FA52929A2D100C6521A /* Storage.swift in Sources */,
 				049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */,
+				04A65589293D597F0084CC6A /* String.swift in Sources */,
 				049C0F9C292953A400C6521A /* Collection.swift in Sources */,
 				049C0F912929384D00C6521A /* RootView.swift in Sources */,
 			);
@@ -334,6 +358,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_CFBundleDisplayName = GeoJSON;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -350,7 +375,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jackfinnis.Geojson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -375,6 +400,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_CFBundleDisplayName = GeoJSON;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -391,7 +417,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jackfinnis.Geojson;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

@@ -10,23 +10,23 @@ import SwiftUI
 struct RootView: View {
     @StateObject var vm = ViewModel()
     @AppStorage("launchedBefore") var launchedBefore = false
+    
     @State var showWelcomeView = false
     @State var showFileImporter = false
     @State var firstLaunch = false
     @State var shouldShowFileImporter = false
     
-    var message: String {
-        if #available(iOS 16, *) {
-            return "Please ensure this file is valid GeoJSON and try again."
-        } else {
-            return "Please ensure this file is valid GeoJSON and has the extension .json"
-        }
-    }
-    
     var body: some View {
         ZStack {
             MapView()
                 .ignoresSafeArea()
+                .alert("Importing Files", isPresented: $vm.showExtensionAlert) {
+                    Button("OK", role: .cancel) {
+                        showFileImporter = true
+                    }
+                } message: {
+                    Text("Please ensure the file you want to import has the extension .json, not .geojson")
+                }
             
             VStack(spacing: 0) {
                 Blur()
@@ -34,10 +34,15 @@ struct RootView: View {
                 Spacer()
                     .layoutPriority(1)
             }
-            .alert("Import Failed", isPresented: $vm.showImportFailedAlert) {
-                Button("Ok", role: .cancel) {}
+            .alert("Import Failed", isPresented: $vm.showFailedAlert) {
+                Button("OK", role: .cancel) {}
+                if vm.error == .invalidGeojosn {
+                    Button("Open Website") {
+                        UIApplication.shared.open(URL(string: "https://geojson.io")!)
+                    }
+                }
             } message: {
-                Text(message)
+                Text(vm.error.rawValue)
             }
             
             VStack {
@@ -62,7 +67,7 @@ struct RootView: View {
                 launchedBefore = true
                 firstLaunch = true
                 showWelcomeView = true
-            } else if let urlString = vm.recentURL, let url = URL(string: urlString) {
+            } else if let url = vm.recentURLs.last {
                 vm.importData(from: url)
             }
         }

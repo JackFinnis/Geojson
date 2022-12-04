@@ -30,7 +30,7 @@ struct FloatingButtons: View {
                 
                 if vm.recentURLs.isEmpty {
                     Button {
-                        showFileImporter = true
+                        showFileImporterTapped()
                     } label: {
                         Image(systemName: "square.and.arrow.down")
                             .frame(width: SIZE, height: SIZE)
@@ -38,16 +38,14 @@ struct FloatingButtons: View {
                 } else {
                     Menu {
                         Button {
-                            showFileImporter = true
+                            showFileImporterTapped()
                         } label: {
                            Label("Import GeoJSON File", systemImage: "doc.badge.plus")
                         }
                         Divider()
-                        ForEach(vm.recentURLs, id: \.self) { urlString in
-                            if let url = URL(string: urlString) {
-                                Button(url.lastPathComponent.replacingOccurrences(of: "%20", with: " ")) {
-                                    vm.importData(from: url)
-                                }
+                        ForEach(vm.recentURLs, id: \.self) { url in
+                            Button(url.lastPathComponent.replacingOccurrences(of: "%20", with: " ")) {
+                                vm.importData(from: url, allowAlert: true)
                             }
                         }
                     } label: {
@@ -86,6 +84,17 @@ struct FloatingButtons: View {
         .compositingGroup()
         .shadow(color: Color(.systemFill), radius: 5)
         .padding(10)
+    }
+    
+    func showFileImporterTapped() {
+        if #available(iOS 16, *) {
+            showFileImporter = true
+        } else if vm.showedExtensionAlert {
+            showFileImporter = true
+        } else {
+            vm.showExtensionAlert = true
+            vm.showedExtensionAlert = true
+        }
     }
     
     func updateTrackingMode() {

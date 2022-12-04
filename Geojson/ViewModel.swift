@@ -9,6 +9,12 @@ import Foundation
 import MapKit
 import SwiftUI
 
+enum GeojsonError: String {
+    case lostFile = "This file has been moved or deleted. Please try importing it again."
+    case invalidGeojosn = "This file contains invalid geojson. This website can help spot syntax errors."
+    case emptyFile = "This file does not contain any points, polylines or polygons."
+}
+
 class ViewModel: NSObject, ObservableObject {
     // Geometry
     @Published var points = [MKPointAnnotation]()
@@ -21,17 +27,20 @@ class ViewModel: NSObject, ObservableObject {
     // Map
     var mapView: MKMapView?
     @Published var trackingMode = MKUserTrackingMode.follow
-    @Published var mapType = MKMapType.standard { didSet {
-        mapTypeStorage = mapType.rawValue
-    }}
+    @Published var mapType = MKMapType.standard
     
     // Storage
-    @OptionalStorage(key: "recentURL", defaultValue: nil) var recentURL: String?
-    @Storage(key: "recentURLs", defaultValue: [String]()) var recentURLs
-    @Storage(key: "mapTypeStorage", defaultValue: UInt.zero) var mapTypeStorage
+    @Published var showExtensionAlert = false
+    @Storage(key: "showedExtensionAlert", defaultValue: false) var showedExtensionAlert
+    @Storage(key: "recentURLsData", defaultValue: [Data]()) var recentURLsData
+    var stale = false
+    var recentURLs: [URL] {
+        recentURLsData.compactMap { try? URL(resolvingBookmarkData: $0, bookmarkDataIsStale: &stale) }
+    }
     
     // Alerts
-    @Published var showImportFailedAlert = false
+    var error = GeojsonError.lostFile
+    @Published var showFailedAlert = false
     @Published var showAuthAlert = false
     
     // Animations
@@ -49,24 +58,33 @@ class ViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
         manager.delegate = self
-        mapType = MKMapType(rawValue: mapTypeStorage) ?? .standard
     }
     
-    func importData(from url: URL) {
-        func failed() {
-            showImportFailedAlert = true
-            recentURL = nil
-            recentURLs.removeAll { $0 == url.absoluteString }
+    func importData(from url: URL, allowAlert: Bool = false) {
+        _ = url.startAccessingSecurityScopedResource()
+        let urlData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil)
+        
+        func failed(error: GeojsonError) {
+            if allowAlert {
+                self.error = error
+                showFailedAlert = true
+            }
+            recentURLsData.removeAll { $0 == urlData }
             Haptics.error()
         }
         
-        guard url.startAccessingSecurityScopedResource() else { failed(); return }
+        let data: Data
+        do {
+            data = try Data(contentsOf: url)
+            url.stopAccessingSecurityScopedResource()
+        } catch {
+            debugPrint(error)
+            failed(error: .lostFile)
+            return
+        }
         
         do {
-            let data = try Data(contentsOf: url)
-            url.stopAccessingSecurityScopedResource()
             let features = try MKGeoJSONDecoder().decode(data) as? [MKGeoJSONFeature] ?? []
-            
             points = []
             polylines = []
             polygons = []
@@ -78,18 +96,19 @@ class ViewModel: NSObject, ObservableObject {
             }
         } catch {
             debugPrint(error)
-            failed()
+            failed(error: .invalidGeojosn)
+            return
+        }
+        guard !empty else {
+            failed(error: .emptyFile)
             return
         }
         
-        guard !empty else { failed(); return }
         zoom()
         Haptics.tap()
         
-        let urlString = url.absoluteString
-        recentURL = urlString
-        if !recentURLs.contains(urlString) {
-            recentURLs.append(urlString)
+        if let urlData, !recentURLsData.contains(urlData) {
+            recentURLsData.append(urlData)
         }
     }
     

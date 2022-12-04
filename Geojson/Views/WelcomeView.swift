@@ -17,29 +17,28 @@ struct WelcomeView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 0) {
-                Image("logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 70, height: 70)
-                    .cornerRadius(15)
-                    .horizontallyCentred()
-                    .padding(.bottom)
-                Text((firstLaunch ? "Welcome to\n" : "") + NAME)
-                    .font(.largeTitle.bold())
-                    .multilineTextAlignment(.center)
-                    .horizontallyCentred()
-                    .padding(.bottom, 5)
-                if !firstLaunch {
-                    Text("Version " + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""))
-                        .foregroundColor(.secondary)
-                        .horizontallyCentred()
+                VStack(spacing: 0) {
+                    Image("logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 70, height: 70)
+                        .cornerRadius(15)
+                        .padding(.bottom)
+                    Text((firstLaunch ? "Welcome to\n" : "") + NAME)
+                        .font(.largeTitle.bold())
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 5)
+                    if !firstLaunch {
+                        Text("Version " + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""))
+                            .foregroundColor(.secondary)
+                    }
                 }
+                .horizontallyCentred()
+                .padding(.bottom, 30)
                 
-                Spacer()
                 WelcomeRow("Import GeoJSON", description: "Import polylines, polygons and points from any GeoJSON file", systemName: "square.and.arrow.down")
                 WelcomeRow("Browse Data", description: "Browse your GeoJSON data on an interactive satellite map", systemName: "map")
                 WelcomeRow("Locate Yourself", description: "Easily find your current location and determine your heading", systemName: "location")
-                Spacer()
                 Spacer()
                 
                 if firstLaunch {
@@ -52,6 +51,11 @@ struct WelcomeView: View {
                     }
                 } else {
                     Menu {
+                        Button {
+                            Emails.compose(subject: "\(NAME) Feedback")
+                        } label: {
+                            Label("Send us Feedback", systemImage: "envelope")
+                        }
                         Button {
                             Store.writeReview()
                         } label: {
