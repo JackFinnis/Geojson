@@ -112,6 +112,7 @@
 		04A65583293D589E0084CC6A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				049C0F992929415300C6521A /* Blur.swift */,
 				049C0F9E29295C0300C6521A /* WelcomeView.swift */,
 				049C0FAD2929BC0800C6521A /* DismissCross.swift */,
 				049C0FAF2929BCAD00C6521A /* DraggableBar.swift */,
@@ -137,7 +138,6 @@
 				049C0FB12929BEFE00C6521A /* Haptics.swift */,
 				049C0FAB2929B98E00C6521A /* Store.swift */,
 				049C0FA42929A2D100C6521A /* Storage.swift */,
-				049C0F992929415300C6521A /* Blur.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
