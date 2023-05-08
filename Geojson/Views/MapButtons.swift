@@ -36,19 +36,45 @@ struct MapButtons: View {
             }
             .blurBackground()
             
-            Button {
-                showInfoView = true
-            } label: {
-                Image(systemName: "info.circle")
-                    .squareButton()
+            VStack(spacing: 0) {
+                Button {
+                    showInfoView = true
+                } label: {
+                    Image(systemName: "info.circle")
+                        .squareButton()
+                }
+                
+                if vm.multipleTypes {
+                    Divider().frame(width: SIZE)
+                    Menu {
+                        Picker("", selection: $vm.selectedShapeType) {
+                            Text("All Shapes")
+                                .tag(nil as GeoShapeType?)
+                            ForEach(GeoShapeType.allCases, id: \.self) { type in
+                                let text = Text(type.rawValue).tag(type as GeoShapeType?)
+                                switch type {
+                                case .point:
+                                    if vm.points.isNotEmpty { text }
+                                case .polygon:
+                                    if vm.polygons.isNotEmpty { text }
+                                case .polyline:
+                                    if vm.polylines.isNotEmpty { text }
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle\(vm.selectedShapeType == nil ? "" : ".fill")")
+                            .squareButton()
+                    }
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
             }
             .blurBackground()
-            
-            Spacer()
         }
+        .animation(.default, value: vm.multipleTypes)
         .padding(10)
         .sheet(isPresented: $showInfoView) {
-            InfoView(welcome: false)
+            InfoView(isPresented: $showInfoView, welcome: false)
         }
     }
     

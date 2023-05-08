@@ -13,6 +13,7 @@
 		0402C60D2A090C9000238C51 /* Shapefile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60C2A090C9000238C51 /* Shapefile.swift */; };
 		0402C60F2A090D0900238C51 /* BinUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60E2A090D0900238C51 /* BinUtils.swift */; };
 		0402C6142A09175100238C51 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6132A09175100238C51 /* CGPoint.swift */; };
+		0402C6162A091EE200238C51 /* GeoShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6152A091EE200238C51 /* GeoShapeType.swift */; };
 		040AD1DE29F4A42B00BA54E6 /* CarbonCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */; };
 		040AD1E029F4A6D800BA54E6 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DF29F4A6D800BA54E6 /* NSObject.swift */; };
 		040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1E129F4A84C00BA54E6 /* ImportButton.swift */; };
@@ -46,6 +47,7 @@
 		0402C60C2A090C9000238C51 /* Shapefile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapefile.swift; sourceTree = "<group>"; };
 		0402C60E2A090D0900238C51 /* BinUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinUtils.swift; sourceTree = "<group>"; };
 		0402C6132A09175100238C51 /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
+		0402C6152A091EE200238C51 /* GeoShapeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoShapeType.swift; sourceTree = "<group>"; };
 		040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbonCopy.swift; sourceTree = "<group>"; };
 		040AD1DF29F4A6D800BA54E6 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		040AD1E129F4A84C00BA54E6 /* ImportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportButton.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				049C0F852929384D00C6521A /* ViewModel.swift */,
 				04C71FF32A08DCD100417249 /* GeoError.swift */,
 				04C71FF52A08DCEB00417249 /* GeoFileType.swift */,
+				0402C6152A091EE200238C51 /* GeoShapeType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */,
 				049C0F9C292953A400C6521A /* Collection.swift in Sources */,
 				040AD1E029F4A6D800BA54E6 /* NSObject.swift in Sources */,
+				0402C6162A091EE200238C51 /* GeoShapeType.swift in Sources */,
 				0402C6142A09175100238C51 /* CGPoint.swift in Sources */,
 				049C0F912929384D00C6521A /* RootView.swift in Sources */,
 			);
@@ -431,7 +435,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
-				INFOPLIST_KEY_CFBundleDisplayName = GeoJSON;
+				INFOPLIST_KEY_CFBundleDisplayName = GeoViewer;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -472,7 +476,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "";
-				INFOPLIST_KEY_CFBundleDisplayName = GeoJSON;
+				INFOPLIST_KEY_CFBundleDisplayName = GeoViewer;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

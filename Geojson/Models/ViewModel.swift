@@ -18,10 +18,14 @@ class ViewModel: NSObject, ObservableObject {
     
     // MARK: - Properties
     // Geometry
-    var points = [MKPointAnnotation]()
-    var polylines = [MKPolyline]()
-    var polygons = [MKPolygon]()
+    @Published var points = [MKPointAnnotation]()
+    @Published var polylines = [MKPolyline]()
+    @Published var polygons = [MKPolygon]()
     var empty: Bool { points.isEmpty && polylines.isEmpty && polygons.isEmpty }
+    var multipleTypes: Bool { [points.isNotEmpty, polylines.isNotEmpty, polygons.isNotEmpty].filter { $0 }.count > 1 }
+    @Published var selectedShapeType: GeoShapeType? { didSet {
+        refreshMap()
+    }}
     
     // MapView
     var mapView: MKMapView?
@@ -93,13 +97,8 @@ class ViewModel: NSObject, ObservableObject {
             try parseShapefile()
         }
         
-        mapView?.removeAnnotations(mapView?.annotations ?? [])
-        mapView?.removeOverlays(mapView?.overlays ?? [])
-        
-        mapView?.addAnnotations(points)
-        mapView?.addOverlays(polylines, level: .aboveRoads)
-        mapView?.addOverlays(polygons, level: .aboveRoads)
-        
+        selectedShapeType = nil
+        refreshMap()
         zoom()
         Haptics.tap()
         if !recentUrlsData.contains(urlData) {
@@ -113,10 +112,17 @@ class ViewModel: NSObject, ObservableObject {
         polygons = []
     }
     
-    func refreshOverlays() {
-        let overlays = mapView?.overlays(in: .aboveRoads) ?? []
-        mapView?.removeOverlays(overlays)
-        mapView?.addOverlays(overlays, level: .aboveRoads)
+    func refreshMap() {
+        mapView?.removeAnnotations(mapView?.annotations ?? [])
+        mapView?.removeOverlays(mapView?.overlays ?? [])
+        
+        if selectedShapeType == nil || selectedShapeType == .point {
+            mapView?.addAnnotations(points)
+        } else if selectedShapeType == nil || selectedShapeType == .polygon {
+            mapView?.addOverlays(polygons, level: .aboveRoads)
+        } else if selectedShapeType == nil || selectedShapeType == .polyline {
+            mapView?.addOverlays(polylines, level: .aboveRoads)
+        }
     }
     
     func zoom() {
@@ -156,7 +162,7 @@ class ViewModel: NSObject, ObservableObject {
     
     func updateMapType(_ newType: MKMapType) {
         mapView?.mapType = newType
-        refreshOverlays()
+        refreshMap()
         withAnimation(.easeInOut(duration: 0.25)) {
             degrees += 90
         }

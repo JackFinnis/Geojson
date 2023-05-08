@@ -9,10 +9,11 @@ import SwiftUI
 import MessageUI
 
 struct InfoView: View {
-    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var vm: ViewModel
     @State var showShareSheet = false
     @State var showEmailSheet = false
     
+    @Binding var isPresented: Bool
     let welcome: Bool
     
     var body: some View {
@@ -33,23 +34,13 @@ struct InfoView: View {
                 .padding(.bottom, 30)
                 
                 VStack(alignment: .leading, spacing: 20) {
-                    InfoRow(systemName: "mappin.and.ellipse", title: "Import and Browse GeoJSON", description: "Import a GeoJSON file containing polylines, polygons or points and browse the data on the map.")
-                    Button {
-                        UIApplication.shared.open(VALIDATE_URL)
-                    } label: {
-                        InfoRow(systemName: "questionmark.circle", title: "Having trouble importing data?", description: " is a helpful website for spotting syntax errors in GeoJSON.", link: VALIDATE_URL.absoluteString)
-                    }
-                    .buttonStyle(.plain)
+                    InfoRow(systemName: "mappin.and.ellipse", title: "GPX, KML, GeoJSON and Shapefile", description: "Import data any of these formats and browse it on an interactive map.")
+                    InfoRow(systemName: "line.3.horizontal.decrease.circle", title: "Filter Map Data", description: "Filter data by points, polylines and polygons.")
                 }
                 
                 Spacer()
                 if welcome {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Import GeoJSON")
-                            .bigButton()
-                    }
+                    ImportButton(showInfoView: $isPresented, infoView: true)
                 } else {
                     Menu {
                         if MFMailComposeViewController.canSendMail() {
@@ -100,7 +91,7 @@ struct InfoView: View {
                 ToolbarItem(placement: .primaryAction) {
                     if !welcome {
                         Button {
-                            dismiss()
+                            isPresented = false
                         } label: {
                             DismissCross()
                         }
@@ -118,7 +109,7 @@ struct InfoView_Previews: PreviewProvider {
     static var previews: some View {
         Text("")
             .sheet(isPresented: .constant(true)) {
-                InfoView(welcome: true)
+                InfoView(isPresented: .constant(true), welcome: true)
             }
     }
 }

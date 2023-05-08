@@ -9,26 +9,30 @@ import SwiftUI
 
 struct ImportButton: View {
     @EnvironmentObject var vm: ViewModel
+    @State var showFileImporter = false
     
-    @Binding var showFileImporter: Bool
+    @Binding var showInfoView: Bool
+    let infoView: Bool
     
     var body: some View {
-        VStack {
-            Spacer()
-            Menu {
-                Button {
+        Menu {
+            ForEach(GeoFileType.allCases, id: \.self) { type in
+                Button("Import \(type.rawValue)") {
                     showFileImporter = true
-                } label: {
-                   Label("Import GeoJSON File", systemImage: "plus")
                 }
-                Section("Recents") {
-                    ForEach(vm.recentUrls, id: \.self) { url in
-                        Button(url.deletingPathExtension().lastPathComponent.removingPercentEncoding ?? url.absoluteString) {
-                            vm.importFile(url: url, canShowAlert: true)
-                        }
+            }
+            Section("Recents") {
+                ForEach(vm.recentUrls, id: \.self) { url in
+                    Button(url.deletingPathExtension().lastPathComponent.removingPercentEncoding ?? url.absoluteString) {
+                        vm.importFile(url: url, canShowAlert: true)
                     }
                 }
-            } label: {
+            }
+        } label: {
+            if infoView {
+                Text("Import GeoJSON")
+                    .bigButton()
+            } else {
                 Image(systemName: "plus")
                     .font(.title2.weight(.semibold))
                     .foregroundColor(.white)
@@ -37,7 +41,15 @@ struct ImportButton: View {
                     .clipShape(Circle())
                     .addShadow()
             }
-            .padding()
+        }
+        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.item]) { result in
+            switch result {
+            case .success(let url):
+                vm.importFile(url: url, canShowAlert: true)
+                showInfoView = false
+            case .failure(let error):
+                debugPrint(error)
+            }
         }
     }
 }

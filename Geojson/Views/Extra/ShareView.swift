@@ -48,10 +48,8 @@ struct ShareModifier: ViewModifier {
                     view
                 }
             }
-            .alert("Sharing Complete", isPresented: $showSharedAlert) {
+            .alert("Thanks for sharing \(NAME)!", isPresented: $showSharedAlert) {
                 Button("OK", role: .cancel) {}
-            } message: {
-                Text("Thanks for sharing \(NAME)!")
             }
     }
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let NAME = "GeoJSON Viewer"
+let NAME = "GeoViewer"
 let SIZE = 44.0
 let EMAIL = "jack.finnis@icloud.com"
 let APP_URL = URL(string: "https://apps.apple.com/app/id6444589175")!
