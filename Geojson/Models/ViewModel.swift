@@ -53,7 +53,7 @@ class ViewModel: NSObject, ObservableObject {
         manager.delegate = self
     }
     
-    func importFile(url: URL, canShowAlert: Bool = true) {
+    func importFile(url: URL, canShowAlert: Bool) {
         do {
             try importFile(url: url)
         } catch let error as GeoError {
@@ -87,10 +87,10 @@ class ViewModel: NSObject, ObservableObject {
             try parseGeoJSON(data: data)
         case .gpx:
             try parseGPX(data: data)
-        case .shp:
-            print("todo")
         case .kml:
-            print("todo")
+            try parseKML(data: data)
+        case .shp:
+            try parseShapefile()
         }
         
         mapView?.removeAnnotations(mapView?.annotations ?? [])
@@ -313,6 +313,48 @@ extension ViewModel {
                 return MKPolygon(coordinates: coords, count: coords.count)
             }
             polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
+        }
+    }
+}
+
+// MARK: - Parse Shapefile
+extension ViewModel {
+    func parseShapefile() throws {
+        let reader: ShapefileReader
+        do {
+            reader = try ShapefileReader(path: "hello.shp") //todo
+        } catch {
+            throw GeoError.invalidShapefile
+        }
+        
+        reader.shapeAndRecordGenerator().forEach { shape, record in
+            switch shape.shapeType {
+            case .nullShape: break
+            case .point, .pointM, .pointZ, .multipoint, .multipointM, .multipointZ:
+                shape.partPointsGenerator().forEach { points in
+                    points.forEach { point in
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = point.coord
+                        self.points.append(annotation)
+                    }
+                }
+            case .polyLine, .polylineM, .polylineZ:
+                shape.partPointsGenerator().forEach { points in
+                    let coords = points.map(\.coord)
+                    polylines.append(MKPolyline(coordinates: coords, count: coords.count))
+                }
+            case .polygon, .polygonZ, .polygonM, .multipatch:
+                let generator = shape.partPointsGenerator()
+                guard let exterior = generator.next() else { return }
+                let exteriorCoords = exterior.map(\.coord)
+                var interiorPolygons = [MKPolygon]()
+                var interior = generator.next()
+                while interior != nil {
+                    let coords = interior!.map(\.coord)
+                    interiorPolygons.append(MKPolygon(coordinates: coords, count: coords.count))
+                }
+                polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
+            }
         }
     }
 }

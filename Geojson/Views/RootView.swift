@@ -46,7 +46,7 @@ struct RootView: View {
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.item]) { result in
             switch result {
             case .success(let url):
-                vm.importFile(url: url)
+                vm.importFile(url: url, canShowAlert: true)
             case .failure(let error):
                 debugPrint(error)
             }

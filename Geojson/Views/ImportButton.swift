@@ -24,7 +24,7 @@ struct ImportButton: View {
                 Section("Recents") {
                     ForEach(vm.recentUrls, id: \.self) { url in
                         Button(url.deletingPathExtension().lastPathComponent.removingPercentEncoding ?? url.absoluteString) {
-                            vm.importFile(url: url)
+                            vm.importFile(url: url, canShowAlert: true)
                         }
                     }
                 }
