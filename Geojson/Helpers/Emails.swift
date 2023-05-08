@@ -1,16 +1,20 @@
 //
 //  Emails.swift
-//  Fourier
+//  News
 //
-//  Created by Jack Finnis on 04/12/2022.
+//  Created by Jack Finnis on 21/04/2023.
 //
 
 import SwiftUI
 
 struct Emails {
-    static func compose(subject: String) {
-        if let url = URL(string: "mailto:" + EMAIL + "?subject=" + subject.replaceSpaces) {
-            UIApplication.shared.open(url)
-        }
+    static func mailtoUrl(subject: String) -> URL? {
+        URL(string: "mailto:\(EMAIL)?subject=\(subject.replaceSpaces)")
+    }
+}
+
+extension String {
+    var replaceSpaces: String {
+        replacingOccurrences(of: " ", with: "%20")
     }
 }

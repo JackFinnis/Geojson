@@ -8,11 +8,25 @@
 import SwiftUI
 import MapKit
 
+class _MKMapView: MKMapView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let compass = subviews.first(where: { type(of: $0).id == "MKCompassView" }) {
+            compass.center = compass.center.applying(.init(translationX: -5, y: SIZE*3 + 25))
+            if (compass.gestureRecognizers?.count ?? 0) < 2 {
+                let tap = UITapGestureRecognizer(target: ViewModel.shared, action: #selector(ViewModel.tappedCompass))
+                tap.delegate = ViewModel.shared
+                compass.addGestureRecognizer(tap)
+            }
+        }
+    }
+}
+
 struct MapView: UIViewRepresentable {
     @EnvironmentObject var vm: ViewModel
     
     func makeUIView(context: Context) -> MKMapView {
-        let mapView = MKMapView()
+        let mapView = _MKMapView()
         mapView.delegate = vm
         vm.mapView = mapView
         
@@ -21,20 +35,10 @@ struct MapView: UIViewRepresentable {
         mapView.showsCompass = true
         mapView.isPitchEnabled = false
         
+        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMarkerAnnotationView.id)
+        
         return mapView
     }
     
-    func updateUIView(_ mapView: MKMapView, context: Context) {
-        mapView.mapType = vm.mapType
-        if mapView.userTrackingMode != vm.trackingMode {
-            mapView.setUserTrackingMode(vm.trackingMode, animated: true)
-        }
-        
-        mapView.removeAnnotations(mapView.annotations)
-        mapView.addAnnotations(vm.points)
-        
-        mapView.removeOverlays(mapView.overlays)
-        mapView.addOverlays(vm.polylines, level: .aboveRoads)
-        mapView.addOverlays(vm.polygons, level: .aboveRoads)
-    }
+    func updateUIView(_ view: MKMapView, context: Context) {}
 }

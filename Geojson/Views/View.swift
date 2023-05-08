@@ -16,14 +16,36 @@ extension View {
         }
     }
     
+    func squareButton() -> some View {
+        self.font(.system(size: SIZE/2))
+            .frame(width: SIZE, height: SIZE)
+    }
+    
+    func addShadow() -> some View {
+        self
+            .compositingGroup()
+            .shadow(color: Color.black.opacity(0.2), radius: 5)
+    }
+    
+    func blurBackground() -> some View {
+        self
+            .background(.thickMaterial)
+            .continuousRadius(10)
+            .addShadow()
+    }
+    
+    func continuousRadius(_ cornerRadius: CGFloat) -> some View {
+        clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+    }
+    
     func bigButton() -> some View {
         self
-            .font(.body.bold())
+            .font(.headline)
             .padding()
             .horizontallyCentred()
             .foregroundColor(.white)
             .background(Color.accentColor)
-            .cornerRadius(15)
+            .continuousRadius(16)
     }
     
     @ViewBuilder
