@@ -64,13 +64,15 @@ struct RootView: View {
             Text("")
                 .alert("Import Failed", isPresented: $vm.showFailedAlert) {
                     Button("OK", role: .cancel) {}
-                    if vm.importError == .invalidGeojosn {
+                    switch vm.geoError {
+                    case .invalidGeoJSON:
                         Button("Open in Safari") {
-                            UIApplication.shared.open(URL(string: "https://geojson.io")!)
+                            UIApplication.shared.open(VALIDATE_URL)
                         }
+                    default: EmptyView()
                     }
                 } message: {
-                    Text(vm.importError.rawValue)
+                    Text(vm.geoError.message)
                 }
         }
         .environmentObject(vm)

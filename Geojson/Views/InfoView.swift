@@ -37,7 +37,7 @@ struct InfoView: View {
                     Button {
                         UIApplication.shared.open(VALIDATE_URL)
                     } label: {
-                        InfoRow(systemName: "questionmark.circle", title: "Having trouble importing data?", description: " is a helpful website for spotting syntax errors in GeoJSON.", link: "https://geojson.io")
+                        InfoRow(systemName: "questionmark.circle", title: "Having trouble importing data?", description: " is a helpful website for spotting syntax errors in GeoJSON.", link: VALIDATE_URL.absoluteString)
                     }
                     .buttonStyle(.plain)
                 }

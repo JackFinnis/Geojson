@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0402C6062A08F76B00238C51 /* GeoJSONPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 0402C6052A08F76B00238C51 /* GeoJSONPackage */; };
+		0402C6092A08FD4F00238C51 /* RCKML in Frameworks */ = {isa = PBXBuildFile; productRef = 0402C6082A08FD4F00238C51 /* RCKML */; };
+		0402C60B2A0903C900238C51 /* KMLCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60A2A0903C900238C51 /* KMLCoordinate.swift */; };
 		040AD1DE29F4A42B00BA54E6 /* CarbonCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */; };
 		040AD1E029F4A6D800BA54E6 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DF29F4A6D800BA54E6 /* NSObject.swift */; };
 		040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1E129F4A84C00BA54E6 /* ImportButton.swift */; };
@@ -24,16 +27,19 @@
 		049C0FAA2929B86500C6521A /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA92929B86500C6521A /* ShareView.swift */; };
 		049C0FAC2929B98E00C6521A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAB2929B98E00C6521A /* Store.swift */; };
 		049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAD2929BC0800C6521A /* DismissCross.swift */; };
-		049C0FB02929BCAD00C6521A /* DraggableBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAF2929BCAD00C6521A /* DraggableBar.swift */; };
+		049C0FB02929BCAD00C6521A /* DraggableTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAF2929BCAD00C6521A /* DraggableTitle.swift */; };
 		049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FB12929BEFE00C6521A /* Haptics.swift */; };
 		049C0FB9292A88CD00C6521A /* Starbucks.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB6292A88CD00C6521A /* Starbucks.geojson */; };
 		049C0FBA292A88CD00C6521A /* ULEZ.json in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB7292A88CD00C6521A /* ULEZ.json */; };
 		049C0FBB292A88CD00C6521A /* Cycle Lanes.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */; };
 		04A65587293D58DC0084CC6A /* Emails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A65586293D58DC0084CC6A /* Emails.swift */; };
-		04C71FEC2A0873C400417249 /* GeoJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 04C71FEB2A0873C400417249 /* GeoJSON */; };
+		04C71FF42A08DCD100417249 /* GeoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C71FF32A08DCD100417249 /* GeoError.swift */; };
+		04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C71FF52A08DCEB00417249 /* GeoFileType.swift */; };
+		04C71FFD2A08EC8B00417249 /* CoreGPX in Frameworks */ = {isa = PBXBuildFile; productRef = 04C71FFC2A08EC8B00417249 /* CoreGPX */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0402C60A2A0903C900238C51 /* KMLCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLCoordinate.swift; sourceTree = "<group>"; };
 		040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbonCopy.swift; sourceTree = "<group>"; };
 		040AD1DF29F4A6D800BA54E6 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		040AD1E129F4A84C00BA54E6 /* ImportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportButton.swift; sourceTree = "<group>"; };
@@ -52,12 +58,14 @@
 		049C0FA92929B86500C6521A /* ShareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		049C0FAB2929B98E00C6521A /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		049C0FAD2929BC0800C6521A /* DismissCross.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissCross.swift; sourceTree = "<group>"; };
-		049C0FAF2929BCAD00C6521A /* DraggableBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableBar.swift; sourceTree = "<group>"; };
+		049C0FAF2929BCAD00C6521A /* DraggableTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableTitle.swift; sourceTree = "<group>"; };
 		049C0FB12929BEFE00C6521A /* Haptics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		049C0FB6292A88CD00C6521A /* Starbucks.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Starbucks.geojson; sourceTree = "<group>"; };
 		049C0FB7292A88CD00C6521A /* ULEZ.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ULEZ.json; sourceTree = "<group>"; };
 		049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Cycle Lanes.geojson"; sourceTree = "<group>"; };
 		04A65586293D58DC0084CC6A /* Emails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emails.swift; sourceTree = "<group>"; };
+		04C71FF32A08DCD100417249 /* GeoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoError.swift; sourceTree = "<group>"; };
+		04C71FF52A08DCEB00417249 /* GeoFileType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoFileType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +73,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04C71FEC2A0873C400417249 /* GeoJSON in Frameworks */,
+				0402C6092A08FD4F00238C51 /* RCKML in Frameworks */,
+				04C71FFD2A08EC8B00417249 /* CoreGPX in Frameworks */,
+				0402C6062A08F76B00238C51 /* GeoJSONPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,13 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				049C0F74292936F600C6521A /* GeojsonApp.swift */,
-				049C0F872929384D00C6521A /* RootView.swift */,
-				049C0F892929384D00C6521A /* MapView.swift */,
-				049C0F8B2929384D00C6521A /* MapButtons.swift */,
-				040AD1E129F4A84C00BA54E6 /* ImportButton.swift */,
-				049C0F9E29295C0300C6521A /* InfoView.swift */,
-				049C0F852929384D00C6521A /* ViewModel.swift */,
-				04A65583293D589E0084CC6A /* Views */,
+				04C71FF12A08DCAC00417249 /* Views */,
+				04C71FF22A08DCBB00417249 /* Models */,
 				04A65585293D58C00084CC6A /* Helpers */,
 				04A65584293D58B30084CC6A /* Extensions */,
 				049C0FB5292A88B300C6521A /* Resources */,
@@ -117,17 +122,17 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		04A65583293D589E0084CC6A /* Views */ = {
+		04A65583293D589E0084CC6A /* Extra */ = {
 			isa = PBXGroup;
 			children = (
 				040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */,
 				049C0FAD2929BC0800C6521A /* DismissCross.swift */,
-				049C0FAF2929BCAD00C6521A /* DraggableBar.swift */,
+				049C0FAF2929BCAD00C6521A /* DraggableTitle.swift */,
 				049C0FA92929B86500C6521A /* ShareView.swift */,
 				040AD1E329F4AABD00BA54E6 /* EmailView.swift */,
 				049C0FA229295C5A00C6521A /* View.swift */,
 			);
-			path = Views;
+			path = Extra;
 			sourceTree = "<group>";
 		};
 		04A65584293D58B30084CC6A /* Extensions */ = {
@@ -135,6 +140,7 @@
 			children = (
 				049C0F9B292953A400C6521A /* Collection.swift */,
 				040AD1DF29F4A6D800BA54E6 /* NSObject.swift */,
+				0402C60A2A0903C900238C51 /* KMLCoordinate.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -148,6 +154,29 @@
 				049C0FA42929A2D100C6521A /* Storage.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		04C71FF12A08DCAC00417249 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				049C0F872929384D00C6521A /* RootView.swift */,
+				049C0F892929384D00C6521A /* MapView.swift */,
+				049C0F8B2929384D00C6521A /* MapButtons.swift */,
+				040AD1E129F4A84C00BA54E6 /* ImportButton.swift */,
+				049C0F9E29295C0300C6521A /* InfoView.swift */,
+				04A65583293D589E0084CC6A /* Extra */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		04C71FF22A08DCBB00417249 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				049C0F852929384D00C6521A /* ViewModel.swift */,
+				04C71FF32A08DCD100417249 /* GeoError.swift */,
+				04C71FF52A08DCEB00417249 /* GeoFileType.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,7 +196,9 @@
 			);
 			name = Geojson;
 			packageProductDependencies = (
-				04C71FEB2A0873C400417249 /* GeoJSON */,
+				04C71FFC2A08EC8B00417249 /* CoreGPX */,
+				0402C6052A08F76B00238C51 /* GeoJSONPackage */,
+				0402C6082A08FD4F00238C51 /* RCKML */,
 			);
 			productName = Geojson;
 			productReference = 049C0F71292936F600C6521A /* Geojson.app */;
@@ -198,7 +229,9 @@
 			);
 			mainGroup = 049C0F68292936F600C6521A;
 			packageReferences = (
-				04C71FEA2A0873C400417249 /* XCRemoteSwiftPackageReference "GeoJSON" */,
+				04C71FFB2A08EC8B00417249 /* XCRemoteSwiftPackageReference "CoreGPX" */,
+				0402C6042A08F76B00238C51 /* XCRemoteSwiftPackageReference "GeoJSONPackage" */,
+				0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */,
 			);
 			productRefGroup = 049C0F72292936F600C6521A /* Products */;
 			projectDirPath = "";
@@ -228,8 +261,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049C0FB02929BCAD00C6521A /* DraggableBar.swift in Sources */,
+				049C0FB02929BCAD00C6521A /* DraggableTitle.swift in Sources */,
 				04A65587293D58DC0084CC6A /* Emails.swift in Sources */,
+				04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */,
+				04C71FF42A08DCD100417249 /* GeoError.swift in Sources */,
 				049C0F932929384D00C6521A /* MapView.swift in Sources */,
 				049C0FAA2929B86500C6521A /* ShareView.swift in Sources */,
 				049C0FAC2929B98E00C6521A /* Store.swift in Sources */,
@@ -238,6 +273,7 @@
 				049C0FA029295C0300C6521A /* InfoView.swift in Sources */,
 				049C0FA329295C5A00C6521A /* View.swift in Sources */,
 				040AD1E429F4AABD00BA54E6 /* EmailView.swift in Sources */,
+				0402C60B2A0903C900238C51 /* KMLCoordinate.swift in Sources */,
 				049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */,
 				040AD1DE29F4A42B00BA54E6 /* CarbonCopy.swift in Sources */,
 				049C0F952929384D00C6521A /* MapButtons.swift in Sources */,
@@ -468,21 +504,47 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		04C71FEA2A0873C400417249 /* XCRemoteSwiftPackageReference "GeoJSON" */ = {
+		0402C6042A08F76B00238C51 /* XCRemoteSwiftPackageReference "GeoJSONPackage" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kiliankoe/GeoJSON";
+			repositoryURL = "https://github.com/JackFinnis/GeoJSONPackage";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RCCoop/RCKML";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.2;
+				minimumVersion = 1.0.0;
+			};
+		};
+		04C71FFB2A08EC8B00417249 /* XCRemoteSwiftPackageReference "CoreGPX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vincentneo/CoreGPX";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		04C71FEB2A0873C400417249 /* GeoJSON */ = {
+		0402C6052A08F76B00238C51 /* GeoJSONPackage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 04C71FEA2A0873C400417249 /* XCRemoteSwiftPackageReference "GeoJSON" */;
-			productName = GeoJSON;
+			package = 0402C6042A08F76B00238C51 /* XCRemoteSwiftPackageReference "GeoJSONPackage" */;
+			productName = GeoJSONPackage;
+		};
+		0402C6082A08FD4F00238C51 /* RCKML */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */;
+			productName = RCKML;
+		};
+		04C71FFC2A08EC8B00417249 /* CoreGPX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04C71FFB2A08EC8B00417249 /* XCRemoteSwiftPackageReference "CoreGPX" */;
+			productName = CoreGPX;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

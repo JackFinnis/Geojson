@@ -8,14 +8,9 @@
 import Foundation
 import MapKit
 import SwiftUI
-import GeoJSON
-
-enum ImportError: String {
-    case fileMoved = "This file has been moved or deleted. Please try importing it again."
-    case fileCurrupted = "This file has been corrupted. Please try importing it again."
-    case fileEmpty = "This file does not contain any points, polylines or polygons."
-    case invalidGeojosn = "This file contains invalid geojson. https://geojson.io can help spot syntax errors in GeoJSON."
-}
+import GeoJSONPackage
+import CoreGPX
+import RCKML
 
 @MainActor
 class ViewModel: NSObject, ObservableObject {
@@ -26,6 +21,7 @@ class ViewModel: NSObject, ObservableObject {
     var points = [MKPointAnnotation]()
     var polylines = [MKPolyline]()
     var polygons = [MKPolygon]()
+    var empty: Bool { points.isEmpty && polylines.isEmpty && polygons.isEmpty }
     
     // MapView
     var mapView: MKMapView?
@@ -40,7 +36,7 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     // Alerts
-    @Published var importError = ImportError.fileMoved
+    @Published var geoError = GeoError.fileMoved
     @Published var showFailedAlert = false
     
     // Animations
@@ -57,18 +53,25 @@ class ViewModel: NSObject, ObservableObject {
         manager.delegate = self
     }
     
-    func importFailed(error: ImportError, canShowAlert: Bool) {
-        self.importError = error
-        showFailedAlert = true
-        Haptics.error()
+    func importFile(url: URL, canShowAlert: Bool = true) {
+        do {
+            try importFile(url: url)
+        } catch let error as GeoError {
+            self.geoError = error
+            showFailedAlert = true
+            Haptics.error()
+        } catch {}
     }
     
-    func importFile(url: URL, canShowAlert: Bool = true) {
+    func importFile(url: URL) throws {
+        guard let type = GeoFileType(fileExtension: url.pathExtension) else {
+            throw GeoError.unsupportedFileType
+        }
+        
         guard url.startAccessingSecurityScopedResource(),
               let urlData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil)
         else {
-            importFailed(error: .fileMoved, canShowAlert: canShowAlert)
-            return
+            throw GeoError.fileMoved
         }
         
         let data: Data
@@ -76,32 +79,19 @@ class ViewModel: NSObject, ObservableObject {
             data = try Data(contentsOf: url)
             url.stopAccessingSecurityScopedResource()
         } catch {
-            importFailed(error: .fileCurrupted, canShowAlert: canShowAlert)
-            return
+            throw GeoError.fileCurrupted
         }
         
-        let features: [Feature]
-        do {
-            let document = try JSONDecoder().decode(GeoJSONDocument.self, from: data)
-            switch document {
-            case .feature(let feature):
-                features = [feature]
-            case .featureCollection(let featureCollection):
-                features = featureCollection.features
-            }
-        } catch {
-            importFailed(error: .invalidGeojosn, canShowAlert: canShowAlert)
-            return
+        switch type {
+        case .geojson:
+            try parseGeoJSON(data: data)
+        case .gpx:
+            try parseGPX(data: data)
+        case .shp:
+            print("todo")
+        case .kml:
+            print("todo")
         }
-        guard features.isNotEmpty else {
-            importFailed(error: .fileEmpty, canShowAlert: canShowAlert)
-            return
-        }
-        
-        points = []
-        polylines = []
-        polygons = []
-        features.compactMap(\.geometry).forEach(handleGeometry)
         
         mapView?.removeAnnotations(mapView?.annotations ?? [])
         mapView?.removeOverlays(mapView?.overlays ?? [])
@@ -117,45 +107,10 @@ class ViewModel: NSObject, ObservableObject {
         }
     }
     
-    func handleGeometry(_ geometry: Geometry) {
-        switch geometry {
-        case .geometryCollection(let geometries):
-            geometries.forEach(handleGeometry)
-        case .point(let point):
-            addPoint(point.coordinates)
-        case .multiPoint(let multiPoint):
-            multiPoint.coordinates.forEach(addPoint)
-        case .lineString(let lineString):
-            addPolyline(lineString)
-        case .multiLineString(let multiLineString):
-            multiLineString.coordinates.forEach(addPolyline)
-        case .polygon(let polygon):
-            addPolygon(polygon)
-        case .multiPolygon(let multiPolygon):
-            multiPolygon.coordinates.forEach(addPolygon)
-        }
-    }
-    
-    func addPoint(_ position: Position) {
-        let point = MKPointAnnotation()
-        point.coordinate = position.coordinate
-        points.append(point)
-    }
-    
-    func addPolyline(_ lineString: LineString) {
-        let coords = lineString.coordinates.map(\.coordinate)
-        polylines.append(MKPolyline(coordinates: coords, count: coords.count))
-    }
-    
-    func addPolygon(_ polygon: Polygon) {
-        guard let exterior = polygon.coordinates.first else { return }
-        let exteriorCoords = exterior.coordinates.map(\.coordinate)
-        let interiors = Array(polygon.coordinates.dropFirst())
-        let interiorPolygons = interiors.map { positions in
-            let coords = positions.coordinates.map(\.coordinate)
-            return MKPolygon(coordinates: coords, count: coords.count)
-        }
-        polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
+    func emptyData() {
+        points = []
+        polylines = []
+        polygons = []
     }
     
     func refreshOverlays() {
@@ -210,6 +165,154 @@ class ViewModel: NSObject, ObservableObject {
             withAnimation(.easeInOut(duration: 0.25)) {
                 self.degrees += 90
             }
+        }
+    }
+}
+
+// MARK: - Parse GeoJSON
+extension ViewModel {
+    func parseGeoJSON(data: Data) throws {
+        let features: [Feature]
+        do {
+            let document = try JSONDecoder().decode(GeoJSONDocument.self, from: data)
+            switch document {
+            case .feature(let feature):
+                features = [feature]
+            case .featureCollection(let featureCollection):
+                features = featureCollection.features
+            }
+        } catch {
+            throw GeoError.invalidGeoJSON
+        }
+        guard features.isNotEmpty else {
+            throw GeoError.fileEmpty
+        }
+        
+        emptyData()
+        features.compactMap(\.geometry).forEach(handleGeometry)
+    }
+    
+    func handleGeometry(_ geometry: Geometry) {
+        switch geometry {
+        case .geometryCollection(let geometries):
+            geometries.forEach(handleGeometry)
+        case .point(let point):
+            addPoint(point.coordinates)
+        case .multiPoint(let multiPoint):
+            multiPoint.coordinates.forEach(addPoint)
+        case .lineString(let lineString):
+            addPolyline(lineString)
+        case .multiLineString(let multiLineString):
+            multiLineString.coordinates.forEach(addPolyline)
+        case .polygon(let polygon):
+            addPolygon(polygon)
+        case .multiPolygon(let multiPolygon):
+            multiPolygon.coordinates.forEach(addPolygon)
+        }
+    }
+    
+    func addPoint(_ position: Position) {
+        let point = MKPointAnnotation()
+        point.coordinate = position.coordinate
+        points.append(point)
+    }
+    
+    func addPolyline(_ lineString: LineString) {
+        let coords = lineString.coordinates.map(\.coordinate)
+        polylines.append(MKPolyline(coordinates: coords, count: coords.count))
+    }
+    
+    func addPolygon(_ polygon: Polygon) {
+        guard let exterior = polygon.coordinates.first else { return }
+        let exteriorCoords = exterior.coordinates.map(\.coordinate)
+        let interiors = Array(polygon.coordinates.dropFirst())
+        let interiorPolygons = interiors.map { positions in
+            let coords = positions.coordinates.map(\.coordinate)
+            return MKPolygon(coordinates: coords, count: coords.count)
+        }
+        polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
+    }
+}
+
+// MARK: - Parse GPX
+extension ViewModel {
+    func parseGPX(data: Data) throws {
+        let parser = GPXParser(withData: data)
+        let root: GPXRoot?
+        do {
+            root = try parser.fallibleParsedData(forceContinue: false)
+        } catch {
+            throw GeoError.invalidGPX(error)
+        }
+        guard let root else {
+            throw GeoError.fileEmpty
+        }
+        
+        points = root.waypoints.compactMap { waypoint in
+            guard let lat = waypoint.latitude, let long = waypoint.longitude else { return nil }
+            let point = MKPointAnnotation()
+            point.coordinate = CLLocationCoordinate2DMake(lat, long)
+            return point
+        }
+        polylines.append(contentsOf: root.routes.compactMap { route in
+            let coords = route.points.compactMap { point -> CLLocationCoordinate2D? in
+                guard let lat = point.latitude, let long = point.longitude else { return nil }
+                return CLLocationCoordinate2DMake(lat, long)
+            }
+            guard coords.isNotEmpty else { return nil }
+            return MKPolyline(coordinates: coords, count: coords.count)
+        })
+        polylines.append(contentsOf: root.tracks.map { track in
+            track.segments.compactMap { segment -> MKPolyline? in
+                let coords = segment.points.compactMap { point -> CLLocationCoordinate2D? in
+                    guard let lat = point.latitude, let long = point.longitude else { return nil }
+                    return CLLocationCoordinate2DMake(lat, long)
+                }
+                guard coords.isNotEmpty else { return nil }
+                return MKPolyline(coordinates: coords, count: coords.count)
+            }
+        }.joined())
+    }
+}
+
+// MARK: - Parse KML
+extension ViewModel {
+    func parseKML(data: Data) throws {
+        let document: KMLDocument
+        do {
+            document = try KMLDocument(data)
+        } catch let error as KMLError {
+            throw GeoError.invalidKML(error)
+        } catch { return }
+        
+        document.features.forEach(handleKMLFeature)
+    }
+    
+    func handleKMLFeature(_ feature: KMLFeature) {
+        if let folder = feature as? KMLFolder {
+            folder.features.forEach(handleKMLFeature)
+        } else if let placemark = feature as? KMLPlacemark {
+            handleGeometry(placemark.geometry)
+        }
+    }
+    
+    func handleGeometry(_ geometry: KMLGeometry) {
+        if let lineString = geometry as? KMLLineString {
+            let coords = lineString.coordinates.map(\.coord)
+            polylines.append(MKPolyline(coordinates: coords, count: coords.count))
+        } else if let multiGeometry = geometry as? KMLMultiGeometry {
+            multiGeometry.geometries.forEach(handleGeometry)
+        } else if let kmlPoint = geometry as? KMLPoint {
+            let point = MKPointAnnotation()
+            point.coordinate = kmlPoint.coordinate.coord
+            points.append(point)
+        } else if let polygon = geometry as? KMLPolygon {
+            let exteriorCoords = polygon.outerBoundaryIs.coordinates.map(\.coord)
+            let interiorPolygons = polygon.innerBoundaryIs?.map { positions in
+                let coords = positions.coordinates.map(\.coord)
+                return MKPolygon(coordinates: coords, count: coords.count)
+            }
+            polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
         }
     }
 }
