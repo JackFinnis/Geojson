@@ -34,7 +34,7 @@ struct InfoView: View {
                 .padding(.bottom, 30)
                 
                 VStack(alignment: .leading, spacing: 20) {
-                    InfoRow(systemName: "mappin.and.ellipse", title: "GPX, KML, GeoJSON, Shapefile", description: "Import the most popular geodata file formats and browse your data on an interactive map.")
+                    InfoRow(systemName: "mappin.and.ellipse", title: "GPX, KML, GeoJSON", description: "Import the most popular geodata file formats and browse your data on an interactive map.")
                     InfoRow(systemName: "line.3.horizontal.decrease.circle", title: "Filter Map Data", description: "Filter data by points, polylines and polygons.")
                     InfoRow(systemName: "clock.arrow.circlepath", title: "Save Your Recents", description: "Quickly switch between your recent files.")
                 }

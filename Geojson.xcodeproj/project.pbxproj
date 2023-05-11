@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		0402C6092A08FD4F00238C51 /* RCKML in Frameworks */ = {isa = PBXBuildFile; productRef = 0402C6082A08FD4F00238C51 /* RCKML */; };
 		0402C60B2A0903C900238C51 /* KMLCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60A2A0903C900238C51 /* KMLCoordinate.swift */; };
-		0402C60D2A090C9000238C51 /* Shapefile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60C2A090C9000238C51 /* Shapefile.swift */; };
-		0402C60F2A090D0900238C51 /* BinUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60E2A090D0900238C51 /* BinUtils.swift */; };
 		0402C6142A09175100238C51 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6132A09175100238C51 /* CGPoint.swift */; };
 		0402C6162A091EE200238C51 /* GeoShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6152A091EE200238C51 /* GeoShapeType.swift */; };
 		0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */; };
@@ -47,8 +45,6 @@
 
 /* Begin PBXFileReference section */
 		0402C60A2A0903C900238C51 /* KMLCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLCoordinate.swift; sourceTree = "<group>"; };
-		0402C60C2A090C9000238C51 /* Shapefile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapefile.swift; sourceTree = "<group>"; };
-		0402C60E2A090D0900238C51 /* BinUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinUtils.swift; sourceTree = "<group>"; };
 		0402C6132A09175100238C51 /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		0402C6152A091EE200238C51 /* GeoShapeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoShapeType.swift; sourceTree = "<group>"; };
 		0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMultiPoint.swift; sourceTree = "<group>"; };
@@ -96,15 +92,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0402C6102A090FA400238C51 /* Shapefile */ = {
-			isa = PBXGroup;
-			children = (
-				0402C60C2A090C9000238C51 /* Shapefile.swift */,
-				0402C60E2A090D0900238C51 /* BinUtils.swift */,
-			);
-			path = Shapefile;
-			sourceTree = "<group>";
-		};
 		049C0F68292936F600C6521A = {
 			isa = PBXGroup;
 			children = (
@@ -179,7 +166,6 @@
 				049C0FB12929BEFE00C6521A /* Haptics.swift */,
 				049C0FAB2929B98E00C6521A /* Store.swift */,
 				049C0FA42929A2D100C6521A /* Storage.swift */,
-				0402C6102A090FA400238C51 /* Shapefile */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -301,7 +287,6 @@
 				049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */,
 				049C0F8F2929384D00C6521A /* ViewModel.swift in Sources */,
 				049C0FA029295C0300C6521A /* InfoView.swift in Sources */,
-				0402C60D2A090C9000238C51 /* Shapefile.swift in Sources */,
 				049C0FA329295C5A00C6521A /* View.swift in Sources */,
 				040AD1E429F4AABD00BA54E6 /* EmailView.swift in Sources */,
 				0402C60B2A0903C900238C51 /* KMLCoordinate.swift in Sources */,
@@ -311,7 +296,6 @@
 				049C0FA52929A2D100C6521A /* Storage.swift in Sources */,
 				049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */,
 				0402C6272A0D175300238C51 /* Array.swift in Sources */,
-				0402C60F2A090D0900238C51 /* BinUtils.swift in Sources */,
 				040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */,
 				049C0F9C292953A400C6521A /* Collection.swift in Sources */,
 				040AD1E029F4A6D800BA54E6 /* NSObject.swift in Sources */,

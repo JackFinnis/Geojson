@@ -15,7 +15,6 @@ import Foundation
 enum GeoFileType: String, CaseIterable {
     case geojson = "GeoJSON File"
     case gpx = "GPX File"
-    case shp = "Shapefile"
     case kml = "KML File"
     
     init?(fileExtension: String) {
@@ -34,8 +33,6 @@ enum GeoFileType: String, CaseIterable {
             return ["geojson", "json"]
         case .gpx:
             return ["gpx"]
-        case .shp:
-            return ["shp"]
         case .kml:
             return ["kml", "kmx"]
         }

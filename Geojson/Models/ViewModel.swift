@@ -93,8 +93,9 @@ class ViewModel: NSObject, ObservableObject {
             try parseGPX(data: data)
         case .kml:
             try parseKML(data: data)
-        case .shp:
-            try parseShapefile(url: url)
+        }
+        guard !empty else {
+            throw GeoError.fileEmpty
         }
         
         selectedShapeType = nil // Refreshes overlays & updates view
@@ -218,7 +219,7 @@ extension ViewModel {
         } catch {
             throw GeoError.invalidGPX(error)
         }
-        guard let root else {
+        guard let root, root.waypoints.isNotEmpty || root.routes.isNotEmpty || root.tracks.isNotEmpty else {
             throw GeoError.fileEmpty
         }
         
@@ -253,7 +254,12 @@ extension ViewModel {
             document = try KMLDocument(data)
         } catch let error as KMLError {
             throw GeoError.invalidKML(error)
-        } catch { return }
+        } catch {
+            throw GeoError.fileEmpty
+        }
+        guard document.features.isNotEmpty else {
+            throw GeoError.fileEmpty
+        }
         
         emptyData()
         document.features.forEach(handleKMLFeature)
@@ -283,45 +289,6 @@ extension ViewModel {
                 points.coordinates.map(\.coord)
             }))
         }
-    }
-}
-
-// MARK: - Parse Shapefile
-extension ViewModel {
-    func parseShapefile(url: URL) throws {
-        let reader: ShapefileReader
-        do {
-            reader = try ShapefileReader(url: url)
-        } catch {
-            throw GeoError.invalidShapefile
-        }
-        
-        emptyData()
-        reader.shapeAndRecordGenerator().forEach { shape, record in
-            switch shape.shapeType {
-            case .nullShape: break
-            case .point, .pointM, .pointZ, .multipoint, .multipointM, .multipointZ:
-                shape.partPointsGenerator().forEach { points in
-                    self.points.append(contentsOf: points.map { Point(coordinate: $0.coord) })
-                }
-            case .polyLine, .polylineM, .polylineZ:
-                shape.partPointsGenerator().forEach { points in
-                    polylines.append(Polyline(coords: points.map(\.coord)))
-                }
-            case .polygon, .polygonZ, .polygonM, .multipatch:
-                let generator = shape.partPointsGenerator()
-                guard let exterior = generator.next() else { return }
-                var interiorCoords = [[CLLocationCoordinate2D]]()
-                var interior = generator.next()
-                while interior != nil {
-                    interiorCoords.append(interior!.map(\.coord))
-                    interior = generator.next()
-                }
-                polygons.append(Polygon(exteriorCoords: exterior.map(\.coord), interiorCoords: interiorCoords))
-            }
-        }
-        
-        polylines.forEach { print($0.mkPolyline.coordinate) }
     }
 }
 
