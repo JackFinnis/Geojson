@@ -120,9 +120,10 @@ class ViewModel: NSObject, ObservableObject {
         
         selectedShapeType = nil // Refreshes overlays & updates view
         zoom()
-        Haptics.tap()
         recentUrls.append(url)
         recentUrlsData.append(urlData)
+        Haptics.tap()
+        Analytics.log(.importFile)
     }
     
     func emptyData() {
