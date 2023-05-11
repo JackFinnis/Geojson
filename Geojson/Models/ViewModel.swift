@@ -57,6 +57,7 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     func updateBookmarks() {
+        recentUrls = []
         var newUrlsData = [Data]()
         for data in recentUrlsData {
             var stale = false

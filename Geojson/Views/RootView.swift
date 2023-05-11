@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RootView: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.scenePhase) var scenePhase
     @StateObject var vm = ViewModel.shared
     @AppStorage("launchedBefore") var launchedBefore = false
     @State var showWelcomeView = false
@@ -41,6 +42,11 @@ struct RootView: View {
             }
             if let url = vm.recentUrls.last {
                 vm.importFile(url: url, canShowAlert: false)
+            }
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                vm.updateBookmarks()
             }
         }
         .sheet(isPresented: $showWelcomeView) {
