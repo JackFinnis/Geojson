@@ -16,14 +16,18 @@ struct ImportButton: View {
     
     var body: some View {
         Menu {
-            ForEach(GeoFileType.allCases, id: \.self) { type in
-                Button("Import \(type.rawValue)") {
-                    showFileImporter = true
+            Section("Import File") {
+                ForEach(GeoFileType.allCases, id: \.self) { type in
+                    Button {
+                        showFileImporter = true
+                    } label: {
+                        Label("Import \(type.rawValue)", systemImage: "plus")
+                    }
                 }
             }
-            Section("Recents") {
-                ForEach(vm.recentUrls, id: \.self) { url in
-                    Button(url.deletingPathExtension().lastPathComponent.removingPercentEncoding ?? url.absoluteString) {
+            Section("Recent Files") {
+                ForEach(vm.recentUrls.reversed(), id: \.self) { url in
+                    Button(url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent) {
                         vm.importFile(url: url, canShowAlert: true)
                     }
                 }

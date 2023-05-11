@@ -25,7 +25,7 @@ struct InfoView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 70, height: 70)
                         .continuousRadius(15)
-                        .shadow(color: .black.opacity(0.2), radius: 5)
+                        .addShadow()
                     Text(NAME)
                         .font(.largeTitle.bold())
                         .multilineTextAlignment(.center)
@@ -34,8 +34,9 @@ struct InfoView: View {
                 .padding(.bottom, 30)
                 
                 VStack(alignment: .leading, spacing: 20) {
-                    InfoRow(systemName: "mappin.and.ellipse", title: "GPX, KML, GeoJSON and Shapefile", description: "Import data any of these formats and browse it on an interactive map.")
+                    InfoRow(systemName: "mappin.and.ellipse", title: "GPX, KML, GeoJSON, Shapefile", description: "Import the most popular geodata file formats and browse your data on an interactive map.")
                     InfoRow(systemName: "line.3.horizontal.decrease.circle", title: "Filter Map Data", description: "Filter data by points, polylines and polygons.")
+                    InfoRow(systemName: "clock.arrow.circlepath", title: "Save Your Recents", description: "Quickly switch between your recent files.")
                 }
                 
                 Spacer()

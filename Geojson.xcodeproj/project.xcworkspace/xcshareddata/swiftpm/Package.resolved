@@ -10,30 +10,12 @@
       }
     },
     {
-      "identity" : "anycodable",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/flight-school/AnyCodable.git",
-      "state" : {
-        "revision" : "862808b2070cd908cb04f9aafe7de83d35f81b05",
-        "version" : "0.6.7"
-      }
-    },
-    {
       "identity" : "coregpx",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vincentneo/CoreGPX",
       "state" : {
         "revision" : "90dea5dea799e2b3684f5c72f07141d8516ce80b",
         "version" : "0.9.2"
-      }
-    },
-    {
-      "identity" : "geojsonpackage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JackFinnis/GeoJSONPackage",
-      "state" : {
-        "branch" : "main",
-        "revision" : "58e44d477f53a8f8a265fd654cff1207b344be8c"
       }
     },
     {

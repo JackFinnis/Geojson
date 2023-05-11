@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0402C6062A08F76B00238C51 /* GeoJSONPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 0402C6052A08F76B00238C51 /* GeoJSONPackage */; };
 		0402C6092A08FD4F00238C51 /* RCKML in Frameworks */ = {isa = PBXBuildFile; productRef = 0402C6082A08FD4F00238C51 /* RCKML */; };
 		0402C60B2A0903C900238C51 /* KMLCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60A2A0903C900238C51 /* KMLCoordinate.swift */; };
 		0402C60D2A090C9000238C51 /* Shapefile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60C2A090C9000238C51 /* Shapefile.swift */; };
 		0402C60F2A090D0900238C51 /* BinUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C60E2A090D0900238C51 /* BinUtils.swift */; };
 		0402C6142A09175100238C51 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6132A09175100238C51 /* CGPoint.swift */; };
 		0402C6162A091EE200238C51 /* GeoShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6152A091EE200238C51 /* GeoShapeType.swift */; };
+		0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */; };
+		0402C61D2A0D0CF700238C51 /* Shapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C61C2A0D0CF700238C51 /* Shapes.swift */; };
+		0402C6252A0D10FA00238C51 /* GPXWaypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6242A0D10FA00238C51 /* GPXWaypoint.swift */; };
+		0402C6272A0D175300238C51 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6262A0D175300238C51 /* Array.swift */; };
 		040AD1DE29F4A42B00BA54E6 /* CarbonCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */; };
 		040AD1E029F4A6D800BA54E6 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DF29F4A6D800BA54E6 /* NSObject.swift */; };
 		040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1E129F4A84C00BA54E6 /* ImportButton.swift */; };
@@ -48,6 +51,10 @@
 		0402C60E2A090D0900238C51 /* BinUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinUtils.swift; sourceTree = "<group>"; };
 		0402C6132A09175100238C51 /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		0402C6152A091EE200238C51 /* GeoShapeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoShapeType.swift; sourceTree = "<group>"; };
+		0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMultiPoint.swift; sourceTree = "<group>"; };
+		0402C61C2A0D0CF700238C51 /* Shapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shapes.swift; sourceTree = "<group>"; };
+		0402C6242A0D10FA00238C51 /* GPXWaypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXWaypoint.swift; sourceTree = "<group>"; };
+		0402C6262A0D175300238C51 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbonCopy.swift; sourceTree = "<group>"; };
 		040AD1DF29F4A6D800BA54E6 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		040AD1E129F4A84C00BA54E6 /* ImportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportButton.swift; sourceTree = "<group>"; };
@@ -83,7 +90,6 @@
 			files = (
 				0402C6092A08FD4F00238C51 /* RCKML in Frameworks */,
 				04C71FFD2A08EC8B00417249 /* CoreGPX in Frameworks */,
-				0402C6062A08F76B00238C51 /* GeoJSONPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,10 +161,13 @@
 		04A65584293D58B30084CC6A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				0402C6262A0D175300238C51 /* Array.swift */,
 				049C0F9B292953A400C6521A /* Collection.swift */,
-				040AD1DF29F4A6D800BA54E6 /* NSObject.swift */,
-				0402C60A2A0903C900238C51 /* KMLCoordinate.swift */,
 				0402C6132A09175100238C51 /* CGPoint.swift */,
+				0402C6242A0D10FA00238C51 /* GPXWaypoint.swift */,
+				0402C60A2A0903C900238C51 /* KMLCoordinate.swift */,
+				0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */,
+				040AD1DF29F4A6D800BA54E6 /* NSObject.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -195,6 +204,7 @@
 				04C71FF32A08DCD100417249 /* GeoError.swift */,
 				04C71FF52A08DCEB00417249 /* GeoFileType.swift */,
 				0402C6152A091EE200238C51 /* GeoShapeType.swift */,
+				0402C61C2A0D0CF700238C51 /* Shapes.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -217,7 +227,6 @@
 			name = Geojson;
 			packageProductDependencies = (
 				04C71FFC2A08EC8B00417249 /* CoreGPX */,
-				0402C6052A08F76B00238C51 /* GeoJSONPackage */,
 				0402C6082A08FD4F00238C51 /* RCKML */,
 			);
 			productName = Geojson;
@@ -250,7 +259,6 @@
 			mainGroup = 049C0F68292936F600C6521A;
 			packageReferences = (
 				04C71FFB2A08EC8B00417249 /* XCRemoteSwiftPackageReference "CoreGPX" */,
-				0402C6042A08F76B00238C51 /* XCRemoteSwiftPackageReference "GeoJSONPackage" */,
 				0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */,
 			);
 			productRefGroup = 049C0F72292936F600C6521A /* Products */;
@@ -285,9 +293,11 @@
 				04A65587293D58DC0084CC6A /* Emails.swift in Sources */,
 				04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */,
 				04C71FF42A08DCD100417249 /* GeoError.swift in Sources */,
+				0402C61D2A0D0CF700238C51 /* Shapes.swift in Sources */,
 				049C0F932929384D00C6521A /* MapView.swift in Sources */,
 				049C0FAA2929B86500C6521A /* ShareView.swift in Sources */,
 				049C0FAC2929B98E00C6521A /* Store.swift in Sources */,
+				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
 				049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */,
 				049C0F8F2929384D00C6521A /* ViewModel.swift in Sources */,
 				049C0FA029295C0300C6521A /* InfoView.swift in Sources */,
@@ -300,6 +310,7 @@
 				049C0F952929384D00C6521A /* MapButtons.swift in Sources */,
 				049C0FA52929A2D100C6521A /* Storage.swift in Sources */,
 				049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */,
+				0402C6272A0D175300238C51 /* Array.swift in Sources */,
 				0402C60F2A090D0900238C51 /* BinUtils.swift in Sources */,
 				040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */,
 				049C0F9C292953A400C6521A /* Collection.swift in Sources */,
@@ -307,6 +318,7 @@
 				0402C6162A091EE200238C51 /* GeoShapeType.swift in Sources */,
 				0402C6142A09175100238C51 /* CGPoint.swift in Sources */,
 				049C0F912929384D00C6521A /* RootView.swift in Sources */,
+				0402C6252A0D10FA00238C51 /* GPXWaypoint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,14 +540,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0402C6042A08F76B00238C51 /* XCRemoteSwiftPackageReference "GeoJSONPackage" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/JackFinnis/GeoJSONPackage";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RCCoop/RCKML";
@@ -555,11 +559,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0402C6052A08F76B00238C51 /* GeoJSONPackage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0402C6042A08F76B00238C51 /* XCRemoteSwiftPackageReference "GeoJSONPackage" */;
-			productName = GeoJSONPackage;
-		};
 		0402C6082A08FD4F00238C51 /* RCKML */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */;

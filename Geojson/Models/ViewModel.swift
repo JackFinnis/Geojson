@@ -8,7 +8,6 @@
 import Foundation
 import MapKit
 import SwiftUI
-import GeoJSONPackage
 import CoreGPX
 import RCKML
 
@@ -18,13 +17,14 @@ class ViewModel: NSObject, ObservableObject {
     
     // MARK: - Properties
     // Geometry
-    @Published var points = [MKPointAnnotation]()
-    @Published var polylines = [MKPolyline]()
-    @Published var polygons = [MKPolygon]()
+    var points = [Point]()
+    var polylines = [Polyline]()
+    var polygons = [Polygon]()
     var empty: Bool { points.isEmpty && polylines.isEmpty && polygons.isEmpty }
     var multipleTypes: Bool { [points.isNotEmpty, polylines.isNotEmpty, polygons.isNotEmpty].filter { $0 }.count > 1 }
     @Published var selectedShapeType: GeoShapeType? { didSet {
         refreshMap()
+        zoom()
     }}
     
     // MapView
@@ -97,8 +97,7 @@ class ViewModel: NSObject, ObservableObject {
             try parseShapefile()
         }
         
-        selectedShapeType = nil
-        refreshMap()
+        selectedShapeType = nil // Refreshes overlays & updates view
         zoom()
         Haptics.tap()
         if !recentUrlsData.contains(urlData) {
@@ -118,20 +117,18 @@ class ViewModel: NSObject, ObservableObject {
         
         if selectedShapeType == nil || selectedShapeType == .point {
             mapView?.addAnnotations(points)
-        } else if selectedShapeType == nil || selectedShapeType == .polygon {
+        }
+        if selectedShapeType == nil || selectedShapeType == .polygon {
             mapView?.addOverlays(polygons, level: .aboveRoads)
-        } else if selectedShapeType == nil || selectedShapeType == .polyline {
+        }
+        if selectedShapeType == nil || selectedShapeType == .polyline {
             mapView?.addOverlays(polylines, level: .aboveRoads)
         }
     }
     
     func zoom() {
-        let coords = points.map { $0.coordinate }
-        let pointsRect = MKPolyline(coordinates: coords, count: coords.count).boundingMapRect
-        let polylinesRect = MKMultiPolyline(polylines).boundingMapRect
-        let polygonsRect = MKMultiPolygon(polygons).boundingMapRect
-        let rect = pointsRect.union(polylinesRect).union(polygonsRect)
-        
+        let points = (selectedShapeType == nil || selectedShapeType == .point) ? points : []
+        let rect = points.rect.union(mapView?.overlays.rect ?? .null)
         let padding = UIEdgeInsets(top: 40, left: 40, bottom: 40, right: 40)
         mapView?.setVisibleMapRect(rect, edgePadding: padding, animated: true)
     }
@@ -178,65 +175,36 @@ class ViewModel: NSObject, ObservableObject {
 // MARK: - Parse GeoJSON
 extension ViewModel {
     func parseGeoJSON(data: Data) throws {
-        let features: [Feature]
+        let objects: [MKGeoJSONObject]
         do {
-            let document = try JSONDecoder().decode(GeoJSONDocument.self, from: data)
-            switch document {
-            case .feature(let feature):
-                features = [feature]
-            case .featureCollection(let featureCollection):
-                features = featureCollection.features
-            }
+            objects = try MKGeoJSONDecoder().decode(data)
         } catch {
             throw GeoError.invalidGeoJSON
         }
-        guard features.isNotEmpty else {
+        guard objects.isNotEmpty else {
             throw GeoError.fileEmpty
         }
         
         emptyData()
-        features.compactMap(\.geometry).forEach(handleGeometry)
+        objects.forEach(handleObject)
     }
     
-    func handleGeometry(_ geometry: Geometry) {
-        switch geometry {
-        case .geometryCollection(let geometries):
-            geometries.forEach(handleGeometry)
-        case .point(let point):
-            addPoint(point.coordinates)
-        case .multiPoint(let multiPoint):
-            multiPoint.coordinates.forEach(addPoint)
-        case .lineString(let lineString):
-            addPolyline(lineString)
-        case .multiLineString(let multiLineString):
-            multiLineString.coordinates.forEach(addPolyline)
-        case .polygon(let polygon):
-            addPolygon(polygon)
-        case .multiPolygon(let multiPolygon):
-            multiPolygon.coordinates.forEach(addPolygon)
+    func handleObject(_ object: MKGeoJSONObject) {
+        if let feature = object as? MKGeoJSONFeature {
+            feature.geometry.forEach(handleObject)
+        } else if let point = object as? MKPointAnnotation {
+            points.append(Point(coordinate: point.coordinate))
+        } else if let polyline = object as? MKPolyline {
+            polylines.append(Polyline(mkPolyline: polyline))
+        } else if let multiPolyline = object as? MKMultiPolyline {
+            polylines.append(contentsOf: multiPolyline.polylines.map(Polyline.init))
+        } else if let polygon = object as? MKPolygon {
+            polygons.append(Polygon(mkPolygon: polygon))
+        } else if let multiPolygon = object as? MKMultiPolygon {
+            polygons.append(contentsOf: multiPolygon.polygons.map(Polygon.init))
+        } else if let multiPoint = object as? MKMultiPoint {
+            points.append(contentsOf: multiPoint.coordinates.map(Point.init))
         }
-    }
-    
-    func addPoint(_ position: Position) {
-        let point = MKPointAnnotation()
-        point.coordinate = position.coordinate
-        points.append(point)
-    }
-    
-    func addPolyline(_ lineString: LineString) {
-        let coords = lineString.coordinates.map(\.coordinate)
-        polylines.append(MKPolyline(coordinates: coords, count: coords.count))
-    }
-    
-    func addPolygon(_ polygon: Polygon) {
-        guard let exterior = polygon.coordinates.first else { return }
-        let exteriorCoords = exterior.coordinates.map(\.coordinate)
-        let interiors = Array(polygon.coordinates.dropFirst())
-        let interiorPolygons = interiors.map { positions in
-            let coords = positions.coordinates.map(\.coordinate)
-            return MKPolygon(coordinates: coords, count: coords.count)
-        }
-        polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
     }
 }
 
@@ -254,30 +222,26 @@ extension ViewModel {
             throw GeoError.fileEmpty
         }
         
-        points = root.waypoints.compactMap { waypoint in
-            guard let lat = waypoint.latitude, let long = waypoint.longitude else { return nil }
-            let point = MKPointAnnotation()
-            point.coordinate = CLLocationCoordinate2DMake(lat, long)
-            return point
+        emptyData()
+        handleWaypoints(root.waypoints)
+        root.routes.forEach { route in
+            handleWaypoints(route.points)
         }
-        polylines.append(contentsOf: root.routes.compactMap { route in
-            let coords = route.points.compactMap { point -> CLLocationCoordinate2D? in
-                guard let lat = point.latitude, let long = point.longitude else { return nil }
-                return CLLocationCoordinate2DMake(lat, long)
+        root.tracks.forEach { track in
+            polylines.append(contentsOf: track.segments.map { segment in
+                Polyline(coords: segment.points.compactMap(\.coord))
+            })
+        }
+    }
+    
+    func handleWaypoints(_ waypoints: [GPXWaypoint]) {
+        var i = 1
+        waypoints.forEach { waypoint in
+            if let point = Point(i: i, waypoint: waypoint) {
+                points.append(point)
+                i += 1
             }
-            guard coords.isNotEmpty else { return nil }
-            return MKPolyline(coordinates: coords, count: coords.count)
-        })
-        polylines.append(contentsOf: root.tracks.map { track in
-            track.segments.compactMap { segment -> MKPolyline? in
-                let coords = segment.points.compactMap { point -> CLLocationCoordinate2D? in
-                    guard let lat = point.latitude, let long = point.longitude else { return nil }
-                    return CLLocationCoordinate2DMake(lat, long)
-                }
-                guard coords.isNotEmpty else { return nil }
-                return MKPolyline(coordinates: coords, count: coords.count)
-            }
-        }.joined())
+        }
     }
 }
 
@@ -291,6 +255,7 @@ extension ViewModel {
             throw GeoError.invalidKML(error)
         } catch { return }
         
+        emptyData()
         document.features.forEach(handleKMLFeature)
     }
     
@@ -298,27 +263,25 @@ extension ViewModel {
         if let folder = feature as? KMLFolder {
             folder.features.forEach(handleKMLFeature)
         } else if let placemark = feature as? KMLPlacemark {
-            handleGeometry(placemark.geometry)
+            if let point = placemark.geometry as? KMLPoint {
+                points.append(Point(point: point, placemark: placemark))
+            } else {
+                handleGeometry(placemark.geometry)
+            }
         }
     }
     
     func handleGeometry(_ geometry: KMLGeometry) {
-        if let lineString = geometry as? KMLLineString {
-            let coords = lineString.coordinates.map(\.coord)
-            polylines.append(MKPolyline(coordinates: coords, count: coords.count))
-        } else if let multiGeometry = geometry as? KMLMultiGeometry {
+        if let multiGeometry = geometry as? KMLMultiGeometry {
             multiGeometry.geometries.forEach(handleGeometry)
-        } else if let kmlPoint = geometry as? KMLPoint {
-            let point = MKPointAnnotation()
-            point.coordinate = kmlPoint.coordinate.coord
-            points.append(point)
+        } else if let point = geometry as? KMLPoint {
+            points.append(Point(coordinate: point.coordinate.coord))
+        } else if let lineString = geometry as? KMLLineString {
+            polylines.append(Polyline(coords: lineString.coordinates.map(\.coord)))
         } else if let polygon = geometry as? KMLPolygon {
-            let exteriorCoords = polygon.outerBoundaryIs.coordinates.map(\.coord)
-            let interiorPolygons = polygon.innerBoundaryIs?.map { positions in
-                let coords = positions.coordinates.map(\.coord)
-                return MKPolygon(coordinates: coords, count: coords.count)
-            }
-            polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
+            polygons.append(Polygon(exteriorCoords: polygon.outerBoundaryIs.coordinates.map(\.coord), interiorCoords: polygon.innerBoundaryIs?.map { points in
+                points.coordinates.map(\.coord)
+            }))
         }
     }
 }
@@ -333,33 +296,28 @@ extension ViewModel {
             throw GeoError.invalidShapefile
         }
         
+        emptyData()
         reader.shapeAndRecordGenerator().forEach { shape, record in
             switch shape.shapeType {
             case .nullShape: break
             case .point, .pointM, .pointZ, .multipoint, .multipointM, .multipointZ:
                 shape.partPointsGenerator().forEach { points in
-                    points.forEach { point in
-                        let annotation = MKPointAnnotation()
-                        annotation.coordinate = point.coord
-                        self.points.append(annotation)
-                    }
+                    self.points.append(contentsOf: points.map { Point(coordinate: $0.coord) })
                 }
             case .polyLine, .polylineM, .polylineZ:
                 shape.partPointsGenerator().forEach { points in
-                    let coords = points.map(\.coord)
-                    polylines.append(MKPolyline(coordinates: coords, count: coords.count))
+                    polylines.append(Polyline(coords: points.map(\.coord)))
                 }
             case .polygon, .polygonZ, .polygonM, .multipatch:
                 let generator = shape.partPointsGenerator()
                 guard let exterior = generator.next() else { return }
-                let exteriorCoords = exterior.map(\.coord)
-                var interiorPolygons = [MKPolygon]()
+                var interiorCoords = [[CLLocationCoordinate2D]]()
                 var interior = generator.next()
                 while interior != nil {
-                    let coords = interior!.map(\.coord)
-                    interiorPolygons.append(MKPolygon(coordinates: coords, count: coords.count))
+                    interiorCoords.append(interior!.map(\.coord))
+                    interior = generator.next()
                 }
-                polygons.append(MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorPolygons))
+                polygons.append(Polygon(exteriorCoords: exterior.map(\.coord), interiorCoords: interiorCoords))
             }
         }
     }
@@ -369,13 +327,13 @@ extension ViewModel {
 extension ViewModel: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let darkMode = UITraitCollection.current.userInterfaceStyle == .dark || mapView.mapType == .hybrid
-        if let polyline = overlay as? MKPolyline {
-            let renderer = MKPolylineRenderer(polyline: polyline)
+        if let polyline = overlay as? Polyline {
+            let renderer = MKPolylineRenderer(polyline: polyline.mkPolyline)
             renderer.lineWidth = 2
             renderer.strokeColor = darkMode ? UIColor(.cyan) : .link
             return renderer
-        } else if let polygon = overlay as? MKPolygon {
-            let renderer = MKPolygonRenderer(polygon: polygon)
+        } else if let polygon = overlay as? Polygon {
+            let renderer = MKPolygonRenderer(polygon: polygon.mkPolygon)
             renderer.lineWidth = 2
             renderer.strokeColor = .systemOrange
             renderer.fillColor = .systemOrange.withAlphaComponent(0.1)
@@ -385,9 +343,10 @@ extension ViewModel: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let point = annotation as? MKPointAnnotation {
-            let view = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.id, for: point)
-            view.displayPriority = .required
+        if let point = annotation as? Point {
+            let view = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.id, for: point) as? MKMarkerAnnotationView
+            view?.displayPriority = .required
+            view?.glyphText = point.index == nil ? nil : String(point.index!)
             return view
         }
         return nil
@@ -397,12 +356,6 @@ extension ViewModel: MKMapViewDelegate {
         let view = mapView.view(for: mapView.userLocation)
         view?.leftCalloutAccessoryView = UIView()
         view?.rightCalloutAccessoryView = UIView()
-    }
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if view is MKMarkerAnnotationView {
-            mapView.deselectAnnotation(view.annotation, animated: true)
-        }
     }
     
     func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
