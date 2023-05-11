@@ -34,10 +34,7 @@ class ViewModel: NSObject, ObservableObject {
     
     // Storage
     @Storage("recentUrlsData") var recentUrlsData = [Data]()
-    var stale = false
-    var recentUrls: [URL] {
-        recentUrlsData.compactMap { try? URL(resolvingBookmarkData: $0, bookmarkDataIsStale: &stale) }
-    }
+    @Published var recentUrls = [URL]()
     
     // Alerts
     @Published var geoError = GeoError.fileMoved
@@ -52,11 +49,32 @@ class ViewModel: NSObject, ObservableObject {
     var authStatus = CLAuthorizationStatus.notDetermined
     @Published var showAuthAlert = false
     
+    // MARK: - Initialiser
     override init() {
         super.init()
         manager.delegate = self
+        updateBookmarks()
     }
     
+    func updateBookmarks() {
+        var newUrlsData = [Data]()
+        for data in recentUrlsData {
+            var stale = false
+            guard let url = try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale),
+                  !recentUrls.contains(url)
+            else { continue }
+            recentUrls.append(url)
+            if stale {
+                guard let newData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil) else { continue }
+                newUrlsData.append(newData)
+            } else {
+                newUrlsData.append(data)
+            }
+        }
+        recentUrlsData = newUrlsData
+    }
+    
+    // MARK: - Import Data
     func importFile(url: URL, canShowAlert: Bool) {
         do {
             try importFile(url: url)
@@ -68,14 +86,15 @@ class ViewModel: NSObject, ObservableObject {
     }
     
     func importFile(url: URL) throws {
+        guard url.startAccessingSecurityScopedResource(),
+              let urlData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil) else {
+            throw GeoError.fileMoved
+        }
+        recentUrls.removeAll(url)
+        recentUrlsData.removeAll(urlData)
+        
         guard let type = GeoFileType(fileExtension: url.pathExtension) else {
             throw GeoError.unsupportedFileType
-        }
-        
-        guard url.startAccessingSecurityScopedResource(),
-              let urlData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil)
-        else {
-            throw GeoError.fileMoved
         }
         
         let data: Data
@@ -101,9 +120,8 @@ class ViewModel: NSObject, ObservableObject {
         selectedShapeType = nil // Refreshes overlays & updates view
         zoom()
         Haptics.tap()
-        if !recentUrlsData.contains(urlData) {
-            recentUrlsData.append(urlData)
-        }
+        recentUrls.append(url)
+        recentUrlsData.append(urlData)
     }
     
     func emptyData() {
@@ -112,6 +130,7 @@ class ViewModel: NSObject, ObservableObject {
         polygons = []
     }
     
+    // MARK: - Map
     func refreshMap() {
         mapView?.removeAnnotations(mapView?.annotations ?? [])
         mapView?.removeOverlays(mapView?.overlays ?? [])
@@ -130,8 +149,9 @@ class ViewModel: NSObject, ObservableObject {
     func zoom() {
         let points = (selectedShapeType == nil || selectedShapeType == .point) ? points : []
         let rect = points.rect.union(mapView?.overlays.rect ?? .null)
-        let padding = UIEdgeInsets(top: 40, left: 40, bottom: 40, right: 40)
-        mapView?.setVisibleMapRect(rect, edgePadding: padding, animated: true)
+        let padding = 30.0
+        let insets = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        mapView?.setVisibleMapRect(rect, edgePadding: insets, animated: true)
     }
     
     func openSettings() {

@@ -11,7 +11,6 @@ import Foundation
 // KML       0.023
 // GPX       0.028
 // GeoJSON   0.016
-
 enum GeoFileType: String, CaseIterable {
     case geojson = "GeoJSON File"
     case gpx = "GPX File"
@@ -34,7 +33,7 @@ enum GeoFileType: String, CaseIterable {
         case .gpx:
             return ["gpx"]
         case .kml:
-            return ["kml", "kmx"]
+            return ["kml", "kmz"]
         }
     }
     

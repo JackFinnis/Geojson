@@ -28,7 +28,7 @@ enum GeoError: Error {
         case .fileCurrupted:
             return "This file has been corrupted. Please try importing it again."
         case .fileEmpty:
-            return "This file does not contain any points, polylines or polygons."
+            return "This file does not contain any points, lines or polygons."
         case .invalidGeoJSON:
             return "This file contains invalid geojson. \(VALIDATE_URL.absoluteString) can help spot syntax errors in GeoJSON."
         case .invalidKML(let error):
