@@ -128,8 +128,8 @@ class DBFReader {
     var recordLengthFromHeader : Int!
     var recordFormat : String!
     
-    init(path:String) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         try self.readHeader()
     }
     
@@ -319,8 +319,8 @@ class SHPReader {
     var measure : (m_min:Double, m_max:Double) = (0.0, 0.0)
     var shpLength : UInt64 = 0
     
-    init(path:String) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         try self.readHeader()
     }
     
@@ -501,8 +501,8 @@ class SHXReader {
         return shapeOffsets.count
     }
     
-    init(path:String) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         self.shapeOffsets = try self.readOffsets()
     }
     
@@ -561,15 +561,13 @@ class ShapefileReader {
     var dbf : DBFReader? = nil
     var shx : SHXReader? = nil
     
-    var shapeName : String
-    
-    init(path:String) throws {
+    init(url: URL) throws {
         
-        self.shapeName = (path as NSString).deletingPathExtension
+        let path = url.deletingPathExtension()
         
-        self.shp = try SHPReader(path: "\(shapeName).shp")
-        self.dbf = try DBFReader(path: "\(shapeName).dbf")
-        self.shx = try SHXReader(path: "\(shapeName).shx")
+        self.shp = try SHPReader(url: path.appendingPathExtension("shp"))
+        self.dbf = try DBFReader(url: path.appendingPathExtension("dbf"))
+        self.shx = try SHXReader(url: path.appendingPathExtension("shx"))
     }
     
     subscript(i:Int) -> Shape? {

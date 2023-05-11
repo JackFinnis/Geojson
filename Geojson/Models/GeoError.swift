@@ -22,7 +22,7 @@ enum GeoError: Error {
     var message: String {
         switch self {
         case .unsupportedFileType:
-            return "\(NAME) only supports importing files of the following types: \(GeoFileType.allCases.map { "." + $0.rawValue }.joined(separator: ", "))."
+            return "\(NAME) only supports importing files of the following types:\n\(GeoFileType.allFileExtensions.map { "." + $0 }.joined(separator: ", "))"
         case .fileMoved:
             return "This file has been moved or deleted. Please try importing it again."
         case .fileCurrupted:

@@ -35,9 +35,13 @@ enum GeoFileType: String, CaseIterable {
         case .gpx:
             return ["gpx"]
         case .shp:
-            return ["gpx"]
+            return ["shp"]
         case .kml:
             return ["kml", "kmx"]
         }
+    }
+    
+    static var allFileExtensions: [String] {
+        Array(allCases.map(\.fileExtensions).joined())
     }
 }

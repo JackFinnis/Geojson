@@ -94,7 +94,7 @@ class ViewModel: NSObject, ObservableObject {
         case .kml:
             try parseKML(data: data)
         case .shp:
-            try parseShapefile()
+            try parseShapefile(url: url)
         }
         
         selectedShapeType = nil // Refreshes overlays & updates view
@@ -288,10 +288,10 @@ extension ViewModel {
 
 // MARK: - Parse Shapefile
 extension ViewModel {
-    func parseShapefile() throws {
+    func parseShapefile(url: URL) throws {
         let reader: ShapefileReader
         do {
-            reader = try ShapefileReader(path: "hello.shp") //todo
+            reader = try ShapefileReader(url: url)
         } catch {
             throw GeoError.invalidShapefile
         }
@@ -320,6 +320,8 @@ extension ViewModel {
                 polygons.append(Polygon(exteriorCoords: exterior.map(\.coord), interiorCoords: interiorCoords))
             }
         }
+        
+        polylines.forEach { print($0.mkPolyline.coordinate) }
     }
 }
 
