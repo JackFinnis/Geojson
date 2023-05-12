@@ -7,7 +7,6 @@
 
 import SwiftUI
 import FirebaseCore
-import FirebaseAnalytics
 
 let NAME = "GeoViewer"
 let SIZE = 44.0
