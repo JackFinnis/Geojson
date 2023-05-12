@@ -79,7 +79,6 @@ struct InfoView: View {
                 }
             }
             .padding()
-            .interactiveDismissDisabled(welcome)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -103,6 +102,7 @@ struct InfoView: View {
         }
         .shareSheet(url: APP_URL, showsSharedAlert: true, isPresented: $showShareSheet)
         .emailSheet(recipient: EMAIL, subject: "\(NAME) Feedback", isPresented: $showEmailSheet)
+        .interactiveDismissDisabled(welcome)
     }
 }
 
