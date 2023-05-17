@@ -70,7 +70,7 @@ struct InfoView: View {
                         Button {
                             showShareSheet.toggle()
                         } label: {
-                            Label("Share with a Friend", systemImage: "person.badge.plus")
+                            Label("Share \(NAME)", systemImage: "square.and.arrow.up")
                         }
                     } label: {
                         Text("Contribute...")
