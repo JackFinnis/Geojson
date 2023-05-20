@@ -25,7 +25,7 @@ struct MapButtons: View {
                         .rotation3DEffect(.degrees(vm.degrees), axis: (x: 0, y: 1, z: 0))
                 }
                 
-                Divider().frame(width: SIZE)
+                Divider().frame(width: Constants.size)
                 Button {
                     updateTrackingMode()
                 } label: {
@@ -45,7 +45,7 @@ struct MapButtons: View {
                 }
                 
                 if vm.multipleTypes {
-                    Divider().frame(width: SIZE)
+                    Divider().frame(width: Constants.size)
                     Menu {
                         Picker("", selection: $vm.selectedShapeType) {
                             Text("All Data")

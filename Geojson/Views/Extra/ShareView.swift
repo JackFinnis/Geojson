@@ -48,7 +48,7 @@ struct ShareModifier: ViewModifier {
                     view
                 }
             }
-            .alert("Thanks for sharing \(NAME)!", isPresented: $showSharedAlert) {
+            .alert("Thanks for sharing \(Constants.name)!", isPresented: $showSharedAlert) {
                 Button("OK", role: .cancel) {}
             }
     }

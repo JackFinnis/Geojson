@@ -37,6 +37,17 @@ enum GeoFileType: String, CaseIterable {
         }
     }
     
+    var helpUrl: URL {
+        switch self {
+        case .geojson:
+            return URL(string: "https://geojson.io")!
+        case .gpx:
+            return URL(string: "https://gpx.studio")!
+        case .kml:
+            return URL(string: "https://www.google.com/maps/d")!
+        }
+    }
+    
     static var allFileExtensions: [String] {
         Array(allCases.map(\.fileExtensions).joined())
     }

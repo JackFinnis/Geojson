@@ -60,17 +60,15 @@ struct RootView: View {
                         vm.openSettings()
                     }
                 } message: {
-                    Text("\(NAME) needs access to your location to show where you are on the map. Please go to Settings > \(NAME) > Location and allow access while using the app.")
+                    Text("\(Constants.name) needs access to your location to show where you are on the map. Please go to Settings > \(Constants.name) > Location and allow access while using the app.")
                 }
             Text("")
                 .alert("Import Failed", isPresented: $vm.showFailedAlert) {
                     Button("OK", role: .cancel) {}
-                    switch vm.geoError {
-                    case .invalidGeoJSON:
-                        Button("Open in Safari") {
-                            UIApplication.shared.open(VALIDATE_URL)
+                    if let fileType = vm.geoError.fileType {
+                        Button("Open Help Website") {
+                            UIApplication.shared.open(fileType.helpUrl)
                         }
-                    default: EmptyView()
                     }
                 } message: {
                     Text(vm.geoError.message)

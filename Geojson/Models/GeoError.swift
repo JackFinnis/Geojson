@@ -17,12 +17,11 @@ enum GeoError: Error {
     case invalidGeoJSON
     case invalidKML(KMLError)
     case invalidGPX(Error)
-    case invalidShapefile
     
     var message: String {
         switch self {
         case .unsupportedFileType:
-            return "\(NAME) only supports importing files of the following types:\n\(GeoFileType.allFileExtensions.map { "." + $0 }.joined(separator: ", "))"
+            return "\(Constants.name) can only import files of the following types:\n\(GeoFileType.allFileExtensions.map { "." + $0 }.joined(separator: ", "))"
         case .fileMoved:
             return "This file has been moved or deleted. Please try importing it again."
         case .fileCurrupted:
@@ -30,13 +29,23 @@ enum GeoError: Error {
         case .fileEmpty:
             return "This file does not contain any points, lines or polygons."
         case .invalidGeoJSON:
-            return "This file contains invalid geojson. \(VALIDATE_URL.absoluteString) can help spot syntax errors in GeoJSON."
+            return "This file contains invalid geojson."
         case .invalidKML(let error):
             return error.description
         case .invalidGPX(let error):
             return handleGPXError(error)
-        case .invalidShapefile:
-            return "This file contains invalid Shapefile data."
+        }
+    }
+    
+    var fileType: GeoFileType? {
+        switch self {
+        case .invalidGeoJSON:
+            return .geojson
+        case .invalidKML(_):
+            return .kml
+        case .invalidGPX(_):
+            return .gpx
+        default: return nil
         }
     }
     

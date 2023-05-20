@@ -18,6 +18,8 @@
 		0402C62C2A0DAB9000238C51 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0402C62B2A0DAB9000238C51 /* GoogleService-Info.plist */; };
 		0402C6302A0DAC0100238C51 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0402C62F2A0DAC0100238C51 /* FirebaseAnalytics */; };
 		0402C6322A0DAC8900238C51 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6312A0DAC8900238C51 /* Analytics.swift */; };
+		0402C6AF2A18D5AB00238C51 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6AE2A18D5AB00238C51 /* Constants.swift */; };
+		0402C6B12A18DAF700238C51 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6B02A18DAF700238C51 /* String.swift */; };
 		040AD1DE29F4A42B00BA54E6 /* CarbonCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */; };
 		040AD1E029F4A6D800BA54E6 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DF29F4A6D800BA54E6 /* NSObject.swift */; };
 		040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1E129F4A84C00BA54E6 /* ImportButton.swift */; };
@@ -56,6 +58,8 @@
 		0402C6262A0D175300238C51 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		0402C62B2A0DAB9000238C51 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0402C6312A0DAC8900238C51 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
+		0402C6AE2A18D5AB00238C51 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		0402C6B02A18DAF700238C51 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		040AD1DD29F4A42B00BA54E6 /* CarbonCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbonCopy.swift; sourceTree = "<group>"; };
 		040AD1DF29F4A6D800BA54E6 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		040AD1E129F4A84C00BA54E6 /* ImportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportButton.swift; sourceTree = "<group>"; };
@@ -170,6 +174,7 @@
 				0402C60A2A0903C900238C51 /* KMLCoordinate.swift */,
 				0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */,
 				040AD1DF29F4A6D800BA54E6 /* NSObject.swift */,
+				0402C6B02A18DAF700238C51 /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -177,6 +182,7 @@
 		04A65585293D58C00084CC6A /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0402C6AE2A18D5AB00238C51 /* Constants.swift */,
 				04A65586293D58DC0084CC6A /* Emails.swift */,
 				049C0FB12929BEFE00C6521A /* Haptics.swift */,
 				049C0FAB2929B98E00C6521A /* Store.swift */,
@@ -298,7 +304,9 @@
 				04A65587293D58DC0084CC6A /* Emails.swift in Sources */,
 				04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */,
 				04C71FF42A08DCD100417249 /* GeoError.swift in Sources */,
+				0402C6B12A18DAF700238C51 /* String.swift in Sources */,
 				0402C61D2A0D0CF700238C51 /* Shapes.swift in Sources */,
+				0402C6AF2A18D5AB00238C51 /* Constants.swift in Sources */,
 				049C0F932929384D00C6521A /* MapView.swift in Sources */,
 				049C0FAA2929B86500C6521A /* ShareView.swift in Sources */,
 				049C0FAC2929B98E00C6521A /* Store.swift in Sources */,

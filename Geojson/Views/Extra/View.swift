@@ -17,8 +17,8 @@ extension View {
     }
     
     func squareButton() -> some View {
-        self.font(.system(size: SIZE/2))
-            .frame(width: SIZE, height: SIZE)
+        self.font(.system(size: Constants.size/2))
+            .frame(width: Constants.size, height: Constants.size)
     }
     
     func addShadow() -> some View {

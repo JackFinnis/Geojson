@@ -16,7 +16,7 @@ struct Store {
     }
     
     static func writeReview() {
-        var components = URLComponents(url: APP_URL, resolvingAgainstBaseURL: false)
+        var components = URLComponents(url: Constants.appUrl, resolvingAgainstBaseURL: false)
         components?.queryItems = [URLQueryItem(name: "action", value: "write-review")]
         guard let url = components?.url else { return }
         UIApplication.shared.open(url)

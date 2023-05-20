@@ -9,12 +9,7 @@ import SwiftUI
 
 struct Emails {
     static func mailtoUrl(subject: String) -> URL? {
-        URL(string: "mailto:\(EMAIL)?subject=\(subject.replaceSpaces)")
-    }
-}
-
-extension String {
-    var replaceSpaces: String {
-        replacingOccurrences(of: " ", with: "%20")
+        guard let encodedSubject = subject.urlEncoded else { return nil }
+        return URL(string: "mailto:\(Constants.email)?subject=\(encodedSubject)")
     }
 }
