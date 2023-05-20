@@ -37,6 +37,19 @@ struct InfoView: View {
                     InfoRow(systemName: "mappin.and.ellipse", title: "GPX, KML and GeoJSON", description: "Import the most popular geodata file formats and browse your data on an interactive map.")
                     InfoRow(systemName: "line.3.horizontal.decrease.circle", title: "Filter Map Data", description: "Filter points, lines and polygons.")
                     InfoRow(systemName: "clock.arrow.circlepath", title: "Save Your Recents", description: "Quickly open your recent files.")
+                    if !welcome {
+                        Menu {
+                            ForEach(GeoFileType.allCases, id: \.self) { type in
+                                Button {
+                                    UIApplication.shared.open(type.helpUrl)
+                                } label: {
+                                    Label(type.helpUrlName, systemImage: "safari")
+                                }
+                            }
+                        } label: {
+                            InfoRow(systemName: "questionmark.circle", title: "Having Trouble Importing Data?", description: "Check out these helpful ", link: "websites")
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -130,10 +143,12 @@ struct InfoRow: View {
             VStack(alignment: .leading) {
                 Text(title)
                     .font(.headline)
-                Text(link)
-                    .foregroundColor(.accentColor)
-                    .underline() +
+                    .foregroundColor(.primary)
                 Text(description)
+                    .foregroundColor(.secondary) +
+                Text(link)
+                    .foregroundColor(.accentColor) +
+                Text(link.isEmpty ? "" : ".")
                     .foregroundColor(.secondary)
             }
         }

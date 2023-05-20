@@ -22,14 +22,12 @@ extension View {
     }
     
     func addShadow() -> some View {
-        self
-            .compositingGroup()
+        self.compositingGroup()
             .shadow(color: Color.black.opacity(0.2), radius: 5)
     }
     
     func blurBackground() -> some View {
-        self
-            .background(.thickMaterial)
+        self.background(.thickMaterial)
             .continuousRadius(10)
             .addShadow()
     }
@@ -39,8 +37,7 @@ extension View {
     }
     
     func bigButton() -> some View {
-        self
-            .font(.headline)
+        self.font(.headline)
             .padding()
             .horizontallyCentred()
             .foregroundColor(.white)

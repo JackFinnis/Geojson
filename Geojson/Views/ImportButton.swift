@@ -21,7 +21,7 @@ struct ImportButton: View {
                     Button {
                         showFileImporter = true
                     } label: {
-                        Label("Import \(type.rawValue)", systemImage: "plus")
+                        Label("Import \(type.rawValue) File", systemImage: "plus")
                     }
                 }
             }

@@ -12,9 +12,9 @@ import Foundation
 // GPX       0.028
 // GeoJSON   0.016
 enum GeoFileType: String, CaseIterable {
-    case geojson = "GeoJSON File"
-    case gpx = "GPX File"
-    case kml = "KML File"
+    case geojson = "GeoJSON"
+    case gpx = "GPX"
+    case kml = "KML"
     
     init?(fileExtension: String) {
         for type in GeoFileType.allCases {
@@ -45,6 +45,17 @@ enum GeoFileType: String, CaseIterable {
             return URL(string: "https://gpx.studio")!
         case .kml:
             return URL(string: "https://www.google.com/maps/d")!
+        }
+    }
+    
+    var helpUrlName: String {
+        switch self {
+        case .geojson:
+            return "GeoJSON.io"
+        case .gpx:
+            return "GPX Studio"
+        case .kml:
+            return "Google Maps"
         }
     }
     
