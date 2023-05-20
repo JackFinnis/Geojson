@@ -131,7 +131,6 @@
 		049C0F73292936F600C6521A /* Geojson */ = {
 			isa = PBXGroup;
 			children = (
-				049C0F74292936F600C6521A /* GeojsonApp.swift */,
 				04C71FF12A08DCAC00417249 /* Views */,
 				04C71FF22A08DCBB00417249 /* Models */,
 				04A65585293D58C00084CC6A /* Helpers */,
@@ -195,6 +194,7 @@
 		04C71FF12A08DCAC00417249 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				049C0F74292936F600C6521A /* GeojsonApp.swift */,
 				049C0F872929384D00C6521A /* RootView.swift */,
 				049C0F892929384D00C6521A /* MapView.swift */,
 				049C0F8B2929384D00C6521A /* MapButtons.swift */,

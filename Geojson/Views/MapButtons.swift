@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 
 struct MapButtons: View {
-    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var vm: ViewModel
     @State var showInfoView = false
     

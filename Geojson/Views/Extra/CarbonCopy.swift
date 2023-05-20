@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct CarbonCopy: UIViewRepresentable {
     func makeUIView(context: Context) -> UIVisualEffectView {
         let view = UIVisualEffectView()
