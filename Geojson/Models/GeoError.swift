@@ -8,19 +8,22 @@
 import Foundation
 import CoreGPX
 import RCKML
+import AEXML
 
 enum GeoError: Error {
-    case unsupportedFileType
+    case fileType
     case fileMoved
     case fileCurrupted
     case fileEmpty
-    case invalidGeoJSON
-    case invalidKML(KMLError)
-    case invalidGPX(Error)
+    case geoJSON
+    case kml(KMLError)
+    case aexml(AEXMLError)
+    case nsxml(XMLParser.ErrorCode?)
+    case gpx(Error)
     
     var message: String {
         switch self {
-        case .unsupportedFileType:
+        case .fileType:
             return "\(Constants.name) can only import files of the following types:\n\(GeoFileType.allFileExtensions.map { "." + $0 }.joined(separator: ", "))"
         case .fileMoved:
             return "This file has been moved or deleted. Please try importing it again."
@@ -28,22 +31,27 @@ enum GeoError: Error {
             return "This file has been corrupted. Please try importing it again."
         case .fileEmpty:
             return "This file does not contain any points, lines or polygons."
-        case .invalidGeoJSON:
+        case .geoJSON:
             return "This file contains invalid geojson."
-        case .invalidKML(let error):
+        case .kml(let error):
             return error.description
-        case .invalidGPX(let error):
+        case .aexml(let error):
+            return "Unable to parse this KML file: \(error.description)"
+        case .nsxml(let error):
+            let message = error == nil ? "Unknown error code." : "Error code \(error!.rawValue)."
+            return "Unable to parse this KML file: " + message
+        case .gpx(let error):
             return handleGPXError(error)
         }
     }
     
     var fileType: GeoFileType? {
         switch self {
-        case .invalidGeoJSON:
+        case .geoJSON:
             return .geojson
-        case .invalidKML(_):
+        case .kml(_), .aexml(_), .nsxml:
             return .kml
-        case .invalidGPX(_):
+        case .gpx(_):
             return .gpx
         default: return nil
         }
@@ -107,6 +115,19 @@ extension KMLError {
             return "This file contains invalid KML data."
         case .couldntConvertStringData:
             return "This file contains invalid KML data."
+        }
+    }
+}
+
+extension AEXMLError {
+    var description: String {
+        switch self {
+        case .elementNotFound:
+            return "Element not found."
+        case .rootElementMissing:
+            return "Root element missing."
+        case .parsingFailed:
+            return "Parsing failed."
         }
     }
 }

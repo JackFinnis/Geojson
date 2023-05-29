@@ -35,47 +35,16 @@ class Point: NSObject, MKAnnotation {
     }
 }
 
-class Polygon: NSObject {
-    let mkPolygon: MKPolygon
-    
-    init(mkPolygon: MKPolygon) {
-        self.mkPolygon = mkPolygon
-    }
-    
-    init(exteriorCoords: [CLLocationCoordinate2D], interiorCoords: [[CLLocationCoordinate2D]]?) {
-        self.mkPolygon = MKPolygon(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorCoords?.map { coords in
+extension MKPolygon {
+    convenience init(exteriorCoords: [CLLocationCoordinate2D], interiorCoords: [[CLLocationCoordinate2D]]?) {
+        self.init(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorCoords?.map { coords in
             MKPolygon(coordinates: coords, count: coords.count)
         })
     }
 }
 
-extension Polygon: MKOverlay {
-    var coordinate: CLLocationCoordinate2D {
-        mkPolygon.coordinate
-    }
-    var boundingMapRect: MKMapRect {
-        mkPolygon.boundingMapRect
+extension MKPolyline {
+    convenience init(coords: [CLLocationCoordinate2D]) {
+        self.init(coordinates: coords, count: coords.count)
     }
 }
-
-class Polyline: NSObject {
-    let mkPolyline: MKPolyline
-    
-    init(mkPolyline: MKPolyline) {
-        self.mkPolyline = mkPolyline
-    }
-    
-    init(coords: [CLLocationCoordinate2D]) {
-        self.mkPolyline = MKPolyline(coordinates: coords, count: coords.count)
-    }
-}
-
-extension Polyline: MKOverlay {
-    var coordinate: CLLocationCoordinate2D {
-        mkPolyline.coordinate
-    }
-    var boundingMapRect: MKMapRect {
-        mkPolyline.boundingMapRect
-    }
-}
-

@@ -89,6 +89,7 @@ struct InfoView: View {
                         Text("Contribute...")
                             .bigButton()
                     }
+                    .sharePopover(url: Constants.appUrl, showsSharedAlert: true, isPresented: $showShareSheet)
                 }
             }
             .padding()
@@ -113,7 +114,6 @@ struct InfoView: View {
                 }
             }
         }
-        .shareSheet(url: Constants.appUrl, showsSharedAlert: true, isPresented: $showShareSheet)
         .emailSheet(recipient: Constants.email, subject: "\(Constants.name) Feedback", isPresented: $showEmailSheet)
         .interactiveDismissDisabled(welcome)
     }

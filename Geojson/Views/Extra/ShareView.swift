@@ -23,7 +23,7 @@ struct ShareView: UIViewControllerRepresentable {
 }
 
 extension View {
-    func shareSheet(url: URL, showsSharedAlert: Bool = false, isPresented: Binding<Bool>) -> some View {
+    func sharePopover(url: URL, showsSharedAlert: Bool = false, isPresented: Binding<Bool>) -> some View {
         modifier(ShareModifier(url: url, showsSharedAlert: showsSharedAlert, isPresented: isPresented))
     }
 }

@@ -47,7 +47,7 @@ struct MapButtons: View {
                     Divider().frame(width: Constants.size)
                     Menu {
                         Picker("", selection: $vm.selectedShapeType) {
-                            Text("All Data")
+                            Text("No Filter")
                                 .tag(nil as GeoShapeType?)
                             ForEach(GeoShapeType.allCases, id: \.self) { type in
                                 let text = Text(type.rawValue).tag(type as GeoShapeType?)

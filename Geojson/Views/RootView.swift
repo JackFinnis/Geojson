@@ -49,9 +49,6 @@ struct RootView: View {
                 vm.updateBookmarks()
             }
         }
-        .sheet(isPresented: $showWelcomeView) {
-            InfoView(isPresented: $showWelcomeView, welcome: true)
-        }
         .background {
             Text("")
                 .alert("Access Denied", isPresented: $vm.showAuthAlert) {
@@ -72,6 +69,12 @@ struct RootView: View {
                     }
                 } message: {
                     Text(vm.geoError.message)
+                }
+        }
+        .background {
+            Text("")
+                .sheet(isPresented: $showWelcomeView) {
+                    InfoView(isPresented: $showWelcomeView, welcome: true)
                 }
         }
         .environmentObject(vm)
