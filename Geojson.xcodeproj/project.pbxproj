@@ -24,6 +24,9 @@
 		040AD1E029F4A6D800BA54E6 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1DF29F4A6D800BA54E6 /* NSObject.swift */; };
 		040AD1E229F4A84C00BA54E6 /* ImportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1E129F4A84C00BA54E6 /* ImportButton.swift */; };
 		040AD1E429F4AABD00BA54E6 /* EmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040AD1E329F4AABD00BA54E6 /* EmailView.swift */; };
+		047BF5622A740A0C0022505C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5612A740A0C0022505C /* AppDelegate.swift */; };
+		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
+		047BF5662A7468390022505C /* MKMapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5652A7468390022505C /* MKMapItem.swift */; };
 		049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* GeojsonApp.swift */; };
 		049C0F79292936F700C6521A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049C0F78292936F700C6521A /* Assets.xcassets */; };
 		049C0F8F2929384D00C6521A /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F852929384D00C6521A /* ViewModel.swift */; };
@@ -64,6 +67,10 @@
 		040AD1DF29F4A6D800BA54E6 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		040AD1E129F4A84C00BA54E6 /* ImportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportButton.swift; sourceTree = "<group>"; };
 		040AD1E329F4AABD00BA54E6 /* EmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailView.swift; sourceTree = "<group>"; };
+		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		047BF5612A740A0C0022505C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
+		047BF5652A7468390022505C /* MKMapItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapItem.swift; sourceTree = "<group>"; };
 		049C0F71292936F600C6521A /* Geojson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geojson.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		049C0F74292936F600C6521A /* GeojsonApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeojsonApp.swift; sourceTree = "<group>"; };
 		049C0F78292936F700C6521A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -143,6 +150,7 @@
 		049C0FB5292A88B300C6521A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				047BF5602A7405FA0022505C /* Info.plist */,
 				0402C62B2A0DAB9000238C51 /* GoogleService-Info.plist */,
 				049C0F78292936F700C6521A /* Assets.xcassets */,
 				0402C62D2A0DABB300238C51 /* Example Data */,
@@ -169,8 +177,10 @@
 				0402C6262A0D175300238C51 /* Array.swift */,
 				049C0F9B292953A400C6521A /* Collection.swift */,
 				0402C6132A09175100238C51 /* CGPoint.swift */,
+				047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */,
 				0402C6242A0D10FA00238C51 /* GPXWaypoint.swift */,
 				0402C60A2A0903C900238C51 /* KMLCoordinate.swift */,
+				047BF5652A7468390022505C /* MKMapItem.swift */,
 				0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */,
 				040AD1DF29F4A6D800BA54E6 /* NSObject.swift */,
 				0402C6B02A18DAF700238C51 /* String.swift */,
@@ -209,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				049C0F852929384D00C6521A /* ViewModel.swift */,
+				047BF5612A740A0C0022505C /* AppDelegate.swift */,
 				04C71FF32A08DCD100417249 /* GeoError.swift */,
 				04C71FF52A08DCEB00417249 /* GeoFileType.swift */,
 				0402C6152A091EE200238C51 /* GeoShapeType.swift */,
@@ -303,16 +314,19 @@
 				049C0FB02929BCAD00C6521A /* DraggableTitle.swift in Sources */,
 				04A65587293D58DC0084CC6A /* Emails.swift in Sources */,
 				04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */,
+				047BF5662A7468390022505C /* MKMapItem.swift in Sources */,
 				04C71FF42A08DCD100417249 /* GeoError.swift in Sources */,
 				0402C6B12A18DAF700238C51 /* String.swift in Sources */,
 				0402C61D2A0D0CF700238C51 /* Shapes.swift in Sources */,
 				0402C6AF2A18D5AB00238C51 /* Constants.swift in Sources */,
 				049C0F932929384D00C6521A /* MapView.swift in Sources */,
+				047BF5622A740A0C0022505C /* AppDelegate.swift in Sources */,
 				049C0FAA2929B86500C6521A /* ShareView.swift in Sources */,
 				049C0FAC2929B98E00C6521A /* Store.swift in Sources */,
 				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
 				0402C6322A0DAC8900238C51 /* Analytics.swift in Sources */,
 				049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */,
+				047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */,
 				049C0F8F2929384D00C6521A /* ViewModel.swift in Sources */,
 				049C0FA029295C0300C6521A /* InfoView.swift in Sources */,
 				049C0FA329295C5A00C6521A /* View.swift in Sources */,
@@ -458,7 +472,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
+				INFOPLIST_FILE = Geojson/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GeoViewer;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -499,7 +513,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
+				INFOPLIST_FILE = Geojson/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GeoViewer;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

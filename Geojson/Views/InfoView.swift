@@ -18,81 +18,83 @@ struct InfoView: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 0) {
-                VStack(spacing: 10) {
-                    Image("logo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 70, height: 70)
-                        .continuousRadius(15)
-                        .addShadow()
-                    Text(Constants.name)
-                        .font(.largeTitle.bold())
-                        .multilineTextAlignment(.center)
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 0) {
+                    VStack(spacing: 10) {
+                        Image("logo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 70, height: 70)
+                            .continuousRadius(70 * 0.2237)
+                            .shadow()
+                        Text(Constants.name)
+                            .font(.largeTitle.bold())
+                            .multilineTextAlignment(.center)
+                    }
+                    .horizontallyCentred()
+                    .padding(.bottom, 30)
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        InfoRow(systemName: "map", title: "Import GPX, KML and GeoJSON", description: "Browse your geodata on a satellite or standard map.")
+                        InfoRow(systemName: "location.north.line.fill", title: "Track Your Location", description: "Watch you location and heading update live on the map.")
+                        InfoRow(systemName: "clock.arrow.circlepath", title: "Quickly Open Recent Files", description: "Open files that you have recently imported in just 2 taps.")
+                    }
                 }
+                .padding(.horizontal)
+                .frame(maxWidth: 450)
                 .horizontallyCentred()
-                .padding(.bottom, 30)
-                
-                VStack(alignment: .leading, spacing: 20) {
-                    InfoRow(systemName: "mappin.and.ellipse", title: "GPX, KML and GeoJSON", description: "Import the most popular geodata file formats and browse your data on an interactive map.")
-                    InfoRow(systemName: "line.3.horizontal.decrease.circle", title: "Filter Map Data", description: "Filter points, lines and polygons.")
-                    InfoRow(systemName: "clock.arrow.circlepath", title: "Save Your Recents", description: "Quickly open your recent files.")
-                    if !welcome {
+            }
+            .safeAreaInset(edge: .bottom) {
+                Group {
+                    if welcome {
+                        VStack {
+                            Text("Supports .geojson .json .gpx .kml .kmz")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            ImportButton(showInfoView: $isPresented, infoView: true)
+                        }
+                    } else {
                         Menu {
-                            ForEach(GeoFileType.allCases, id: \.self) { type in
+                            if MFMailComposeViewController.canSendMail() {
                                 Button {
-                                    UIApplication.shared.open(type.helpUrl)
+                                    showEmailSheet = true
                                 } label: {
-                                    Label(type.helpUrlName, systemImage: "safari")
+                                    Label("Send us Feedback", systemImage: "envelope")
+                                }
+                            } else if let url = Emails.mailtoUrl(subject: "\(Constants.name) Feedback"), UIApplication.shared.canOpenURL(url) {
+                                Button {
+                                    UIApplication.shared.open(url)
+                                } label: {
+                                    Label("Send us Feedback", systemImage: "envelope")
                                 }
                             }
+                            Button {
+                                Store.writeReview()
+                            } label: {
+                                Label("Write a Review", systemImage: "quote.bubble")
+                            }
+                            Button {
+                                Store.requestRating()
+                            } label: {
+                                Label("Rate \(Constants.name)", systemImage: "star")
+                            }
+                            Button {
+                                showShareSheet = true
+                            } label: {
+                                Label("Share \(Constants.name)", systemImage: "square.and.arrow.up")
+                            }
                         } label: {
-                            InfoRow(systemName: "questionmark.circle", title: "Having Trouble Importing Data?", description: "Check out these helpful ", link: "websites")
+                            Text("Contribute...")
+                                .bigButton()
                         }
+                        .sharePopover(items: [Constants.appUrl], showsSharedAlert: true, isPresented: $showShareSheet)
                     }
                 }
-                
-                Spacer()
-                if welcome {
-                    ImportButton(showInfoView: $isPresented, infoView: true)
-                } else {
-                    Menu {
-                        if MFMailComposeViewController.canSendMail() {
-                            Button {
-                                showEmailSheet.toggle()
-                            } label: {
-                                Label("Send us Feedback", systemImage: "envelope")
-                            }
-                        } else if let url = Emails.mailtoUrl(subject: "\(Constants.name) Feedback"), UIApplication.shared.canOpenURL(url) {
-                            Button {
-                                UIApplication.shared.open(url)
-                            } label: {
-                                Label("Send us Feedback", systemImage: "envelope")
-                            }
-                        }
-                        Button {
-                            Store.writeReview()
-                        } label: {
-                            Label("Write a Review", systemImage: "quote.bubble")
-                        }
-                        Button {
-                            Store.requestRating()
-                        } label: {
-                            Label("Rate \(Constants.name)", systemImage: "star")
-                        }
-                        Button {
-                            showShareSheet.toggle()
-                        } label: {
-                            Label("Share \(Constants.name)", systemImage: "square.and.arrow.up")
-                        }
-                    } label: {
-                        Text("Contribute...")
-                            .bigButton()
-                    }
-                    .sharePopover(url: Constants.appUrl, showsSharedAlert: true, isPresented: $showShareSheet)
-                }
+                .padding()
+                .background(Color(.systemBackground))
+                .frame(maxWidth: 450)
+                .horizontallyCentred()
             }
-            .padding()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -132,7 +134,6 @@ struct InfoRow: View {
     let systemName: String
     let title: String
     let description: String
-    var link = ""
     
     var body: some View {
         HStack {
@@ -145,10 +146,6 @@ struct InfoRow: View {
                     .font(.headline)
                     .foregroundColor(.primary)
                 Text(description)
-                    .foregroundColor(.secondary) +
-                Text(link)
-                    .foregroundColor(.accentColor) +
-                Text(link.isEmpty ? "" : ".")
                     .foregroundColor(.secondary)
             }
         }

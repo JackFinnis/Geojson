@@ -9,15 +9,18 @@ import SwiftUI
 import MapKit
 
 class _MKMapView: MKMapView {
+    var compass: UIView? {
+        subviews.first(where: { type(of: $0).id == "MKCompassView" })
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        if let compass = subviews.first(where: { type(of: $0).id == "MKCompassView" }) {
-            compass.center = compass.center.applying(.init(translationX: -5, y: Constants.size*3 + 25))
-            if (compass.gestureRecognizers?.count ?? 0) < 2 {
-                let tap = UITapGestureRecognizer(target: ViewModel.shared, action: #selector(ViewModel.tappedCompass))
-                tap.delegate = ViewModel.shared
-                compass.addGestureRecognizer(tap)
-            }
+        guard let compass else { return }
+        compass.center = compass.center.applying(.init(translationX: -(15 + Constants.size), y: 5))
+        if compass.gestureRecognizers?.count == 1 {
+            let tap = UITapGestureRecognizer(target: ViewModel.shared, action: #selector(ViewModel.tappedCompass))
+            tap.delegate = ViewModel.shared
+            compass.addGestureRecognizer(tap)
         }
     }
 }
@@ -35,7 +38,14 @@ struct MapView: UIViewRepresentable {
         mapView.showsCompass = true
         mapView.isPitchEnabled = false
         
+        if #available(iOS 16, *) {
+            mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest, .territories]
+        }
+        
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMarkerAnnotationView.id)
+        
+        let pressRecognizer = UILongPressGestureRecognizer(target: vm, action: #selector(ViewModel.handlePress))
+        mapView.addGestureRecognizer(pressRecognizer)
         
         return mapView
     }

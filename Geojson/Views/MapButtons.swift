@@ -16,6 +16,14 @@ struct MapButtons: View {
         VStack(spacing: 10) {
             VStack(spacing: 0) {
                 Button {
+                    showInfoView = true
+                } label: {
+                    Image(systemName: "info.circle")
+                        .squareButton()
+                }
+                
+                Divider().frame(width: Constants.size)
+                Button {
                     updateMapType()
                 } label: {
                     Image(systemName: mapTypeImage)
@@ -35,45 +43,43 @@ struct MapButtons: View {
             }
             .blurBackground()
             
-            VStack(spacing: 0) {
-                Button {
-                    showInfoView = true
-                } label: {
-                    Image(systemName: "info.circle")
-                        .squareButton()
-                }
-                
-                if vm.multipleTypes {
-                    Divider().frame(width: Constants.size)
-                    Menu {
-                        Picker("", selection: $vm.selectedShapeType) {
-                            Text("No Filter")
-                                .tag(nil as GeoShapeType?)
-                            ForEach(GeoShapeType.allCases, id: \.self) { type in
-                                let text = Text(type.rawValue).tag(type as GeoShapeType?)
-                                switch type {
-                                case .point:
-                                    if vm.points.isNotEmpty { text }
-                                case .polygon:
-                                    if vm.polygons.isNotEmpty { text }
-                                case .polyline:
-                                    if vm.polylines.isNotEmpty { text }
-                                }
+            if vm.multipleTypes {
+                Menu {
+                    Picker("", selection: $vm.selectedShapeType) {
+                        Text("No Filter")
+                            .tag(nil as GeoShapeType?)
+                        ForEach(GeoShapeType.allCases, id: \.self) { type in
+                            let text = Text(type.rawValue).tag(type as GeoShapeType?)
+                            switch type {
+                            case .point:
+                                if vm.points.isNotEmpty { text }
+                            case .polygon:
+                                if vm.polygons.isNotEmpty { text }
+                            case .polyline:
+                                if vm.polylines.isNotEmpty { text }
                             }
                         }
-                    } label: {
-                        Image(systemName: "line.3.horizontal.decrease.circle\(vm.selectedShapeType == nil ? "" : ".fill")")
-                            .squareButton()
                     }
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                } label: {
+                    Image(systemName: "line.3.horizontal.decrease.circle\(vm.selectedShapeType == nil ? "" : ".fill")")
+                        .squareButton()
                 }
+                .blurBackground()
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
-            .blurBackground()
         }
         .animation(.default, value: vm.multipleTypes)
         .padding(10)
         .sheet(isPresented: $showInfoView) {
             InfoView(isPresented: $showInfoView, welcome: false)
+        }
+        .alert("Access Denied", isPresented: $vm.showAuthAlert) {
+            Button("Maybe Later") {}
+            Button("Settings", role: .cancel) {
+                vm.openSettings()
+            }
+        } message: {
+            Text("\(Constants.name) needs access to your location to show where you are on the map. Please go to Settings > \(Constants.name) > Location and allow access while using the app.")
         }
     }
     

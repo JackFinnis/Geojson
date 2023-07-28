@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UniformTypeIdentifiers
 
 // Format    Seconds
 // KML       0.023
@@ -62,4 +63,12 @@ enum GeoFileType: String, CaseIterable {
     static var allFileExtensions: [String] {
         Array(allCases.map(\.fileExtensions).joined())
     }
+    
+    static let allUTTypes: [UTType] = [
+        .json,
+        UTType("com.jackfinnis.geojson")!,
+        UTType("com.jackfinnis.gpx")!,
+        UTType("com.jackfinnis.kml")!,
+        UTType("com.jackfinnis.kmz")!
+    ]
 }

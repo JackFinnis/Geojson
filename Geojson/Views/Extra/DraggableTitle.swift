@@ -7,7 +7,18 @@
 
 import SwiftUI
 
+struct DraggableBar: View {
+    var body: some View {
+        Rectangle()
+            .frame(width: 36, height: 5)
+            .foregroundColor(Color(.placeholderText))
+            .clipShape(Capsule())
+    }
+}
+
 struct DraggableTitle: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    
     let title: String
     
     init(_ title: String = "") {
@@ -15,18 +26,19 @@ struct DraggableTitle: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            Rectangle()
-                .frame(width: 35, height: 5)
-                .foregroundColor(Color(.placeholderText))
-                .cornerRadius(2.5)
-            Spacer()
-        }
-        .frame(height: 45)
-        .overlay {
-            Text(title)
-                .font(.headline)
-                .fixedSize()
+        if horizontalSizeClass == .regular {
+            Text("")
+        } else {
+            VStack(spacing: 0) {
+                DraggableBar()
+                Spacer()
+            }
+            .frame(height: 45)
+            .overlay {
+                Text(title)
+                    .font(.headline)
+                    .fixedSize()
+            }
         }
     }
 }

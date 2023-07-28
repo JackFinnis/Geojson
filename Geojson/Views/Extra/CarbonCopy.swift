@@ -9,17 +9,15 @@ import SwiftUI
 
 struct CarbonCopy: UIViewRepresentable {
     func makeUIView(context: Context) -> UIVisualEffectView {
-        let view = UIVisualEffectView()
-        let effect = UIBlurEffect(style: .regular)
-        
-        let animator = UIViewPropertyAnimator()
-        animator.addAnimations { view.effect = effect }
-        animator.fractionComplete = 0
-        animator.stopAnimation(true)
-        animator.finishAnimation(at: .start)
-        
-        return view
+        UIVisualEffectView()
     }
     
-    func updateUIView(_ view: UIVisualEffectView, context: Context) {}
+    func updateUIView(_ view: UIVisualEffectView, context: Context) {
+        view.effect = nil
+        let effect = UIBlurEffect(style: .regular)
+        let animator = UIViewPropertyAnimator()
+        animator.addAnimations { view.effect = effect }
+        animator.startAnimation()
+        animator.stopAnimation(true)
+    }
 }

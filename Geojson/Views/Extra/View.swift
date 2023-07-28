@@ -21,15 +21,15 @@ extension View {
             .frame(width: Constants.size, height: Constants.size)
     }
     
-    func addShadow() -> some View {
+    func shadow() -> some View {
         self.compositingGroup()
-            .shadow(color: Color.black.opacity(0.2), radius: 5)
+            .shadow(color: Color.black.opacity(0.2), radius: 5, y: 5)
     }
     
     func blurBackground() -> some View {
         self.background(.thickMaterial)
             .continuousRadius(10)
-            .addShadow()
+            .shadow()
     }
     
     func continuousRadius(_ cornerRadius: CGFloat) -> some View {

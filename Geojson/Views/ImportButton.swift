@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ImportButton: View {
     @EnvironmentObject var vm: ViewModel
@@ -15,45 +16,58 @@ struct ImportButton: View {
     let infoView: Bool
     
     var body: some View {
-        Menu {
-            Section("Import File") {
-                ForEach(GeoFileType.allCases, id: \.self) { type in
+        Group {
+            if infoView {
+                Button {
+                    showFileImporter = true
+                } label: {
+                    Text("Import File")
+                        .bigButton()
+                }
+            } else {
+                Menu {
                     Button {
                         showFileImporter = true
                     } label: {
-                        Label("Import \(type.rawValue) File", systemImage: "plus")
+                        Label("Import GPX, KML or GeoJSON File", systemImage: "plus")
                     }
-                }
-            }
-            Section("Recent Files") {
-                ForEach(vm.recentUrls.reversed(), id: \.self) { url in
-                    Button(url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent) {
-                        vm.importFile(url: url, canShowAlert: true)
+                    Section("Open Recent File") {
+                        ForEach(vm.recentUrls.reversed(), id: \.self) { url in
+                            Button(url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent) {
+                                vm.importFile(url: url, canShowAlert: true)
+                            }
+                        }
                     }
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title2.weight(.semibold))
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.accentColor)
+                        .clipShape(Circle())
+                        .shadow()
                 }
-            }
-        } label: {
-            if infoView {
-                Text("Import GeoJSON")
-                    .bigButton()
-            } else {
-                Image(systemName: "plus")
-                    .font(.title2.weight(.semibold))
-                    .foregroundColor(.white)
-                    .frame(width: 50, height: 50)
-                    .background(Color.accentColor)
-                    .clipShape(Circle())
-                    .addShadow()
             }
         }
-        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.item]) { result in
+        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: GeoFileType.allUTTypes) { result in
             switch result {
             case .success(let url):
                 vm.importFile(url: url, canShowAlert: true)
+                vm.requestLocationAuthorization()
                 showInfoView = false
             case .failure(let error):
                 debugPrint(error)
             }
+        }
+        .alert("Import Failed", isPresented: $vm.showFailedAlert) {
+            Button("OK", role: .cancel) {}
+            if let fileType = vm.geoError.fileType {
+                Button("Open Help Website") {
+                    UIApplication.shared.open(fileType.helpUrl)
+                }
+            }
+        } message: {
+            Text(vm.geoError.message)
         }
     }
 }
