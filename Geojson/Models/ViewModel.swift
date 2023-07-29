@@ -431,10 +431,12 @@ extension ViewModel: MKMapViewDelegate {
             }
         } else if let mapItem = view.annotation as? MKMapItem {
             mapItem.openInMaps()
-        } else if let annotation = view.annotation {
-            getMapItem(coord: annotation.coordinate, name: annotation.title ?? nil) { mapItem in
+        } else if let point = view.annotation as? Point {
+            getMapItem(coord: point.coordinate, name: point.title) { mapItem in
                 mapItem.openInMaps()
             }
+        } else if let user = view.annotation as? MKUserLocation {
+            MKMapItem.forCurrentLocation().openInMaps()
         }
     }
     
