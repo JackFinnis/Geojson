@@ -435,7 +435,7 @@ extension ViewModel: MKMapViewDelegate {
             getMapItem(coord: point.coordinate, name: point.title) { mapItem in
                 mapItem.openInMaps()
             }
-        } else if let user = view.annotation as? MKUserLocation {
+        } else if let _ = view.annotation as? MKUserLocation {
             MKMapItem.forCurrentLocation().openInMaps()
         }
     }
