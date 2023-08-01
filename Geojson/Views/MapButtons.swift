@@ -16,7 +16,7 @@ struct MapButtons: View {
         VStack(spacing: 10) {
             VStack(spacing: 0) {
                 Button {
-                    showInfoView = true
+                    showInfoView.toggle()
                 } label: {
                     Image(systemName: "info.circle")
                         .squareButton()

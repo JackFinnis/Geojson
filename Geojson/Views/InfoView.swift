@@ -57,7 +57,7 @@ struct InfoView: View {
                         Menu {
                             if MFMailComposeViewController.canSendMail() {
                                 Button {
-                                    showEmailSheet = true
+                                    showEmailSheet.toggle()
                                 } label: {
                                     Label("Send us Feedback", systemImage: "envelope")
                                 }
@@ -79,7 +79,7 @@ struct InfoView: View {
                                 Label("Rate \(Constants.name)", systemImage: "star")
                             }
                             Button {
-                                showShareSheet = true
+                                showShareSheet.toggle()
                             } label: {
                                 Label("Share \(Constants.name)", systemImage: "square.and.arrow.up")
                             }

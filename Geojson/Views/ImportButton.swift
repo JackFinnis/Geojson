@@ -19,7 +19,7 @@ struct ImportButton: View {
         Group {
             if infoView {
                 Button {
-                    showFileImporter = true
+                    showFileImporter.toggle()
                 } label: {
                     Text("Import File")
                         .bigButton()
@@ -27,7 +27,7 @@ struct ImportButton: View {
             } else {
                 Menu {
                     Button {
-                        showFileImporter = true
+                        showFileImporter.toggle()
                     } label: {
                         Label("Import GPX, KML or GeoJSON File", systemImage: "plus")
                     }

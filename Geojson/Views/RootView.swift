@@ -11,7 +11,7 @@ struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
     @StateObject var vm = ViewModel.shared
-    @AppStorage("launchedBefore") var launchedBefore = false
+    @AppStorage("firstLaunch") var firstLaunch = true
     @State var showWelcomeView = false
     
     var body: some View {
@@ -36,8 +36,8 @@ struct RootView: View {
             }
         }
         .task {
-            if !launchedBefore {
-                launchedBefore = true
+            if firstLaunch {
+                firstLaunch = false
                 showWelcomeView = true
             }
         }
