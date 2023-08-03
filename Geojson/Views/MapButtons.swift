@@ -79,34 +79,32 @@ struct MapButtons: View {
                 vm.openSettings()
             }
         } message: {
-            Text("\(Constants.name) needs access to your location to show where you are on the map. Please go to Settings > \(Constants.name) > Location and allow access while using the app.")
+            Text("\(Constants.name) needs access to your location to show where you are on the map. Please go to Settings > \(Constants.name) > Location and select \"While Using the App\".")
         }
     }
     
     func updateTrackingMode() {
-        var mode: MKUserTrackingMode {
-            switch vm.trackingMode {
-            case .none:
-                return .follow
-            case .follow:
-                return .followWithHeading
-            default:
-                return .none
-            }
+        let mode: MKUserTrackingMode
+        switch vm.trackingMode {
+        case .none:
+            mode = .follow
+        case .follow:
+            mode = .followWithHeading
+        default:
+            mode = .none
         }
-        vm.updateTrackingMode(mode)
+        vm.setTrackingMode(mode)
     }
     
     func updateMapType() {
-        var type: MKMapType {
-            switch vm.mapType {
-            case .standard:
-                return .hybrid
-            default:
-                return .standard
-            }
+        let type: MKMapType
+        switch vm.mapType {
+        case .standard:
+            type = .hybrid
+        default:
+            type = .standard
         }
-        vm.updateMapType(type)
+        vm.setMapType(type)
     }
     
     var trackingModeImage: String {

@@ -207,7 +207,7 @@ class ViewModel: NSObject, ObservableObject {
         }
     }
     
-    func updateTrackingMode(_ newMode: MKUserTrackingMode) {
+    func setTrackingMode(_ newMode: MKUserTrackingMode) {
         guard validateAuth() else { return }
         mapView?.setUserTrackingMode(newMode, animated: true)
         if trackingMode == .followWithHeading || newMode == .followWithHeading {
@@ -225,7 +225,7 @@ class ViewModel: NSObject, ObservableObject {
         }
     }
     
-    func updateMapType(_ newType: MKMapType) {
+    func setMapType(_ newType: MKMapType) {
         mapView?.mapType = newType
         refreshFeatures()
         withAnimation(.easeInOut(duration: 0.25)) {
@@ -419,8 +419,8 @@ extension ViewModel: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
-        let view = mapView.view(for: mapView.userLocation)
-        view?.rightCalloutAccessoryView = getButton(systemName: "map")
+        guard let user = mapView.view(for: mapView.userLocation) else { return }
+        user.rightCalloutAccessoryView = getButton(systemName: "map")
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
@@ -448,14 +448,14 @@ extension ViewModel: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
         if !animated {
-            updateTrackingMode(.none)
+            setTrackingMode(.none)
         }
     }
     
     @objc
     func tappedCompass() {
         guard trackingMode == .followWithHeading else { return }
-        updateTrackingMode(.follow)
+        setTrackingMode(.follow)
     }
 }
 
