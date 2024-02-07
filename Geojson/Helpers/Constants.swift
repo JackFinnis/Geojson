@@ -11,5 +11,5 @@ struct Constants {
     static let name = "GeoViewer"
     static let size = 44.0
     static let email = "jack.finnis@icloud.com"
-    static let appUrl = URL(string: "https://apps.apple.com/app/id6444589175")!
+    static let appURL = URL(string: "https://apps.apple.com/app/id6444589175")!
 }

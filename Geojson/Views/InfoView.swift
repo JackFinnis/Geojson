@@ -87,7 +87,7 @@ struct InfoView: View {
                             Text("Contribute...")
                                 .bigButton()
                         }
-                        .sharePopover(items: [Constants.appUrl], showsSharedAlert: true, isPresented: $showShareSheet)
+                        .sharePopover([Constants.appURL], showsSharedAlert: true, isPresented: $showShareSheet)
                     }
                 }
                 .padding()
