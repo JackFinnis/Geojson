@@ -34,17 +34,3 @@ class Point: NSObject, MKAnnotation {
         subtitle = placemark.featureDescription
     }
 }
-
-extension MKPolygon {
-    convenience init(exteriorCoords: [CLLocationCoordinate2D], interiorCoords: [[CLLocationCoordinate2D]]?) {
-        self.init(coordinates: exteriorCoords, count: exteriorCoords.count, interiorPolygons: interiorCoords?.map { coords in
-            MKPolygon(coordinates: coords, count: coords.count)
-        })
-    }
-}
-
-extension MKPolyline {
-    convenience init(coords: [CLLocationCoordinate2D]) {
-        self.init(coordinates: coords, count: coords.count)
-    }
-}

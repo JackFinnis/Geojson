@@ -8,21 +8,15 @@
 import Foundation
 import UniformTypeIdentifiers
 
-// Format    Seconds
-// KML       0.023
-// GPX       0.028
-// GeoJSON   0.016
 enum GeoFileType: String, CaseIterable {
     case geojson = "GeoJSON"
     case gpx = "GPX"
     case kml = "KML"
     
     init?(fileExtension: String) {
-        for type in GeoFileType.allCases {
-            if type.fileExtensions.contains(fileExtension) {
-                self = type
-                return
-            }
+        for type in GeoFileType.allCases where type.fileExtensions.contains(fileExtension) {
+            self = type
+            return
         }
         return nil
     }

@@ -1,8 +1,8 @@
 //
-//  CopyView.swift
-//  Trails
+//  CarbonCopy.swift
+//  Cycle
 //
-//  Created by Jack Finnis on 19/04/2023.
+//  Created by Jack Finnis on 17/02/2024.
 //
 
 import SwiftUI

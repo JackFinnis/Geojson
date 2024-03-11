@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import MessageUI
 
 struct Emails {
-    static func mailtoUrl(subject: String) -> URL? {
-        guard let encodedSubject = subject.urlEncoded else { return nil }
+    static func url(subject: String) -> URL? {
+        guard let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
         return URL(string: "mailto:\(Constants.email)?subject=\(encodedSubject)")
     }
 }

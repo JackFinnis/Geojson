@@ -1,56 +1,22 @@
 //
 //  View.swift
-//  Geojson
+//  Cycle
 //
-//  Created by Jack Finnis on 19/11/2022.
+//  Created by Jack Finnis on 17/02/2024.
 //
 
 import SwiftUI
 
 extension View {
-    func horizontallyCentred() -> some View {
-        HStack {
-            Spacer(minLength: 0)
-            self
-            Spacer(minLength: 0)
-        }
+    func box() -> some View {
+        frame(width: Constants.size, height: Constants.size)
     }
     
-    func squareButton() -> some View {
-        self.font(.system(size: Constants.size/2))
-            .frame(width: Constants.size, height: Constants.size)
-    }
-    
-    func shadow() -> some View {
-        self.compositingGroup()
-            .shadow(color: Color.black.opacity(0.2), radius: 5, y: 5)
-    }
-    
-    func blurBackground() -> some View {
-        self.background(.thickMaterial)
-            .continuousRadius(10)
-            .shadow()
-    }
-    
-    func continuousRadius(_ cornerRadius: CGFloat) -> some View {
-        clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-    }
-    
-    func bigButton() -> some View {
-        self.font(.headline)
-            .padding()
-            .horizontallyCentred()
-            .foregroundColor(.white)
-            .background(Color.accentColor)
-            .continuousRadius(16)
-    }
-    
-    @ViewBuilder
-    func `if`<Content: View>(_ applyModifier: Bool = true, @ViewBuilder content: (Self) -> Content) -> some View {
-        if applyModifier {
-            content(self)
-        } else {
-            self
-        }
+    func mapButton() -> some View {
+        self
+            .font(.system(size: 19))
+            .background(.ultraThickMaterial)
+            .clipShape(.rect(cornerRadius: 8))
+            .shadow(color: Color(.systemFill), radius: 5)
     }
 }

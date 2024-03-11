@@ -9,11 +9,22 @@ import SwiftUI
 
 @main
 struct GeojsonApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @Environment(\.scenePhase) var scenePhase
+    @State var app = AppState.shared
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
         WindowGroup {
-            RootView()
+            FilesView()
+                .onChange(of: scenePhase) { _, newPhase in
+                    if newPhase == .active {
+                        app.updateBookmarks()
+                    }
+                }
+                .onOpenURL { url in
+                    app.importFile(url: url)
+                }
         }
+        .environmentObject(app)
     }
 }
