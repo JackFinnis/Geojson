@@ -37,8 +37,9 @@ struct FileView: View {
                             .foregroundStyle(.orange.opacity(0.1))
                             .stroke(.orange, style: .init(lineWidth: 3, lineCap: .round, lineJoin: .round))
                     }
-                    if let droppedPoint {
+                    if let droppedPoint, droppedPoint == selectedPoint {
                         Marker("", coordinate: droppedPoint.coordinate)
+                            .tag(droppedPoint)
                     }
                     ForEach(data.points, id: \.self) { point in
                         if let i = point.index {
@@ -54,28 +55,27 @@ struct FileView: View {
                 .onMapCameraChange { context in
                     mapRect = context.rect
                 }
-//                .gesture(
-//                    LongPressGesture(minimumDuration: 1)
-//                        .sequenced(before: DragGesture(minimumDistance: 0, coordinateSpace: .local))
-//                        .onEnded { value in
-//                            if case let .second(true, drag) = value {
-//                                guard let point = drag?.location,
-//                                      let coord = map.convert(point, from: .local)
-//                                else { return }
-//                                droppedPoint = Point(coordinate: coord)
-//                                withAnimation {
-//                                    selectedPoint = droppedPoint
-//                                }
-//                            }
-//                            liveGesture = false
-//                        }
-//                        .onChanged { value in
-//                            if case let .second(true, drag) = value, !liveGesture {
-//                                liveGesture = true
-//                                Haptics.tap()
-//                            }
-//                        }
-//                )
+                .onTapGesture { point in }
+                .gesture(
+                    LongPressGesture(minimumDuration: 1, maximumDistance: 0)
+                        .simultaneously(with: DragGesture(minimumDistance: 0, coordinateSpace: .local))
+                        .onEnded { value in
+                            liveGesture = false
+                        }
+                        .onChanged { value in
+                            guard let drag = value.second,
+                                  let coord = map.convert(drag.location, from: .local)
+                            else { return }
+                            if !liveGesture {
+                                liveGesture = true
+                                Haptics.tap()
+                                withAnimation {
+                                    droppedPoint = Point(coordinate: coord)
+                                    selectedPoint = droppedPoint
+                                }
+                            }
+                        }
+                )
                 .overlay(alignment: .top) {
                     CarbonCopy()
                         .id(app.scenePhase)
