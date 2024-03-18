@@ -40,14 +40,14 @@
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.jackfinnis.kml</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.xml</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>KML</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.jackfinnis.kml</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -57,14 +57,14 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.jackfinnis.kmz</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.zip-archive</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>KMZ</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.jackfinnis.kmz</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -74,14 +74,14 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.jackfinnis.gpx</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.xml</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>GPX</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.jackfinnis.gpx</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -91,14 +91,14 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.jackfinnis.geojson</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.json</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>GeoJSON</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.jackfinnis.geojson</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

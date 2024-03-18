@@ -17,6 +17,6 @@ extension View {
             .font(.system(size: 19))
             .background(.ultraThickMaterial)
             .clipShape(.rect(cornerRadius: 8))
-            .shadow(color: Color(.systemFill), radius: 5)
+            .shadow(color: Color.black.opacity(0.1), radius: 5)
     }
 }

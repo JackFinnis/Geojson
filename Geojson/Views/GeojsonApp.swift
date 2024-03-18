@@ -17,6 +17,7 @@ struct GeojsonApp: App {
         WindowGroup {
             FilesView()
                 .onChange(of: scenePhase) { _, newPhase in
+                    app.scenePhase = scenePhase
                     if newPhase == .active {
                         app.updateBookmarks()
                     }

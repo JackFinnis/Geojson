@@ -32,15 +32,12 @@
 		049C0FAC2929B98E00C6521A /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAB2929B98E00C6521A /* AppStore.swift */; };
 		049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAD2929BC0800C6521A /* DismissCross.swift */; };
 		049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FB12929BEFE00C6521A /* Haptics.swift */; };
-		049C0FB9292A88CD00C6521A /* Starbucks.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB6292A88CD00C6521A /* Starbucks.geojson */; };
-		049C0FBA292A88CD00C6521A /* ULEZ.json in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB7292A88CD00C6521A /* ULEZ.json */; };
-		049C0FBB292A88CD00C6521A /* Cycle Lanes.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */; };
 		04A65587293D58DC0084CC6A /* Emails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A65586293D58DC0084CC6A /* Emails.swift */; };
 		04BA4C5B2B9E4A4A006AF820 /* MKPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5A2B9E4A4A006AF820 /* MKPolygon.swift */; };
 		04BA4C5D2B9E4AB5006AF820 /* MKPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5C2B9E4AB5006AF820 /* MKPolyline.swift */; };
 		04BA4C5F2B9E4D13006AF820 /* CarbonCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5E2B9E4D13006AF820 /* CarbonCopy.swift */; };
 		04BA4C612B9E4FAB006AF820 /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C602B9E4FAB006AF820 /* FilesView.swift */; };
-		04BA4C632B9E5073006AF820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C622B9E5073006AF820 /* File.swift */; };
+		04BA4C632B9E5073006AF820 /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C622B9E5073006AF820 /* GeoData.swift */; };
 		04BA4C652B9E50D5006AF820 /* GeoParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C642B9E50D5006AF820 /* GeoParser.swift */; };
 		04C71FF42A08DCD100417249 /* GeoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C71FF32A08DCD100417249 /* GeoError.swift */; };
 		04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C71FF52A08DCEB00417249 /* GeoFileType.swift */; };
@@ -73,15 +70,12 @@
 		049C0FAB2929B98E00C6521A /* AppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		049C0FAD2929BC0800C6521A /* DismissCross.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissCross.swift; sourceTree = "<group>"; };
 		049C0FB12929BEFE00C6521A /* Haptics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
-		049C0FB6292A88CD00C6521A /* Starbucks.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Starbucks.geojson; sourceTree = "<group>"; };
-		049C0FB7292A88CD00C6521A /* ULEZ.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ULEZ.json; sourceTree = "<group>"; };
-		049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Cycle Lanes.geojson"; sourceTree = "<group>"; };
 		04A65586293D58DC0084CC6A /* Emails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emails.swift; sourceTree = "<group>"; };
 		04BA4C5A2B9E4A4A006AF820 /* MKPolygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolygon.swift; sourceTree = "<group>"; };
 		04BA4C5C2B9E4AB5006AF820 /* MKPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolyline.swift; sourceTree = "<group>"; };
 		04BA4C5E2B9E4D13006AF820 /* CarbonCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbonCopy.swift; sourceTree = "<group>"; };
 		04BA4C602B9E4FAB006AF820 /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
-		04BA4C622B9E5073006AF820 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		04BA4C622B9E5073006AF820 /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
 		04BA4C642B9E50D5006AF820 /* GeoParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoParser.swift; sourceTree = "<group>"; };
 		04C71FF32A08DCD100417249 /* GeoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoError.swift; sourceTree = "<group>"; };
 		04C71FF52A08DCEB00417249 /* GeoFileType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoFileType.swift; sourceTree = "<group>"; };
@@ -101,16 +95,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0402C62D2A0DABB300238C51 /* Example Data */ = {
-			isa = PBXGroup;
-			children = (
-				049C0FB8292A88CD00C6521A /* Cycle Lanes.geojson */,
-				049C0FB6292A88CD00C6521A /* Starbucks.geojson */,
-				049C0FB7292A88CD00C6521A /* ULEZ.json */,
-			);
-			path = "Example Data";
-			sourceTree = "<group>";
-		};
 		049C0F68292936F600C6521A = {
 			isa = PBXGroup;
 			children = (
@@ -145,7 +129,6 @@
 				047BF5602A7405FA0022505C /* Info.plist */,
 				0402C62B2A0DAB9000238C51 /* GoogleService-Info.plist */,
 				049C0F78292936F700C6521A /* Assets.xcassets */,
-				0402C62D2A0DABB300238C51 /* Example Data */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -206,10 +189,10 @@
 				049C0F852929384D00C6521A /* AppState.swift */,
 				047BF5612A740A0C0022505C /* AppDelegate.swift */,
 				04BA4C642B9E50D5006AF820 /* GeoParser.swift */,
+				04BA4C622B9E5073006AF820 /* GeoData.swift */,
 				04C71FF32A08DCD100417249 /* GeoError.swift */,
 				04C71FF52A08DCEB00417249 /* GeoFileType.swift */,
 				0402C6152A091EE200238C51 /* GeoShapeType.swift */,
-				04BA4C622B9E5073006AF820 /* File.swift */,
 				0402C61C2A0D0CF700238C51 /* Point.swift */,
 				0443D4332B9F973F00018470 /* SortBy.swift */,
 			);
@@ -249,7 +232,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1410;
-				LastUpgradeCheck = 1410;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					049C0F70292936F600C6521A = {
 						CreatedOnToolsVersion = 14.1;
@@ -284,11 +267,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049C0FB9292A88CD00C6521A /* Starbucks.geojson in Resources */,
-				049C0FBB292A88CD00C6521A /* Cycle Lanes.geojson in Resources */,
 				0402C62C2A0DAB9000238C51 /* GoogleService-Info.plist in Resources */,
 				049C0F79292936F700C6521A /* Assets.xcassets in Resources */,
-				049C0FBA292A88CD00C6521A /* ULEZ.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,7 +284,7 @@
 				04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */,
 				047BF5662A7468390022505C /* MKMapItem.swift in Sources */,
 				04C71FF42A08DCD100417249 /* GeoError.swift in Sources */,
-				04BA4C632B9E5073006AF820 /* File.swift in Sources */,
+				04BA4C632B9E5073006AF820 /* GeoData.swift in Sources */,
 				0402C61D2A0D0CF700238C51 /* Point.swift in Sources */,
 				0402C6AF2A18D5AB00238C51 /* Constants.swift in Sources */,
 				047BF5622A740A0C0022505C /* AppDelegate.swift in Sources */,
@@ -368,9 +348,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -427,9 +409,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -453,6 +437,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4CQW4CFFYT;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -494,6 +479,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4CQW4CFFYT;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -15,8 +15,8 @@ class GeoParser {
     var polylines = [MKPolyline]()
     var polygons = [MKPolygon]()
     
-    var file: File {
-        File(points: points, polylines: polylines, polygons: polygons)
+    var geoData: GeoData {
+        GeoData(points: points, polylines: polylines, polygons: polygons)
     }
     
     // MARK: - Parse GeoJSON

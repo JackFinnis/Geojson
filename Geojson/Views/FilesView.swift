@@ -12,26 +12,48 @@ struct FilesView: View {
     @Environment(\.requestReview) var requestReview
     @Environment(\.openURL) var openURL
     @EnvironmentObject var app: AppState
+    @AppStorage("sortBy") var sortBy = SortBy.date
     @State var searchText = ""
     @State var showFileImporter = false
     
     var filteredURLs: [URL] {
+        let urls: [URL]
+        switch sortBy {
+        case .name:
+            urls = app.recentURLs.sorted(using: SortDescriptor(\.absoluteString))
+        case .date:
+            urls = app.recentURLs.reversed()
+        }
         if searchText.isEmpty {
-            return app.recentUrls
+            return urls
         } else {
-            return app.recentUrls.filter { $0.lastPathComponent.localizedStandardContains(searchText) }
+            return urls.filter { $0.lastPathComponent.localizedStandardContains(searchText) }
         }
     }
     
     var body: some View {
+        let filteredURLs = filteredURLs
         NavigationStack {
-            List(filteredURLs, id: \.self) { url in
-                Button(url.lastPathComponent) {
-                    app.importFile(url: url)
+            List {
+                ForEach(filteredURLs, id: \.self) { url in
+                    Button(url.lastPathComponent) {
+                        app.importFile(url: url)
+                    }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            app.deleteBookmark(url: url)
+                        } label: {
+                            Label("Remove", systemImage: "trash")
+                        }
+                    }
+                }
+                Section {
+                    Spacer().listRowBackground(Color.clear)
                 }
             }
+            .contentMargins(.vertical, 0)
             .overlay {
-                if app.recentUrls.isEmpty {
+                if app.recentURLs.isEmpty {
                     ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Tap + to import a file"))
                         .allowsHitTesting(false)
                 } else if filteredURLs.isEmpty {
@@ -39,9 +61,9 @@ struct FilesView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
-            .navigationDestination(item: $app.selectedFile) { file in
-                FileView(file: file)
+            .searchable(text: $searchText.animation(), placement: .navigationBarDrawer(displayMode: .always))
+            .navigationDestination(item: $app.selectedGeoData) { data in
+                FileView(mapPosition: .rect(data.rect), data: data)
             }
             .navigationTitle(Constants.name)
             .navigationBarTitleDisplayMode(.inline)
@@ -65,6 +87,21 @@ struct FilesView: View {
                 }
             }
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Picker("Sort Icons", selection: $sortBy.animation()) {
+                            ForEach(SortBy.allCases, id: \.self) { sortBy in
+                                Text(sortBy.rawValue)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
+                    .menuStyle(.button)
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.circle)
+                    .font(.headline)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showFileImporter = true
@@ -77,6 +114,7 @@ struct FilesView: View {
                 }
             }
         }
+        .animation(.default, value: filteredURLs)
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: GeoFileType.allUTTypes) { result in
             switch result {
             case .success(let url):
@@ -88,8 +126,8 @@ struct FilesView: View {
         .alert("Import Failed", isPresented: $app.showError) {
             Button("OK", role: .cancel) {}
             if let fileType = app.error?.fileType {
-                Button("Open Help Website") {
-                    UIApplication.shared.open(fileType.helpUrl)
+                Button("Help") {
+                    UIApplication.shared.open(fileType.helpURL)
                 }
             }
         } message: {

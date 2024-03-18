@@ -17,11 +17,12 @@ class AppState: NSObject, ObservableObject {
     static let shared = AppState()
     
     // MARK: - Properties
-    @Published var selectedFile: File?
+    @Published var selectedGeoData: GeoData?
+    @Published var scenePhase: ScenePhase?
     
     // Storage
-    @Store("recentUrlsData") var recentUrlsData = [Data]()
-    @Published var recentUrls = [URL]()
+    @Store("recentUrlsData") var recentURLsData = [Data]()
+    @Published var recentURLs = [URL]()
     
     // Alerts
     @Published var error: GeoError?
@@ -34,33 +35,36 @@ class AppState: NSObject, ObservableObject {
     }
     
     func updateBookmarks() {
-        recentUrls = []
-        var newUrlsData = [Data]()
-        for data in recentUrlsData {
+        recentURLs = []
+        recentURLsData = recentURLsData.compactMap { data in
             var stale = false
-            guard let url = try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale),
-                  !recentUrls.contains(url)
-            else { continue }
-            recentUrls.append(url)
+            guard let url = try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale), !recentURLs.contains(url) else { return nil }
+            recentURLs.append(url)
             if stale {
-                guard let newData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil) else { continue }
-                newUrlsData.append(newData)
+                guard let newData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil) else { return nil }
+                return newData
             } else {
-                newUrlsData.append(data)
+                return data
             }
         }
-        recentUrlsData = newUrlsData
     }
     
-    // MARK: - Import Data
+    func deleteBookmark(url: URL) {
+        recentURLs.removeAll(url)
+        var stale = false
+        recentURLsData.removeAll { data in
+            (try? url == URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale)) ?? true
+        }
+    }
+    
     func importFile(url: URL) {
         do {
             guard url.startAccessingSecurityScopedResource(),
                   let urlData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil) else {
                 throw GeoError.fileMoved
             }
-            recentUrls.removeAll(url)
-            recentUrlsData.removeAll(urlData)
+            recentURLs.removeAll(url)
+            recentURLsData.removeAll(urlData)
             
             guard let type = GeoFileType(fileExtension: url.pathExtension) else {
                 throw GeoError.fileType
@@ -83,13 +87,13 @@ class AppState: NSObject, ObservableObject {
             case .kml:
                 try parser.parseKML(data: data, fileExtension: url.pathExtension)
             }
-            guard !parser.file.empty else {
+            guard !parser.geoData.empty else {
                 throw GeoError.fileEmpty
             }
-            recentUrls.append(url)
-            recentUrlsData.append(urlData)
+            recentURLs.append(url)
+            recentURLsData.append(urlData)
             
-            selectedFile = parser.file
+            selectedGeoData = parser.geoData
             Haptics.tap()
             Analytics.log(.importFile)
         } catch let error as GeoError {

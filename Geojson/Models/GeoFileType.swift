@@ -32,7 +32,7 @@ enum GeoFileType: String, CaseIterable {
         }
     }
     
-    var helpUrl: URL {
+    var helpURL: URL {
         switch self {
         case .geojson:
             return URL(string: "https://geojson.io")!
@@ -43,7 +43,7 @@ enum GeoFileType: String, CaseIterable {
         }
     }
     
-    var helpUrlName: String {
+    var helpURLName: String {
         switch self {
         case .geojson:
             return "GeoJSON.io"
