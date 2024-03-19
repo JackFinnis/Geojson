@@ -88,12 +88,16 @@ struct FileView: View {
                 }
                 .overlay(alignment: .topLeading) {
                     HStack(alignment: .top, spacing: 20) {
-                        Button {
-                            dismiss()
+                        Menu {
+                            Button("Back") {
+                                dismiss()
+                            }
                         } label: {
                             Image(systemName: "chevron.left")
                                 .bold()
                                 .box()
+                        } primaryAction: {
+                            dismiss()
                         }
                         .mapButton()
                         
