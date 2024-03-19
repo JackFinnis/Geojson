@@ -12,25 +12,25 @@ import RCKML
 
 class Point: NSObject, MKAnnotation {
     let coordinate: CLLocationCoordinate2D
-    var title: String?
-    var subtitle: String?
-    var index: Int?
+    let title: String?
+    let subtitle: String?
+    let index: Int?
     
-    init(coordinate: CLLocationCoordinate2D) {
+    init(coordinate: CLLocationCoordinate2D, title: String? = nil, subtitle: String? = nil, index: Int? = nil) {
         self.coordinate = coordinate
+        self.title = title
+        self.subtitle = subtitle
+        self.index = index
     }
-    
-    init?(i: Int, waypoint: GPXWaypoint) {
+}
+
+extension Point {
+    convenience init?(i: Int, waypoint: GPXWaypoint) {
         guard let coord = waypoint.coord else { return nil }
-        coordinate = coord
-        title = waypoint.name
-        subtitle = waypoint.desc ?? waypoint.comment
-        index = i
+        self.init(coordinate: coord, title: waypoint.name, subtitle: waypoint.desc ?? waypoint.comment, index: i)
     }
     
-    init(point: KMLPoint, placemark: KMLPlacemark) {
-        coordinate = point.coordinate.coord
-        title = placemark.name
-        subtitle = placemark.featureDescription
+    convenience init(point: KMLPoint, placemark: KMLPlacemark) {
+        self.init(coordinate: point.coordinate.coord, title: placemark.name, subtitle: placemark.featureDescription)
     }
 }

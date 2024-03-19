@@ -45,7 +45,7 @@ class GeoParser {
         } else if let multiPolygon = object as? MKMultiPolygon {
             polygons.append(contentsOf: multiPolygon.polygons)
         } else if let multiPoint = object as? MKMultiPoint {
-            points.append(contentsOf: multiPoint.coordinates.map(Point.init))
+            points.append(contentsOf: multiPoint.coordinates.map { Point(coordinate: $0) })
         }
     }
     
@@ -71,7 +71,7 @@ class GeoParser {
     
     func handleGPXWaypoints(_ waypoints: [GPXWaypoint]) {
         let points = waypoints.enumerated().compactMap { i, waypoint in
-            Point(i: i, waypoint: waypoint)
+            Point(i: i + 1, waypoint: waypoint)
         }
         self.points.append(contentsOf: points)
     }
