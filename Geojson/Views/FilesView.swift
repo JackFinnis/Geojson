@@ -63,7 +63,7 @@ struct FilesView: View {
             }
             .searchable(text: $searchText.animation(), placement: .navigationBarDrawer(displayMode: .always))
             .navigationDestination(item: $app.selectedGeoData) { data in
-                FileView(mapPosition: .rect(data.rect), data: data)
+                FileView(data: data)
             }
             .navigationTitle(Constants.name)
             .navigationBarTitleDisplayMode(.inline)
@@ -140,4 +140,5 @@ struct FilesView: View {
 
 #Preview {
     FilesView()
+        .environmentObject(AppState.shared)
 }

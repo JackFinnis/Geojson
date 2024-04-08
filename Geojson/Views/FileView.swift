@@ -12,12 +12,10 @@ struct FileView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var app: AppState
-    @State var mapStyle = MapStyle.standard(elevation: .realistic)
+    @State var mapStyle = MapStyle.standard
     @State var mapStandard = true
-    @State var mapPosition: MapCameraPosition
     @State var selectedPoint: Point?
     @State var droppedPoint: Point?
-    @State var mapRect: MKMapRect?
     @State var liveGesture = false
     @Namespace var mapScope
     
@@ -26,7 +24,7 @@ struct FileView: View {
     var body: some View {
         MapReader { map in
             GeometryReader { geo in
-                Map(position: $mapPosition, selection: $selectedPoint.animation(), scope: mapScope) {
+                Map(initialPosition: .rect(data.rect), interactionModes: [.pan, .zoom, .rotate], selection: $selectedPoint.animation(), scope: mapScope) {
                     UserAnnotation()
                     ForEach(data.polylines, id: \.self) { polyline in
                         MapPolyline(polyline)
@@ -52,9 +50,6 @@ struct FileView: View {
                 .contentMargins(20)
                 .mapStyle(mapStyle)
                 .mapControls {}
-                .onMapCameraChange { context in
-                    mapRect = context.rect
-                }
                 .onTapGesture { point in }
                 .gesture(
                     LongPressGesture(minimumDuration: 1, maximumDistance: 0)
@@ -64,16 +59,12 @@ struct FileView: View {
                         }
                         .onChanged { value in
                             guard let drag = value.second,
-                                  let coord = map.convert(drag.location, from: .local)
+                                  let coord = map.convert(drag.location, from: .local),
+                                  !liveGesture
                             else { return }
-                            if !liveGesture {
-                                liveGesture = true
-                                Haptics.tap()
-                                withAnimation {
-                                    droppedPoint = Point(coordinate: coord)
-                                    selectedPoint = droppedPoint
-                                }
-                            }
+                            liveGesture = true
+                            Haptics.tap()
+                            dropPoint(coord: coord)
                         }
                 )
                 .overlay(alignment: .top) {
@@ -107,37 +98,18 @@ struct FileView: View {
                 }
                 .overlay(alignment: .topTrailing) {
                     VStack(spacing: 10) {
-                        MapUserLocationButton(scope: mapScope)
-                            .buttonBorderShape(.roundedRectangle)
-                        
                         Button {
-                            mapStyle = mapStandard ? .hybrid(elevation: .realistic) : .standard(elevation: .realistic)
+                            mapStyle = mapStandard ? .hybrid : .standard
                             mapStandard.toggle()
                         } label: {
-                            Image(systemName: mapStandard ? "globe" : "map")
+                            Image(systemName: mapStandard ? "globe.americas.fill" : "map")
+                                .contentTransition(.symbolEffect(.replace))
                                 .box()
-                                .rotation3DEffect(mapStandard ? .degrees(180) : .zero, axis: (0, 1, 0))
                         }
                         .mapButton()
                         
-                        MapPitchToggle(scope: mapScope)
+                        MapUserLocationButton(scope: mapScope)
                             .buttonBorderShape(.roundedRectangle)
-                            .mapControlVisibility(.visible)
-                        
-                        if let selectedPoint {
-                            Button {
-                                Task {
-                                    guard let placemark = try? await CLGeocoder().reverseGeocodeLocation(selectedPoint.coordinate.location).first else { return }
-                                    let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
-                                    mapItem.openInMaps()
-                                }
-                            } label: {
-                                Image(systemName: "arrow.triangle.turn.up.right.diamond")
-                                    .box()
-                            }
-                            .mapButton()
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                        }
                         
                         MapCompass(scope: mapScope)
                     }
@@ -147,10 +119,41 @@ struct FileView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+        .confirmationDialog("", isPresented: Binding(get: {
+            selectedPoint != nil
+        }, set: { isPresented in
+            withAnimation {
+                if !isPresented {
+                    selectedPoint = nil
+                }
+            }
+        })) {
+            if let selectedPoint {
+                Button("Directions") {
+                    Task {
+                        await openInMaps(point: selectedPoint)
+                    }
+                }
+            }
+        }
+    }
+    
+    func dropPoint(coord: CLLocationCoordinate2D) {
+        withAnimation {
+            droppedPoint = Point(coordinate: coord)
+            selectedPoint = droppedPoint
+        }
+    }
+    
+    func openInMaps(point: Point) async {
+        guard let placemark = try? await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
+        let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+        mapItem.name = point.title ?? mapItem.name
+        mapItem.openInMaps()
     }
 }
 
 #Preview {
-    FileView(mapPosition: .automatic, data: .example)
+    FileView(data: .example)
         .environmentObject(AppState.shared)
 }
