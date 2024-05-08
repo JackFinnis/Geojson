@@ -28,7 +28,7 @@ struct FileView: View {
                     UserAnnotation()
                     ForEach(data.polylines, id: \.self) { polyline in
                         MapPolyline(polyline)
-                            .stroke(colorScheme == .light ? .blue : .cyan, style: .init(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                            .stroke(colorScheme == .light && mapStandard ? .blue : .cyan, style: .init(lineWidth: 3, lineCap: .round, lineJoin: .round))
                     }
                     ForEach(data.polygons, id: \.self) { polygon in
                         MapPolygon(polygon)
