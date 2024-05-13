@@ -95,7 +95,6 @@ class AppState: NSObject, ObservableObject {
             
             selectedGeoData = parser.geoData
             Haptics.tap()
-            Analytics.log(.importFile)
         } catch let error as GeoError {
             self.error = error
             showError = true

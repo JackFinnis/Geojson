@@ -10,8 +10,7 @@ import SwiftUI
 @main
 struct GeojsonApp: App {
     @Environment(\.scenePhase) var scenePhase
-    @State var app = AppState.shared
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject var app = AppState.shared
     
     var body: some Scene {
         WindowGroup {

@@ -65,27 +65,8 @@ struct FilesView: View {
             .navigationDestination(item: $app.selectedGeoData) { data in
                 FileView(data: data)
             }
-            .navigationTitle(Constants.name)
+            .navigationTitle("Geodata Viewer")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDocument(Constants.appURL, preview: SharePreview(Constants.name, image: Image(.logo))).toolbarTitleMenu {
-                Button {
-                    requestReview()
-                } label: {
-                    Label("Rate \(Constants.name)", systemImage: "star")
-                }
-                Button {
-                    AppStore.writeReview()
-                } label: {
-                    Label("Write a Review", systemImage: "quote.bubble")
-                }
-                if let url = Emails.url(subject: "\(Constants.name) Feedback"), UIApplication.shared.canOpenURL(url) {
-                    Button {
-                        openURL(url)
-                    } label: {
-                        Label("Send us Feedback", systemImage: "envelope")
-                    }
-                }
-            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {

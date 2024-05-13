@@ -7,10 +7,6 @@
 
 import Foundation
 
-extension UserDefaults {
-    static let shared = UserDefaults(suiteName: "group.com.jackfinnis.TubeStatus")!
-}
-
 protocol OptionalProtocol {
     var isNil: Bool { get }
 }
@@ -35,7 +31,7 @@ struct Store<T> {
     init(wrappedValue defaultValue: T, _ key: String, iCloudSync: Bool = false) {
         self.key = key
         self.defaultValue = defaultValue
-        self.store = iCloudSync ? NSUbiquitousKeyValueStore.default : UserDefaults.shared
+        self.store = iCloudSync ? NSUbiquitousKeyValueStore.default : UserDefaults.standard
     }
     
     var wrappedValue: T {

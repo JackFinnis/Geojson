@@ -9,7 +9,7 @@ import SwiftUI
 
 extension View {
     func box() -> some View {
-        frame(width: Constants.size, height: Constants.size)
+        frame(width: 44, height: 44)
     }
     
     func mapButton() -> some View {

@@ -14,13 +14,8 @@
 		0402C61D2A0D0CF700238C51 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C61C2A0D0CF700238C51 /* Point.swift */; };
 		0402C6252A0D10FA00238C51 /* GPXWaypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6242A0D10FA00238C51 /* GPXWaypoint.swift */; };
 		0402C6272A0D175300238C51 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6262A0D175300238C51 /* Array.swift */; };
-		0402C62C2A0DAB9000238C51 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0402C62B2A0DAB9000238C51 /* GoogleService-Info.plist */; };
-		0402C6302A0DAC0100238C51 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0402C62F2A0DAC0100238C51 /* FirebaseAnalytics */; };
-		0402C6322A0DAC8900238C51 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6312A0DAC8900238C51 /* Analytics.swift */; };
-		0402C6AF2A18D5AB00238C51 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6AE2A18D5AB00238C51 /* Constants.swift */; };
 		0443D4322B9F968000018470 /* FileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443D4312B9F968000018470 /* FileView.swift */; };
 		0443D4342B9F973F00018470 /* SortBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443D4332B9F973F00018470 /* SortBy.swift */; };
-		047BF5622A740A0C0022505C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5612A740A0C0022505C /* AppDelegate.swift */; };
 		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
 		047BF5662A7468390022505C /* MKMapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5652A7468390022505C /* MKMapItem.swift */; };
 		049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* GeojsonApp.swift */; };
@@ -29,10 +24,8 @@
 		049C0F9C292953A400C6521A /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F9B292953A400C6521A /* Collection.swift */; };
 		049C0FA329295C5A00C6521A /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA229295C5A00C6521A /* View.swift */; };
 		049C0FA52929A2D100C6521A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA42929A2D100C6521A /* Store.swift */; };
-		049C0FAC2929B98E00C6521A /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAB2929B98E00C6521A /* AppStore.swift */; };
 		049C0FAE2929BC0800C6521A /* DismissCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FAD2929BC0800C6521A /* DismissCross.swift */; };
 		049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FB12929BEFE00C6521A /* Haptics.swift */; };
-		04A65587293D58DC0084CC6A /* Emails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A65586293D58DC0084CC6A /* Emails.swift */; };
 		04BA4C5B2B9E4A4A006AF820 /* MKPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5A2B9E4A4A006AF820 /* MKPolygon.swift */; };
 		04BA4C5D2B9E4AB5006AF820 /* MKPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5C2B9E4AB5006AF820 /* MKPolyline.swift */; };
 		04BA4C5F2B9E4D13006AF820 /* CarbonCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5E2B9E4D13006AF820 /* CarbonCopy.swift */; };
@@ -51,13 +44,9 @@
 		0402C61C2A0D0CF700238C51 /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		0402C6242A0D10FA00238C51 /* GPXWaypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXWaypoint.swift; sourceTree = "<group>"; };
 		0402C6262A0D175300238C51 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
-		0402C62B2A0DAB9000238C51 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		0402C6312A0DAC8900238C51 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
-		0402C6AE2A18D5AB00238C51 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		0443D4312B9F968000018470 /* FileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileView.swift; sourceTree = "<group>"; };
 		0443D4332B9F973F00018470 /* SortBy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBy.swift; sourceTree = "<group>"; };
 		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		047BF5612A740A0C0022505C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		047BF5652A7468390022505C /* MKMapItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapItem.swift; sourceTree = "<group>"; };
 		049C0F71292936F600C6521A /* Geojson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geojson.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,10 +56,8 @@
 		049C0F9B292953A400C6521A /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		049C0FA229295C5A00C6521A /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		049C0FA42929A2D100C6521A /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
-		049C0FAB2929B98E00C6521A /* AppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		049C0FAD2929BC0800C6521A /* DismissCross.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissCross.swift; sourceTree = "<group>"; };
 		049C0FB12929BEFE00C6521A /* Haptics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
-		04A65586293D58DC0084CC6A /* Emails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emails.swift; sourceTree = "<group>"; };
 		04BA4C5A2B9E4A4A006AF820 /* MKPolygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolygon.swift; sourceTree = "<group>"; };
 		04BA4C5C2B9E4AB5006AF820 /* MKPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolyline.swift; sourceTree = "<group>"; };
 		04BA4C5E2B9E4D13006AF820 /* CarbonCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbonCopy.swift; sourceTree = "<group>"; };
@@ -88,7 +75,6 @@
 			files = (
 				0402C6092A08FD4F00238C51 /* RCKML in Frameworks */,
 				04C71FFD2A08EC8B00417249 /* CoreGPX in Frameworks */,
-				0402C6302A0DAC0100238C51 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +113,6 @@
 			isa = PBXGroup;
 			children = (
 				047BF5602A7405FA0022505C /* Info.plist */,
-				0402C62B2A0DAB9000238C51 /* GoogleService-Info.plist */,
 				049C0F78292936F700C6521A /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -162,10 +147,6 @@
 		04A65585293D58C00084CC6A /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				049C0FAB2929B98E00C6521A /* AppStore.swift */,
-				0402C6312A0DAC8900238C51 /* Analytics.swift */,
-				0402C6AE2A18D5AB00238C51 /* Constants.swift */,
-				04A65586293D58DC0084CC6A /* Emails.swift */,
 				049C0FB12929BEFE00C6521A /* Haptics.swift */,
 				049C0FA42929A2D100C6521A /* Store.swift */,
 			);
@@ -187,7 +168,6 @@
 			isa = PBXGroup;
 			children = (
 				049C0F852929384D00C6521A /* AppState.swift */,
-				047BF5612A740A0C0022505C /* AppDelegate.swift */,
 				04BA4C642B9E50D5006AF820 /* GeoParser.swift */,
 				04BA4C622B9E5073006AF820 /* GeoData.swift */,
 				04C71FF32A08DCD100417249 /* GeoError.swift */,
@@ -218,7 +198,6 @@
 			packageProductDependencies = (
 				04C71FFC2A08EC8B00417249 /* CoreGPX */,
 				0402C6082A08FD4F00238C51 /* RCKML */,
-				0402C62F2A0DAC0100238C51 /* FirebaseAnalytics */,
 			);
 			productName = Geojson;
 			productReference = 049C0F71292936F600C6521A /* Geojson.app */;
@@ -251,7 +230,6 @@
 			packageReferences = (
 				04C71FFB2A08EC8B00417249 /* XCRemoteSwiftPackageReference "CoreGPX" */,
 				0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */,
-				0402C62E2A0DAC0100238C51 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 049C0F72292936F600C6521A /* Products */;
 			projectDirPath = "";
@@ -267,7 +245,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0402C62C2A0DAB9000238C51 /* GoogleService-Info.plist in Resources */,
 				049C0F79292936F700C6521A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,19 +257,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				0443D4342B9F973F00018470 /* SortBy.swift in Sources */,
-				04A65587293D58DC0084CC6A /* Emails.swift in Sources */,
 				04C71FF62A08DCEB00417249 /* GeoFileType.swift in Sources */,
 				047BF5662A7468390022505C /* MKMapItem.swift in Sources */,
 				04C71FF42A08DCD100417249 /* GeoError.swift in Sources */,
 				04BA4C632B9E5073006AF820 /* GeoData.swift in Sources */,
 				0402C61D2A0D0CF700238C51 /* Point.swift in Sources */,
-				0402C6AF2A18D5AB00238C51 /* Constants.swift in Sources */,
-				047BF5622A740A0C0022505C /* AppDelegate.swift in Sources */,
 				04BA4C5D2B9E4AB5006AF820 /* MKPolyline.swift in Sources */,
 				0443D4322B9F968000018470 /* FileView.swift in Sources */,
-				049C0FAC2929B98E00C6521A /* AppStore.swift in Sources */,
 				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
-				0402C6322A0DAC8900238C51 /* Analytics.swift in Sources */,
 				049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */,
 				047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */,
 				04BA4C612B9E4FAB006AF820 /* FilesView.swift in Sources */,
@@ -444,7 +416,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geojson/Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = GeoViewer;
+				INFOPLIST_KEY_CFBundleDisplayName = Geodata;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -486,7 +458,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geojson/Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = GeoViewer;
+				INFOPLIST_KEY_CFBundleDisplayName = Geodata;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -546,14 +518,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0402C62E2A0DAC0100238C51 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 10.0.0;
-			};
-		};
 		04C71FFB2A08EC8B00417249 /* XCRemoteSwiftPackageReference "CoreGPX" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vincentneo/CoreGPX";
@@ -569,11 +533,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0402C6072A08FD4F00238C51 /* XCRemoteSwiftPackageReference "RCKML" */;
 			productName = RCKML;
-		};
-		0402C62F2A0DAC0100238C51 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0402C62E2A0DAC0100238C51 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
 		};
 		04C71FFC2A08EC8B00417249 /* CoreGPX */ = {
 			isa = XCSwiftPackageProductDependency;
