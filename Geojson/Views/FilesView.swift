@@ -61,12 +61,11 @@ struct FilesView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .searchable(text: $searchText.animation(), placement: .navigationBarDrawer(displayMode: .always))
+            .searchable(text: $searchText.animation())
             .navigationDestination(item: $app.selectedGeoData) { data in
                 FileView(data: data)
             }
             .navigationTitle("Geodata Viewer")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
