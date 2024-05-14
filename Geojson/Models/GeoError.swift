@@ -107,8 +107,8 @@ extension KMLError {
             return "This KML file contains an invalid coordinate."
         case .missingRequiredElement(let elementName):
             return "This KML file is missing a required element: \(elementName)."
-        case .unknownFileExtension(let `extension`):
-            return "This KML file has an invalid extension: \(`extension`)."
+        case .unknownFileExtension(let fileExtension):
+            return "This KML file has an invalid extension: \(fileExtension)."
         case .kmzReadError:
             return "This file contains invalid KML data."
         case .kmzWriteError:

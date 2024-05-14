@@ -17,7 +17,7 @@ extension Array where Element: MKOverlay {
 extension Array where Element: MKAnnotation {
     var rect: MKMapRect {
         let coords = map(\.coordinate)
-        return MKPolyline(coordinates: coords, count: coords.count).boundingMapRect
+        return MKPolyline(coords: coords).boundingMapRect
     }
 }
 

@@ -15,7 +15,6 @@ struct GeoData: Hashable {
     
     var rect: MKMapRect { polygons.rect.union(polylines.rect).union(points.rect) }
     var empty: Bool { points.isEmpty && polylines.isEmpty && polygons.isEmpty }
-    var multipleTypes: Bool { [points.isNotEmpty, polylines.isNotEmpty, polygons.isNotEmpty].filter { $0 }.count > 1 }
     
     static let example = GeoData(points: [], polylines: [], polygons: [])
 }

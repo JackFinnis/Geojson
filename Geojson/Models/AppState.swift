@@ -21,7 +21,7 @@ class AppState: NSObject, ObservableObject {
     @Published var scenePhase: ScenePhase?
     
     // Storage
-    @Store("recentUrlsData") var recentURLsData = [Data]()
+    @Store("recentURLsData") var recentURLsData = [Data]()
     @Published var recentURLs = [URL]()
     
     // Alerts

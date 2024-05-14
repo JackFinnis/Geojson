@@ -9,8 +9,6 @@ import SwiftUI
 import StoreKit
 
 struct FilesView: View {
-    @Environment(\.requestReview) var requestReview
-    @Environment(\.openURL) var openURL
     @EnvironmentObject var app: AppState
     @AppStorage("sortBy") var sortBy = SortBy.date
     @State var searchText = ""
@@ -36,16 +34,19 @@ struct FilesView: View {
         NavigationStack {
             List {
                 ForEach(filteredURLs, id: \.self) { url in
-                    Button(url.lastPathComponent) {
-                        app.importFile(url: url)
-                    }
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            app.deleteBookmark(url: url)
-                        } label: {
-                            Label("Remove", systemImage: "trash")
+                    NavigationLink(url.lastPathComponent, value: true)
+                        .overlay {
+                            Button("") {
+                                app.importFile(url: url)
+                            }
                         }
-                    }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                app.deleteBookmark(url: url)
+                            } label: {
+                                Label("Remove", systemImage: "trash")
+                            }
+                        }
                 }
                 Section {
                     Spacer().listRowBackground(Color.clear)
@@ -104,15 +105,15 @@ struct FilesView: View {
             }
         }
         .alert("Import Failed", isPresented: $app.showError) {
-            Button("OK", role: .cancel) {}
+            Button("Cancel", role: .cancel) {}
             if let fileType = app.error?.fileType {
-                Button("Help") {
+                Button("Open") {
                     UIApplication.shared.open(fileType.helpURL)
                 }
             }
         } message: {
-            if let error = app.error {
-                Text(error.message)
+            if let error = app.error, let fileType = app.error?.fileType {
+                Text("\(error.message)\n\(fileType.helpURLName) can help spot the problem.")
             }
         }
     }

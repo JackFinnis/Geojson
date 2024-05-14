@@ -9,5 +9,5 @@ import Foundation
 
 enum SortBy: String, CaseIterable {
     case name = "Name"
-    case date = "Date Viewed"
+    case date = "Recent"
 }
