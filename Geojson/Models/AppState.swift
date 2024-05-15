@@ -94,7 +94,6 @@ class AppState: NSObject, ObservableObject {
             recentURLsData.append(urlData)
             
             selectedGeoData = parser.geoData
-            Haptics.tap()
         } catch let error as GeoError {
             self.error = error
             showError = true
