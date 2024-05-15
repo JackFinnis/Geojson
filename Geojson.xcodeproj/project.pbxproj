@@ -17,7 +17,7 @@
 		0443D4342B9F973F00018470 /* SortBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443D4332B9F973F00018470 /* SortBy.swift */; };
 		047114A82BF4D360005D9DBC /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047114A72BF4D360005D9DBC /* AppState.swift */; };
 		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
-		049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* GeojsonApp.swift */; };
+		049C0F75292936F600C6521A /* GeodataApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* GeodataApp.swift */; };
 		049C0F79292936F700C6521A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049C0F78292936F700C6521A /* Assets.xcassets */; };
 		049C0F9C292953A400C6521A /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F9B292953A400C6521A /* Collection.swift */; };
 		049C0FA329295C5A00C6521A /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA229295C5A00C6521A /* View.swift */; };
@@ -45,7 +45,7 @@
 		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		049C0F71292936F600C6521A /* Geojson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geojson.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		049C0F74292936F600C6521A /* GeojsonApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeojsonApp.swift; sourceTree = "<group>"; };
+		049C0F74292936F600C6521A /* GeodataApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeodataApp.swift; sourceTree = "<group>"; };
 		049C0F78292936F700C6521A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		049C0F9B292953A400C6521A /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		049C0FA229295C5A00C6521A /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
@@ -146,7 +146,7 @@
 		04C71FF12A08DCAC00417249 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				049C0F74292936F600C6521A /* GeojsonApp.swift */,
+				049C0F74292936F600C6521A /* GeodataApp.swift */,
 				04BA4C602B9E4FAB006AF820 /* RootView.swift */,
 				0443D4312B9F968000018470 /* MapView.swift */,
 				04A65583293D589E0084CC6A /* Extra */,
@@ -252,7 +252,7 @@
 				04BA4C5D2B9E4AB5006AF820 /* MKPolyline.swift in Sources */,
 				0443D4322B9F968000018470 /* MapView.swift in Sources */,
 				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
-				049C0F75292936F600C6521A /* GeojsonApp.swift in Sources */,
+				049C0F75292936F600C6521A /* GeodataApp.swift in Sources */,
 				047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */,
 				04BA4C612B9E4FAB006AF820 /* RootView.swift in Sources */,
 				049C0FA329295C5A00C6521A /* View.swift in Sources */,
@@ -401,6 +401,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geojson/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Geodata;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -443,6 +444,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Geojson/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Geodata;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is shown on the map.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

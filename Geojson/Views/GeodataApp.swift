@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct GeodataViewerApp: App {
+struct GeodataApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
