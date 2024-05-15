@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension View {
-    func box() -> some View {
+    func mapBox() -> some View {
         frame(width: 44, height: 44)
     }
     

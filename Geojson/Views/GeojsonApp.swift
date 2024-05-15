@@ -8,23 +8,10 @@
 import SwiftUI
 
 @main
-struct GeojsonApp: App {
-    @Environment(\.scenePhase) var scenePhase
-    @StateObject var app = AppState.shared
-    
+struct GeodataViewerApp: App {
     var body: some Scene {
         WindowGroup {
-            FilesView()
-                .onChange(of: scenePhase) { _, newPhase in
-                    app.scenePhase = scenePhase
-                    if newPhase == .active {
-                        app.updateBookmarks()
-                    }
-                }
-                .onOpenURL { url in
-                    app.importFile(url: url)
-                }
+            RootView()
         }
-        .environmentObject(app)
     }
 }

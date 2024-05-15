@@ -8,10 +8,9 @@
 import SwiftUI
 import MapKit
 
-struct FileView: View {
+struct MapView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var app: AppState
     @State var mapStyle = MapStyle.standard
     @State var mapStandard = true
     @State var selectedPoint: Point?
@@ -20,6 +19,7 @@ struct FileView: View {
     @Namespace var mapScope
     
     let data: GeoData
+    let scenePhase: ScenePhase
     
     var body: some View {
         MapReader { map in
@@ -69,7 +69,7 @@ struct FileView: View {
                 )
                 .overlay(alignment: .top) {
                     CarbonCopy()
-                        .id(app.scenePhase)
+                        .id(scenePhase)
                         .blur(radius: 5, opaque: true)
                         .frame(height: geo.safeAreaInsets.top)
                         .mask {
@@ -86,7 +86,7 @@ struct FileView: View {
                         } label: {
                             Image(systemName: "chevron.left")
                                 .bold()
-                                .box()
+                                .mapBox()
                         } primaryAction: {
                             dismiss()
                         }
@@ -104,7 +104,7 @@ struct FileView: View {
                         } label: {
                             Image(systemName: mapStandard ? "globe.americas.fill" : "map")
                                 .contentTransition(.symbolEffect(.replace))
-                                .box()
+                                .mapBox()
                         }
                         .mapButton()
                         
@@ -154,6 +154,5 @@ struct FileView: View {
 }
 
 #Preview {
-    FileView(data: .example)
-        .environmentObject(AppState.shared)
+    MapView(data: .example, scenePhase: .active)
 }
