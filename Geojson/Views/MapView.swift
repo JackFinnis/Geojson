@@ -24,11 +24,12 @@ struct MapView: UIViewRepresentable {
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.isPitchEnabled = false
         mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest]
+        mapView.layoutMargins = .init(length: 5)
         
         mapView.addAnnotations(data.points)
         mapView.addOverlay(MKMultiPolyline(data.polylines), level: .aboveRoads)
         mapView.addOverlay(MKMultiPolygon(data.polygons), level: .aboveRoads)
-        mapView.setVisibleMapRect(data.rect, edgePadding: .init(top: 16, left: 16, bottom: 16, right: 16), animated: false)
+        mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: 10), animated: false)
         
         return mapView
     }
@@ -68,6 +69,7 @@ struct MapView: UIViewRepresentable {
             else { return nil }
             marker.displayPriority = .required
             marker.glyphText = point.index.map(String.init)
+            marker.markerTintColor = UIColor(Color.accentColor)
             return marker
         }
         
