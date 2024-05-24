@@ -22,6 +22,7 @@
 		049C0F9C292953A400C6521A /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F9B292953A400C6521A /* Collection.swift */; };
 		049C0FA329295C5A00C6521A /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FA229295C5A00C6521A /* View.swift */; };
 		049C0FB22929BEFE00C6521A /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0FB12929BEFE00C6521A /* Haptics.swift */; };
+		049E167F2C00EDDE00ABB106 /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E167E2C00EDDE00ABB106 /* DataView.swift */; };
 		04BA4C5B2B9E4A4A006AF820 /* MKPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5A2B9E4A4A006AF820 /* MKPolygon.swift */; };
 		04BA4C5D2B9E4AB5006AF820 /* MKPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5C2B9E4AB5006AF820 /* MKPolyline.swift */; };
 		04BA4C5F2B9E4D13006AF820 /* CarbonCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C5E2B9E4D13006AF820 /* CarbonCopy.swift */; };
@@ -50,6 +51,7 @@
 		049C0F9B292953A400C6521A /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		049C0FA229295C5A00C6521A /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		049C0FB12929BEFE00C6521A /* Haptics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		049E167E2C00EDDE00ABB106 /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		04BA4C5A2B9E4A4A006AF820 /* MKPolygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolygon.swift; sourceTree = "<group>"; };
 		04BA4C5C2B9E4AB5006AF820 /* MKPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolyline.swift; sourceTree = "<group>"; };
 		04BA4C5E2B9E4D13006AF820 /* CarbonCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbonCopy.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 			children = (
 				049C0F74292936F600C6521A /* GeodataApp.swift */,
 				04BA4C602B9E4FAB006AF820 /* RootView.swift */,
+				049E167E2C00EDDE00ABB106 /* DataView.swift */,
 				0443D4312B9F968000018470 /* MapView.swift */,
 				04A65583293D589E0084CC6A /* Extra */,
 			);
@@ -252,6 +255,7 @@
 				04BA4C5D2B9E4AB5006AF820 /* MKPolyline.swift in Sources */,
 				0443D4322B9F968000018470 /* MapView.swift in Sources */,
 				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
+				049E167F2C00EDDE00ABB106 /* DataView.swift in Sources */,
 				049C0F75292936F600C6521A /* GeodataApp.swift in Sources */,
 				047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */,
 				04BA4C612B9E4FAB006AF820 /* RootView.swift in Sources */,

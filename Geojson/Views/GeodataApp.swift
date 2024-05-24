@@ -15,3 +15,9 @@ struct GeodataApp: App {
         }
     }
 }
+
+/*
+ polyline colour/width
+ polyline properties eg name
+ edit/add/delete data
+ */

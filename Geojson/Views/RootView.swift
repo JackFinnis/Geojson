@@ -69,7 +69,7 @@ struct RootView: View {
             }
             .searchable(text: $searchText.animation())
             .navigationDestination(item: $selectedGeoData) { data in
-                MapView(data: data, scenePhase: scenePhase)
+                DataView(data: data, scenePhase: scenePhase)
             }
             .navigationTitle("Geodata Viewer")
             .toolbar {
