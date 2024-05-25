@@ -13,13 +13,15 @@ struct DataView: View {
     @Environment(\.colorScheme) var colorScheme
     @State var trackingMode = MKUserTrackingMode.none
     @State var mapType = MKMapType.standard
+    @State var selectedAnnotation: MKAnnotation?
+    @State var droppedPoint: Point?
     
     let data: GeoData
     let scenePhase: ScenePhase
     
     var body: some View {
         ZStack {
-            MapView(trackingMode: $trackingMode, data: data, mapType: mapType)
+            MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapType: mapType)
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
@@ -67,6 +69,37 @@ struct DataView: View {
             .padding(10)
         }
         .toolbar(.hidden, for: .navigationBar)
+        .confirmationDialog("", isPresented: Binding(get: {
+            selectedAnnotation != nil
+        }, set: { isPresented in
+            withAnimation {
+                if !isPresented {
+                    selectedAnnotation = nil
+                }
+            }
+        })) {
+            if let selectedAnnotation {
+                Button("Directions") {
+                    Task {
+                        await openInMaps(selectedAnnotation)
+                    }
+                }
+            }
+        }
+    }
+    
+    func openInMaps(_ annotation: MKAnnotation) async {
+        if let point = annotation as? Point {
+            guard let placemark = try? await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
+            let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+            mapItem.name = point.title ?? mapItem.name
+            mapItem.openInMaps()
+        } else if let feature = annotation as? MKMapFeatureAnnotation {
+            guard let mapItem = try? await MKMapItemRequest(mapFeatureAnnotation: feature).mapItem else { return }
+            mapItem.openInMaps()
+        } else if let _ = annotation as? MKUserLocation {
+            MKMapItem.forCurrentLocation().openInMaps()
+        }
     }
     
     func updateTrackingMode() {

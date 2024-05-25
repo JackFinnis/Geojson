@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MapView: UIViewRepresentable {
+    @Binding var selectedAnnotation: MKAnnotation?
     @Binding var trackingMode: MKUserTrackingMode
     let data: GeoData
     let mapType: MKMapType
@@ -37,6 +38,10 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ mapView: MKMapView, context: Context) {
         mapView.setUserTrackingMode(trackingMode, animated: true)
         mapView.mapType = mapType
+        
+        if selectedAnnotation == nil {
+            mapView.selectedAnnotations.forEach { mapView.deselectAnnotation($0, animated: true) }
+        }
     }
     
     class Coordinator: NSObject, MKMapViewDelegate {
@@ -64,13 +69,18 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
-            guard let point = annotation as? Point,
-                  let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView
-            else { return nil }
-            marker.displayPriority = .required
-            marker.glyphText = point.index.map(String.init)
-            marker.markerTintColor = UIColor(Color.accentColor)
-            return marker
+            if let point = annotation as? Point,
+               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
+                marker.displayPriority = .required
+                marker.glyphText = point.index.map(String.init)
+                marker.markerTintColor = UIColor(Color.accentColor)
+                return marker
+            }
+            return nil
+        }
+        
+        func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
+            parent.selectedAnnotation = annotation
         }
         
         func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
