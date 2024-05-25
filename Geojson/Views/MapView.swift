@@ -36,9 +36,8 @@ struct MapView: UIViewRepresentable {
     }
     
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        mapView.setUserTrackingMode(trackingMode, animated: true)
         mapView.mapType = mapType
-        
+        mapView.setUserTrackingMode(trackingMode, animated: true)
         if selectedAnnotation == nil {
             mapView.selectedAnnotations.forEach { mapView.deselectAnnotation($0, animated: true) }
         }
@@ -49,6 +48,14 @@ struct MapView: UIViewRepresentable {
         
         init(_ parent: MapView) {
             self.parent = parent
+        }
+        
+        func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
+            parent.selectedAnnotation = annotation
+        }
+        
+        func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
+            parent.trackingMode = mode
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
@@ -77,16 +84,6 @@ struct MapView: UIViewRepresentable {
                 return marker
             }
             return nil
-        }
-        
-        func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
-            parent.selectedAnnotation = annotation
-        }
-        
-        func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
-            if !animated {
-                parent.trackingMode = .none
-            }
         }
     }
 }

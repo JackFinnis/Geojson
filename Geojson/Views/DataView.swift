@@ -69,7 +69,7 @@ struct DataView: View {
             .padding(10)
         }
         .toolbar(.hidden, for: .navigationBar)
-        .confirmationDialog("", isPresented: Binding(get: {
+        .confirmationDialog((selectedAnnotation?.title ?? nil) ?? "Feature", isPresented: Binding(get: {
             selectedAnnotation != nil
         }, set: { isPresented in
             withAnimation {
@@ -77,7 +77,7 @@ struct DataView: View {
                     selectedAnnotation = nil
                 }
             }
-        })) {
+        }), titleVisibility: .visible) {
             if let selectedAnnotation {
                 Button("Directions") {
                     Task {
