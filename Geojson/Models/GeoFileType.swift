@@ -60,9 +60,9 @@ enum GeoFileType: String, CaseIterable {
     
     static let allUTTypes: [UTType] = [
         .json,
-        UTType("com.jackfinnis.geojson")!,
-        UTType("com.jackfinnis.gpx")!,
-        UTType("com.jackfinnis.kml")!,
-        UTType("com.jackfinnis.kmz")!
+        UTType("public.geojson")!,
+        UTType("com.topografix.gpx")!,
+        UTType("com.google.earth.kml")!,
+        UTType("com.google.earth.kmz")!
     ]
 }

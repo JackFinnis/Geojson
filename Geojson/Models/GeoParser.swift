@@ -54,7 +54,7 @@ class GeoParser {
         let parser = GPXParser(withData: data)
         let root: GPXRoot?
         do {
-            root = try parser.fallibleParsedData(forceContinue: false)
+            root = try parser.fallibleParsedData(forceContinue: true)
         } catch {
             throw GeoError.gpx(error)
         }

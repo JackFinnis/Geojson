@@ -121,13 +121,13 @@ struct RootView: View {
                 Text("\(error.message)\n\(fileType.helpURLName) can help spot the problem.")
             }
         }
+        .onOpenURL { url in
+            importFile(url: url)
+        }
         .onChange(of: scenePhase) { _, scenePhase in
             if scenePhase == .active {
                 updateBookmarks()
             }
-        }
-        .onOpenURL { url in
-            importFile(url: url)
         }
         .onAppear {
             updateBookmarks()
