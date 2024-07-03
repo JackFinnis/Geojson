@@ -11,6 +11,7 @@ import MapKit
 struct DataView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.openURL) var openURL
     @State var trackingMode = MKUserTrackingMode.none
     @State var mapType = MKMapType.standard
     @State var selectedAnnotation: MKAnnotation?
@@ -79,12 +80,23 @@ struct DataView: View {
             }
         }), titleVisibility: .visible) {
             if let selectedAnnotation {
-                Button("Directions") {
+                let user = selectedAnnotation is MKUserLocation
+                Button(user ? "Open in Maps" : "Directions") {
                     Task {
                         await openInMaps(selectedAnnotation)
                     }
                 }
+                if let subtitle = selectedAnnotation.subtitle,
+                   let subtitle,
+                   let url = URL(string: subtitle) {
+                    Button("Open Link") {
+                        openURL(url)
+                    }
+                }
             }
+        }
+        .onAppear {
+            CLLocationManager().requestWhenInUseAuthorization()
         }
     }
     
