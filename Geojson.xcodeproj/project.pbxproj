@@ -15,6 +15,7 @@
 		0402C6272A0D175300238C51 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402C6262A0D175300238C51 /* Array.swift */; };
 		04092CED2C378A110015EAE7 /* GeoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04092CEC2C378A110015EAE7 /* GeoError.swift */; };
 		04092CEF2C378D0A0015EAE7 /* UTType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04092CEE2C378D0A0015EAE7 /* UTType.swift */; };
+		04092CF12C3791F40015EAE7 /* WebFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04092CF02C3791F40015EAE7 /* WebFile.swift */; };
 		0443D4322B9F968000018470 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443D4312B9F968000018470 /* MapView.swift */; };
 		047114A82BF4D360005D9DBC /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047114A72BF4D360005D9DBC /* AppState.swift */; };
 		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
@@ -42,6 +43,7 @@
 		0402C6262A0D175300238C51 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		04092CEC2C378A110015EAE7 /* GeoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoError.swift; sourceTree = "<group>"; };
 		04092CEE2C378D0A0015EAE7 /* UTType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTType.swift; sourceTree = "<group>"; };
+		04092CF02C3791F40015EAE7 /* WebFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebFile.swift; sourceTree = "<group>"; };
 		0443D4312B9F968000018470 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		047114A72BF4D360005D9DBC /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				04BA4C642B9E50D5006AF820 /* GeoParser.swift */,
 				04BA4C622B9E5073006AF820 /* GeoData.swift */,
 				04092CEC2C378A110015EAE7 /* GeoError.swift */,
+				04092CF02C3791F40015EAE7 /* WebFile.swift */,
 				0402C61C2A0D0CF700238C51 /* Point.swift */,
 			);
 			path = Models;
@@ -269,6 +272,7 @@
 				04BA4C5F2B9E4D13006AF820 /* CarbonCopy.swift in Sources */,
 				04092CED2C378A110015EAE7 /* GeoError.swift in Sources */,
 				0402C6252A0D10FA00238C51 /* GPXWaypoint.swift in Sources */,
+				04092CF12C3791F40015EAE7 /* WebFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

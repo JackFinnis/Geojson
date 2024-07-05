@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.modelContext) var modelContext
     @State var urls = [URL]()
     @State var showFileImporter = false
     @State var selectedGeoData: GeoData?
+    @Query var webFiles: [WebFile]
     
     @State var error: GeoError?
     @State var showErrorAlert = false
@@ -20,19 +23,40 @@ struct RootView: View {
         NavigationStack {
             List {
                 ForEach(urls, id: \.self) { url in
-                    NavigationLink(url.lastPathComponent, value: true)
-                        .overlay {
-                            Button("") {
-                                loadFile(url: url)
+                    let webFile = webFiles.first { $0.name == url.lastPathComponent }
+                    NavigationLink(value: true) {
+                        HStack {
+                            Text(url.lastPathComponent)
+                            Spacer()
+                            if webFile != nil {
+                                Image(systemName: "safari.fill")
+                                    .foregroundStyle(.secondary)
                             }
                         }
-                        .swipeActions {
-                            Button(role: .destructive) {
-                                deleteFile(url: url)
+                    }
+                    .overlay {
+                        Button("") {
+                            loadFile(url: url)
+                        }
+                    }
+                    .contextMenu {
+                        if let webFile {
+                            Button {
+                                Task {
+                                    await fetchFile(url: webFile.url)
+                                }
                             } label: {
-                                Label("Delete", systemImage: "trash")
+                                Label("Refresh", systemImage: "arrow.clockwise")
                             }
                         }
+                    }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            deleteFile(url: url)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
                 }
                 Section {
                     Spacer().listRowBackground(Color.clear)
@@ -66,7 +90,7 @@ struct RootView: View {
                                     await fetchFile(url: url)
                                 }
                             } label: {
-                                Label("Paste URL", systemImage: "safari")
+                                Label("Paste URL", systemImage: "doc.on.doc")
                             }
                         }
                     } label: {
@@ -140,6 +164,9 @@ struct RootView: View {
             fail(error: .download)
             return
         }
+        
+        let webFile = WebFile(name: filename, url: url)
+        modelContext.insert(webFile)
         
         do {
             let temp = URL.temporaryDirectory.appending(path: filename)
