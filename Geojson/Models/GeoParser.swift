@@ -23,29 +23,29 @@ class GeoParser {
     
     // MARK: - Parse File
     func parse(url: URL) throws -> GeoData {
-        guard let type = GeoFileType(fileExtension: url.pathExtension) else {
-            throw GeoError.fileType
-        }
-        
         let data: Data
         do {
             data = try Data(contentsOf: url)
         } catch {
             print(error)
-            throw GeoError.fileCurrupted
+            throw GeoError.fileCorrupted
         }
         
-        switch type {
-        case .geojson:
+        switch url.pathExtension {
+        case "json", "geojson":
             try parseGeoJSON(data: data)
-        case .gpx:
+        case "gpx":
             try parseGPX(data: data)
-        case .kml:
+        case "kml", "kmz":
             try parseKML(data: data, fileExtension: url.pathExtension)
+        default:
+            throw GeoError.fileType
         }
+        
         guard !geoData.empty else {
             throw GeoError.fileEmpty
         }
+        
         return geoData
     }
     
@@ -55,7 +55,8 @@ class GeoParser {
         do {
             objects = try MKGeoJSONDecoder().decode(data)
         } catch {
-            throw GeoError.geoJSON
+            print(error)
+            throw GeoError.invalidGeoJSON
         }
         
         objects.forEach(handleGeoJSONObject)
@@ -84,9 +85,10 @@ class GeoParser {
         let parser = GPXParser(withData: data)
         let root: GPXRoot?
         do {
-            root = try parser.fallibleParsedData(forceContinue: true)
+            root = try parser.fallibleParsedData(forceContinue: false)
         } catch {
-            throw GeoError.gpx(error)
+            print(error)
+            throw GeoError.invalidGPX
         }
         guard let root, root.waypoints.isNotEmpty || root.routes.isNotEmpty || root.tracks.isNotEmpty else {
             throw GeoError.fileEmpty
@@ -115,15 +117,9 @@ class GeoParser {
             } else {
                 document = try KMLDocument(kmzData: data)
             }
-        } catch let error as KMLError {
-            throw GeoError.kml(error)
-        } catch let error as AEXMLError {
-            throw GeoError.aexml(error)
-        } catch let error as NSError {
-            throw GeoError.nsxml(XMLParser.ErrorCode(rawValue: error.code))
-        }
-        guard document.features.isNotEmpty else {
-            throw GeoError.fileEmpty
+        } catch {
+            print(error)
+            throw GeoError.invalidKML
         }
         
         document.features.forEach(handleKMLFeature)

@@ -12,6 +12,7 @@ struct RootView: View {
     @State var urls = [URL]()
     @State var showFileImporter = false
     @State var selectedGeoData: GeoData?
+    
     @State var error: GeoError?
     @State var showErrorAlert = false
     
@@ -27,7 +28,7 @@ struct RootView: View {
                         }
                         .swipeActions {
                             Button(role: .destructive) {
-                                try? FileManager.default.removeItem(at: url)
+                                deleteFile(url: url)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -38,7 +39,6 @@ struct RootView: View {
                 }
             }
             .animation(.default, value: urls)
-            .contentMargins(.vertical, 0)
             .overlay {
                 if urls.isEmpty {
                     ContentUnavailableView("No Recents", systemImage: "mappin.and.ellipse", description: Text("Recently opened files will appear here.\nTap + to open a file."))
@@ -70,7 +70,7 @@ struct RootView: View {
                             }
                         }
                     } label: {
-                        Image(systemName: "plus")
+                        Label("Import File", systemImage: "plus")
                     }
                     .menuStyle(.button)
                     .buttonStyle(.borderedProminent)
@@ -79,24 +79,13 @@ struct RootView: View {
                 }
             }
         }
-        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: GeoFileType.allUTTypes) { result in
+        .alert("Import Failed", isPresented: $showErrorAlert) {}
+        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json, .geojson, .gpx, .kml, .kmz]) { result in
             switch result {
             case .failure(let error):
                 print(error)
             case .success(let url):
                 importFile(url: url)
-            }
-        }
-        .alert("Import Failed", isPresented: $showErrorAlert) {
-            Button("Cancel", role: .cancel) {}
-            if let fileType = error?.fileType {
-                Button("Open") {
-                    UIApplication.shared.open(fileType.helpURL)
-                }
-            }
-        } message: {
-            if let error, let fileType = error.fileType {
-                Text("\(error.message)\n\(fileType.helpURLName) can help spot the problem.")
             }
         }
         .onOpenURL { url in
@@ -112,23 +101,53 @@ struct RootView: View {
         }
     }
     
+    func fail(error: GeoError) {
+        self.error = error
+        showErrorAlert = true
+        Haptics.error()
+    }
+    
     func updateLocalFiles() {
         do {
             urls = try FileManager.default.contentsOfDirectory(at: .documentsDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
         } catch {
             print(error)
+            fail(error: .fileManager)
+        }
+    }
+    
+    func deleteFile(url: URL) {
+        do {
+            try FileManager.default.removeItem(at: url)
+        } catch {
+            print(error)
+            fail(error: .fileManager)
         }
     }
     
     func fetchFile(url: URL) async {
+        let data: Data
+        let response: URLResponse
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard let filename = response.suggestedFilename else { return }
+            (data, response) = try await URLSession.shared.data(from: url)
+        } catch {
+            print(error)
+            fail(error: .internet)
+            return
+        }
+        
+        guard let filename = response.suggestedFilename else {
+            fail(error: .download)
+            return
+        }
+        
+        do {
             let temp = URL.temporaryDirectory.appending(path: filename)
             try data.write(to: temp)
             importFile(url: temp)
         } catch {
             print(error)
+            fail(error: .fileManager)
         }
     }
     
@@ -147,18 +166,19 @@ struct RootView: View {
             loadFile(url: destination)
         } catch {
             print(error)
+            fail(error: .fileManager)
         }
     }
     
     func loadFile(url: URL) {
         do {
             selectedGeoData = try GeoParser().parse(url: url)
+            Haptics.tap()
         } catch let error as GeoError {
-            self.error = error
-            showErrorAlert = true
-            Haptics.error()
+            fail(error: error)
         } catch {
             print(error)
+            fail(error: .unknown)
         }
     }
 }
