@@ -12,6 +12,7 @@ struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
     @State var urls = [URL]()
+    @State var searchText = ""
     @State var showFileImporter = false
     @State var selectedGeoData: GeoData?
     @Query var webFiles: [WebFile]
@@ -19,10 +20,18 @@ struct RootView: View {
     @State var error: GeoError?
     @State var showErrorAlert = false
     
+    var filteredURLs: [URL] {
+        urls.filter { url in
+            searchText.isEmpty || url.lastPathComponent.localizedStandardContains(searchText)
+        }
+        .sorted(using: SortDescriptor(\URL.lastPathComponent))
+    }
+    
     var body: some View {
+        let filteredURLs = filteredURLs
         NavigationStack {
             List {
-                ForEach(urls, id: \.self) { url in
+                ForEach(filteredURLs, id: \.self) { url in
                     let webFile = webFiles.first { $0.name == url.lastPathComponent }
                     NavigationLink(value: true) {
                         HStack {
@@ -62,16 +71,20 @@ struct RootView: View {
                     Spacer().listRowBackground(Color.clear)
                 }
             }
-            .animation(.default, value: urls)
+            .animation(.default, value: filteredURLs)
             .overlay {
                 if urls.isEmpty {
                     ContentUnavailableView("No Recents", systemImage: "mappin.and.ellipse", description: Text("Recently opened files will appear here.\nTap + to open a file."))
+                        .allowsHitTesting(false)
+                } else if filteredURLs.isEmpty {
+                    ContentUnavailableView.search(text: searchText)
                         .allowsHitTesting(false)
                 }
             }
             .navigationDestination(item: $selectedGeoData) { data in
                 DataView(data: data, scenePhase: scenePhase)
             }
+            .searchable(text: $searchText)
             .navigationTitle("Geodata Viewer")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
