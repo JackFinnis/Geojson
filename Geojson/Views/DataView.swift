@@ -16,6 +16,7 @@ struct DataView: View {
     @State var mapType = MKMapType.standard
     @State var selectedAnnotation: MKAnnotation?
     @State var droppedPoint: Point?
+    @AppState("visitedCoords") var visitedCoords = Set<CLLocationCoordinate2D>()
     
     let data: GeoData
     let scenePhase: ScenePhase
@@ -70,7 +71,7 @@ struct DataView: View {
             .padding(10)
         }
         .toolbar(.hidden, for: .navigationBar)
-        .confirmationDialog((selectedAnnotation?.title ?? nil) ?? "Feature", isPresented: Binding(get: {
+        .confirmationDialog(selectedAnnotation?.name ?? "", isPresented: Binding(get: {
             selectedAnnotation != nil
         }, set: { isPresented in
             withAnimation {
@@ -78,19 +79,29 @@ struct DataView: View {
                     selectedAnnotation = nil
                 }
             }
-        }), titleVisibility: .visible) {
+        }), titleVisibility: selectedAnnotation?.name == nil ? .hidden : .visible) {
             if let selectedAnnotation {
+                if let point = selectedAnnotation as? Point {
+                    if visitedCoords.contains(point.coordinate) {
+                        Button("Undo Visited", role: .destructive) {
+                            visitedCoords.remove(point.coordinate)
+                        }
+                    } else {
+                        Button("Mark as Visited") {
+                            visitedCoords.insert(point.coordinate)
+                        }
+                    }
+                    if let url = point.googleURL,
+                       UIApplication.shared.canOpenURL(url) {
+                        Button("Search Google") {
+                            openURL(url)
+                        }
+                    }
+                }
                 let user = selectedAnnotation is MKUserLocation
                 Button(user ? "Open in Maps" : "Directions") {
                     Task {
                         await openInMaps(selectedAnnotation)
-                    }
-                }
-                if let subtitle = selectedAnnotation.subtitle,
-                   let subtitle,
-                   let url = URL(string: subtitle) {
-                    Button("Open Link") {
-                        openURL(url)
                     }
                 }
             }

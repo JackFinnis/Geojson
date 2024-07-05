@@ -11,6 +11,6 @@ import CoreLocation
 
 extension KMLCoordinate {
     var coord: CLLocationCoordinate2D {
-        CLLocationCoordinate2DMake(latitude, longitude)
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }

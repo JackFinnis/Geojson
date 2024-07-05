@@ -39,11 +39,17 @@ struct MapView: UIViewRepresentable {
         mapView.mapType = mapType
         mapView.setUserTrackingMode(trackingMode, animated: true)
         if selectedAnnotation == nil {
-            mapView.selectedAnnotations.forEach { mapView.deselectAnnotation($0, animated: true) }
+            mapView.selectedAnnotations.forEach { annotation in
+                mapView.deselectAnnotation(annotation, animated: true)
+                mapView.removeAnnotation(annotation)
+                mapView.addAnnotation(annotation)
+            }
         }
     }
     
     class Coordinator: NSObject, MKMapViewDelegate {
+        @AppState("visitedCoords") var visitedCoords = Set<CLLocationCoordinate2D>()
+        
         let parent: MapView
         
         init(_ parent: MapView) {
@@ -78,9 +84,11 @@ struct MapView: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
             if let point = annotation as? Point,
                let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
+                let visited = visitedCoords.contains(point.coordinate)
+                
                 marker.displayPriority = .required
                 marker.glyphText = point.index.map(String.init)
-                marker.markerTintColor = UIColor(Color.accentColor)
+                marker.markerTintColor = UIColor(visited ? .blue : .orange)
                 return marker
             }
             return nil

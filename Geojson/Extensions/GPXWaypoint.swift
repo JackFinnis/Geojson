@@ -12,6 +12,6 @@ import CoreLocation
 extension GPXWaypoint {
     var coord: CLLocationCoordinate2D? {
         guard let latitude, let longitude else { return nil }
-        return CLLocationCoordinate2DMake(latitude, longitude)
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
