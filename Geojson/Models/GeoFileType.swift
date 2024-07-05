@@ -58,11 +58,12 @@ enum GeoFileType: String, CaseIterable {
         Array(allCases.map(\.fileExtensions).joined())
     }
     
-    static let allUTTypes: [UTType] = [
-        .json,
-        UTType("public.geojson")!,
-        UTType("com.topografix.gpx")!,
-        UTType("com.google.earth.kml")!,
-        UTType("com.google.earth.kmz")!
-    ]
+    static let allUTTypes = [UTType.json, .geojson, .gpx, .kml, .kmz]
+}
+
+extension UTType {
+    static let geojson = UTType("public.geojson")!
+    static let gpx = UTType("com.topografix.gpx")!
+    static let kml = UTType("com.google.earth.kml")!
+    static let kmz = UTType("com.google.earth.kmz")!
 }

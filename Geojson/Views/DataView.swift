@@ -156,5 +156,5 @@ struct DataView: View {
 }
 
 #Preview {
-    DataView(data: .example, scenePhase: .active)
+    DataView(data: .empty, scenePhase: .active)
 }

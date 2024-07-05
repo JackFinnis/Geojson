@@ -6,50 +6,30 @@
 //
 
 import SwiftUI
-import StoreKit
 
 struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
-    @AppStorage("sortBy") var sortBy = SortBy.date
-    @AppState("recentURLsData") var recentURLsData = [Data]()
-    @State var searchText = ""
+    @State var urls = [URL]()
     @State var showFileImporter = false
     @State var selectedGeoData: GeoData?
-    @State var recentURLs = [URL]()
     @State var error: GeoError?
-    @State var showError = false
-    
-    var filteredURLs: [URL] {
-        let urls: [URL]
-        switch sortBy {
-        case .name:
-            urls = recentURLs.sorted(using: SortDescriptor(\.absoluteString))
-        case .date:
-            urls = recentURLs.reversed()
-        }
-        if searchText.isEmpty {
-            return urls
-        } else {
-            return urls.filter { $0.lastPathComponent.localizedStandardContains(searchText) }
-        }
-    }
+    @State var showErrorAlert = false
     
     var body: some View {
-        let filteredURLs = filteredURLs
         NavigationStack {
             List {
-                ForEach(filteredURLs, id: \.self) { url in
+                ForEach(urls, id: \.self) { url in
                     NavigationLink(url.lastPathComponent, value: true)
                         .overlay {
                             Button("") {
-                                importFile(url: url)
+                                loadFile(url: url)
                             }
                         }
                         .swipeActions {
                             Button(role: .destructive) {
-                                deleteBookmark(url: url)
+                                try? FileManager.default.removeItem(at: url)
                             } label: {
-                                Label("Remove", systemImage: "trash")
+                                Label("Delete", systemImage: "trash")
                             }
                         }
                 }
@@ -57,59 +37,57 @@ struct RootView: View {
                     Spacer().listRowBackground(Color.clear)
                 }
             }
+            .animation(.default, value: urls)
             .contentMargins(.vertical, 0)
             .overlay {
-                if recentURLs.isEmpty {
-                    ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Tap + to import a file"))
-                        .allowsHitTesting(false)
-                } else if filteredURLs.isEmpty {
-                    ContentUnavailableView.search(text: searchText)
+                if urls.isEmpty {
+                    ContentUnavailableView("No Recents", systemImage: "mappin.and.ellipse", description: Text("Recently opened files will appear here.\nTap + to open a file."))
                         .allowsHitTesting(false)
                 }
             }
-            .searchable(text: $searchText.animation())
             .navigationDestination(item: $selectedGeoData) { data in
                 DataView(data: data, scenePhase: scenePhase)
             }
             .navigationTitle("Geodata Viewer")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Picker("Sort Icons", selection: $sortBy.animation()) {
-                            ForEach(SortBy.allCases, id: \.self) { sortBy in
-                                Text(sortBy.rawValue)
+                        Button {
+                            showFileImporter = true
+                        } label: {
+                            Label("Choose File", systemImage: "folder")
+                        }
+                        if UIPasteboard.general.hasStrings {
+                            Button {
+                                guard let string = UIPasteboard.general.string,
+                                      let url = URL(string: string)
+                                else { return }
+                                Task {
+                                    await fetchFile(url: url)
+                                }
+                            } label: {
+                                Label("Paste URL", systemImage: "safari")
                             }
                         }
                     } label: {
-                        Image(systemName: "arrow.up.arrow.down")
-                    }
-                    .menuStyle(.button)
-                    .buttonStyle(.bordered)
-                    .buttonBorderShape(.circle)
-                    .font(.headline)
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showFileImporter = true
-                    } label: {
                         Image(systemName: "plus")
                     }
+                    .menuStyle(.button)
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.circle)
                     .font(.headline)
                 }
             }
         }
-        .animation(.default, value: filteredURLs)
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: GeoFileType.allUTTypes) { result in
             switch result {
+            case .failure(let error):
+                print(error)
             case .success(let url):
                 importFile(url: url)
-            case .failure(let error):
-                debugPrint(error)
             }
         }
-        .alert("Import Failed", isPresented: $showError) {
+        .alert("Import Failed", isPresented: $showErrorAlert) {
             Button("Cancel", role: .cancel) {}
             if let fileType = error?.fileType {
                 Button("Open") {
@@ -117,88 +95,71 @@ struct RootView: View {
                 }
             }
         } message: {
-            if let error = error, let fileType = error.fileType {
+            if let error, let fileType = error.fileType {
                 Text("\(error.message)\n\(fileType.helpURLName) can help spot the problem.")
             }
         }
         .onOpenURL { url in
             importFile(url: url)
         }
+        .task {
+            updateLocalFiles()
+        }
         .onChange(of: scenePhase) { _, scenePhase in
             if scenePhase == .active {
-                updateBookmarks()
-            }
-        }
-        .onAppear {
-            updateBookmarks()
-        }
-    }
-    
-    func updateBookmarks() {
-        recentURLs = []
-        recentURLsData = recentURLsData.compactMap { data in
-            var stale = false
-            guard let url = try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale), !recentURLs.contains(url) else { return nil }
-            recentURLs.append(url)
-            if stale {
-                guard let newData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil) else { return nil }
-                return newData
-            } else {
-                return data
+                updateLocalFiles()
             }
         }
     }
     
-    func deleteBookmark(url: URL) {
-        recentURLs.removeAll(url)
-        var stale = false
-        recentURLsData.removeAll { data in
-            (try? url == URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale)) ?? true
-        }
-    }
-    
-    func importFile(url: URL) {
+    func updateLocalFiles() {
         do {
-            guard url.startAccessingSecurityScopedResource(),
-                  let urlData = try? url.bookmarkData(options: .suitableForBookmarkFile, includingResourceValuesForKeys: [.fileSecurityKey], relativeTo: nil) else {
-                throw GeoError.fileMoved
-            }
-            recentURLs.removeAll(url)
-            recentURLsData.removeAll(urlData)
+            urls = try FileManager.default.contentsOfDirectory(at: .documentsDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func fetchFile(url: URL) async {
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let filename = response.suggestedFilename else { return }
+            let temp = URL.temporaryDirectory.appending(path: filename)
+            try data.write(to: temp)
+            importFile(url: temp)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func importFile(url source: URL) {
+        let destination = URL.documentsDirectory.appending(path: source.lastPathComponent)
+        let temp = URL.temporaryDirectory.appending(path: UUID().uuidString)
+        do {
+            _ = source.startAccessingSecurityScopedResource()
+            try FileManager.default.copyItem(at: source, to: temp)
+            source.stopAccessingSecurityScopedResource()
             
-            guard let type = GeoFileType(fileExtension: url.pathExtension) else {
-                throw GeoError.fileType
-            }
+            try? FileManager.default.removeItem(at: destination)
+            try FileManager.default.copyItem(at: temp, to: destination)
             
-            let data: Data
-            do {
-                data = try Data(contentsOf: url)
-                url.stopAccessingSecurityScopedResource()
-            } catch {
-                throw GeoError.fileCurrupted
-            }
-            
-            let parser = GeoParser()
-            switch type {
-            case .geojson:
-                try parser.parseGeoJSON(data: data)
-            case .gpx:
-                try parser.parseGPX(data: data)
-            case .kml:
-                try parser.parseKML(data: data, fileExtension: url.pathExtension)
-            }
-            guard !parser.geoData.empty else {
-                throw GeoError.fileEmpty
-            }
-            recentURLs.append(url)
-            recentURLsData.append(urlData)
-            
-            selectedGeoData = parser.geoData
+            updateLocalFiles()
+            loadFile(url: destination)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func loadFile(url: URL) {
+        do {
+            selectedGeoData = try GeoParser().parse(url: url)
         } catch let error as GeoError {
             self.error = error
-            showError = true
+            showErrorAlert = true
             Haptics.error()
-        } catch {}
+        } catch {
+            print(error)
+        }
     }
 }
 

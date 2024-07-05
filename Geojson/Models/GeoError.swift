@@ -24,7 +24,7 @@ enum GeoError: Error {
     var message: String {
         switch self {
         case .fileType:
-            return "Only following file types can be imported:\n\(GeoFileType.allFileExtensions.map { "." + $0 }.joined(separator: ", "))"
+            return "Only following file types can be imported: .geojson, .json. .gpx, .kml, .kmz"
         case .fileMoved:
             return "This file has been moved or deleted. Please try importing it again."
         case .fileCurrupted:

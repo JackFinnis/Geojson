@@ -9,6 +9,8 @@ import MapKit
 import CoreGPX
 import RCKML
 import AEXML
+import SwiftUI
+import UniformTypeIdentifiers
 
 class GeoParser {
     var points = [Point]()
@@ -17,6 +19,34 @@ class GeoParser {
     
     var geoData: GeoData {
         GeoData(points: points, polylines: polylines, polygons: polygons)
+    }
+    
+    // MARK: - Parse File
+    func parse(url: URL) throws -> GeoData {
+        guard let type = GeoFileType(fileExtension: url.pathExtension) else {
+            throw GeoError.fileType
+        }
+        
+        let data: Data
+        do {
+            data = try Data(contentsOf: url)
+        } catch {
+            print(error)
+            throw GeoError.fileCurrupted
+        }
+        
+        switch type {
+        case .geojson:
+            try parseGeoJSON(data: data)
+        case .gpx:
+            try parseGPX(data: data)
+        case .kml:
+            try parseKML(data: data, fileExtension: url.pathExtension)
+        }
+        guard !geoData.empty else {
+            throw GeoError.fileEmpty
+        }
+        return geoData
     }
     
     // MARK: - Parse GeoJSON
