@@ -23,7 +23,7 @@ struct DataView: View {
     
     var body: some View {
         ZStack {
-            MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapType: mapType)
+            MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapType: mapType, preview: false)
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {

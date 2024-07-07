@@ -1,8 +1,8 @@
 //
 //  View.swift
-//  Cycle
+//  Geojson
 //
-//  Created by Jack Finnis on 17/02/2024.
+//  Created by Jack Finnis on 07/07/2024.
 //
 
 import SwiftUI

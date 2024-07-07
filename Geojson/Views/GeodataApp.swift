@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct GeodataApp: App {
@@ -14,7 +13,7 @@ struct GeodataApp: App {
         WindowGroup {
             RootView()
         }
-        .modelContainer(for: WebFile.self)
+        .modelContainer(for: File.self)
     }
 }
 

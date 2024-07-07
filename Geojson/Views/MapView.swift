@@ -13,6 +13,7 @@ struct MapView: UIViewRepresentable {
     @Binding var trackingMode: MKUserTrackingMode
     let data: GeoData
     let mapType: MKMapType
+    let preview: Bool
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -21,16 +22,16 @@ struct MapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
-        mapView.showsUserLocation = true
+        mapView.showsUserLocation = !preview
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.isPitchEnabled = false
         mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest]
-        mapView.layoutMargins = .init(length: 5)
+        mapView.layoutMargins = .init(length: preview ? -25 : 5)
         
         mapView.addAnnotations(data.points)
         mapView.addOverlay(MKMultiPolyline(data.polylines), level: .aboveRoads)
         mapView.addOverlay(MKMultiPolygon(data.polygons), level: .aboveRoads)
-        mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: 10), animated: false)
+        mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: preview ? 35 : 10), animated: false)
         
         return mapView
     }
@@ -66,14 +67,15 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
             let color = UIColor(Color.orange)
+            let lineWidth = parent.preview ? 2.0 : 3.0
             if let multiPolyline = overlay as? MKMultiPolyline {
                 let renderer = MKMultiPolylineRenderer(multiPolyline: multiPolyline)
-                renderer.lineWidth = 3
+                renderer.lineWidth = lineWidth
                 renderer.strokeColor = color
                 return renderer
             } else if let multiPolygon = overlay as? MKMultiPolygon {
                 let renderer = MKMultiPolygonRenderer(multiPolygon: multiPolygon)
-                renderer.lineWidth = 3
+                renderer.lineWidth = lineWidth
                 renderer.strokeColor = color
                 renderer.fillColor = color.withAlphaComponent(0.1)
                 return renderer
@@ -86,6 +88,7 @@ struct MapView: UIViewRepresentable {
                let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
                 let visited = visitedCoords.contains(point.coordinate)
                 
+                marker.titleVisibility = parent.preview ? .hidden : .adaptive
                 marker.displayPriority = .required
                 marker.glyphText = point.index.map(String.init)
                 marker.markerTintColor = UIColor(visited ? .blue : .orange)

@@ -7,76 +7,45 @@
 
 import SwiftUI
 import SwiftData
+import MapKit
 
 struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
+    @AppStorage("sortBy") var sortBy = SortBy.name
     @State var urls = [URL]()
     @State var searchText = ""
     @State var showFileImporter = false
     @State var selectedGeoData: GeoData?
-    @Query var webFiles: [WebFile]
+    @Query var files: [File]
     
     @State var error: GeoError?
     @State var showErrorAlert = false
     
-    var filteredURLs: [URL] {
-        urls.filter { url in
-            searchText.isEmpty || url.lastPathComponent.localizedStandardContains(searchText)
+    var filteredFiles: [File] {
+        files.filter { file in
+            searchText.isEmpty || file.name.localizedStandardContains(searchText)
         }
-        .sorted(using: SortDescriptor(\URL.lastPathComponent))
+        .sorted(using: SortDescriptor(\File.name))
     }
     
     var body: some View {
-        let filteredURLs = filteredURLs
+        let filteredFiles = filteredFiles
         NavigationStack {
-            List {
-                ForEach(filteredURLs, id: \.self) { url in
-                    let webFile = webFiles.first { $0.name == url.lastPathComponent }
-                    NavigationLink(value: true) {
-                        HStack {
-                            Text(url.lastPathComponent)
-                            Spacer()
-                            if webFile != nil {
-                                Image(systemName: "safari.fill")
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                    }
-                    .overlay {
-                        Button("") {
-                            loadFile(url: url)
-                        }
-                    }
-                    .contextMenu {
-                        if let webFile {
-                            Button {
-                                Task {
-                                    await fetchFile(url: webFile.url)
-                                }
-                            } label: {
-                                Label("Refresh", systemImage: "arrow.clockwise")
-                            }
-                        }
-                    }
-                    .swipeActions {
-                        Button(role: .destructive) {
-                            deleteFile(url: url)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
+                    ForEach(filteredFiles) { file in
+                        FileRow(file: file, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
                     }
                 }
-                Section {
-                    Spacer().listRowBackground(Color.clear)
-                }
+                .padding(.horizontal, 8)
             }
-            .animation(.default, value: filteredURLs)
+            .animation(.default, value: filteredFiles)
             .overlay {
-                if urls.isEmpty {
-                    ContentUnavailableView("No Recents", systemImage: "mappin.and.ellipse", description: Text("Recently opened files will appear here.\nTap + to open a file."))
+                if files.isEmpty {
+                    ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Files you import will appear here.\nTap + to import a file."))
                         .allowsHitTesting(false)
-                } else if filteredURLs.isEmpty {
+                } else if filteredFiles.isEmpty {
                     ContentUnavailableView.search(text: searchText)
                         .allowsHitTesting(false)
                 }
@@ -87,6 +56,21 @@ struct RootView: View {
             .searchable(text: $searchText)
             .navigationTitle("Geodata Viewer")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Picker("Sort Files", selection: $sortBy.animation()) {
+                            ForEach(SortBy.allCases, id: \.self) { sortBy in
+                                Text(sortBy.rawValue)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
+                    .menuStyle(.button)
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.circle)
+                    .font(.headline)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button {
@@ -128,14 +112,6 @@ struct RootView: View {
         .onOpenURL { url in
             importFile(url: url)
         }
-        .task {
-            updateLocalFiles()
-        }
-        .onChange(of: scenePhase) { _, scenePhase in
-            if scenePhase == .active {
-                updateLocalFiles()
-            }
-        }
     }
     
     func fail(error: GeoError) {
@@ -144,22 +120,9 @@ struct RootView: View {
         Haptics.error()
     }
     
-    func updateLocalFiles() {
-        do {
-            urls = try FileManager.default.contentsOfDirectory(at: .documentsDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-        } catch {
-            print(error)
-            fail(error: .fileManager)
-        }
-    }
-    
-    func deleteFile(url: URL) {
-        do {
-            try FileManager.default.removeItem(at: url)
-        } catch {
-            print(error)
-            fail(error: .fileManager)
-        }
+    func deleteFile(file: File) {
+        try? FileManager.default.removeItem(at: file.url)
+        modelContext.delete(file)
     }
     
     func fetchFile(url: URL) async {
@@ -178,41 +141,39 @@ struct RootView: View {
             return
         }
         
-        let webFile = WebFile(name: filename, url: url)
-        modelContext.insert(webFile)
-        
         do {
             let temp = URL.temporaryDirectory.appending(path: filename)
             try data.write(to: temp)
-            importFile(url: temp)
+            importFile(url: temp, webURL: url)
         } catch {
             print(error)
             fail(error: .fileManager)
         }
     }
     
-    func importFile(url source: URL) {
-        let destination = URL.documentsDirectory.appending(path: source.lastPathComponent)
-        let temp = URL.temporaryDirectory.appending(path: UUID().uuidString)
+    func importFile(url source: URL, webURL: URL? = nil) {
+        let fileExtension = source.pathExtension
+        let name = String(source.lastPathComponent.dropLast(fileExtension.count + 1))
+        let file = File(fileExtension: fileExtension, name: name, webURL: webURL)
+        modelContext.insert(file)
+        
         do {
+            try? FileManager.default.removeItem(at: file.url)
             _ = source.startAccessingSecurityScopedResource()
-            try FileManager.default.copyItem(at: source, to: temp)
+            try FileManager.default.copyItem(at: source, to: file.url)
             source.stopAccessingSecurityScopedResource()
             
-            try? FileManager.default.removeItem(at: destination)
-            try FileManager.default.copyItem(at: temp, to: destination)
-            
-            updateLocalFiles()
-            loadFile(url: destination)
+            loadFile(file: file)
         } catch {
             print(error)
             fail(error: .fileManager)
         }
     }
     
-    func loadFile(url: URL) {
+    func loadFile(file: File) {
         do {
-            selectedGeoData = try GeoParser().parse(url: url)
+            selectedGeoData = try GeoParser().parse(url: file.url)
+            file.date = .now
             Haptics.tap()
         } catch let error as GeoError {
             fail(error: error)
