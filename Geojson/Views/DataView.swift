@@ -139,7 +139,7 @@ struct DataView: View {
     func updateMapType() {
         switch mapType {
         case .standard:
-            mapType = .hybrid
+            mapType = .hybridFlyover
         default:
             mapType = .standard
         }

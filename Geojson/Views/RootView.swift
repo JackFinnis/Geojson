@@ -100,7 +100,11 @@ struct RootView: View {
                 }
             }
         }
-        .alert("Import Failed", isPresented: $showErrorAlert) {}
+        .alert("Import Failed", isPresented: $showErrorAlert) {} message: {
+            if let error {
+                Text(error.description)
+            }
+        }
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json, .geojson, .gpx, .kml, .kmz]) { result in
             switch result {
             case .failure(let error):
@@ -137,7 +141,7 @@ struct RootView: View {
         }
         
         guard let filename = response.suggestedFilename else {
-            fail(error: .download)
+            fail(error: .fileType)
             return
         }
         

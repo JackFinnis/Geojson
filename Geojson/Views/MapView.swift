@@ -24,7 +24,7 @@ struct MapView: UIViewRepresentable {
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = !preview
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-        mapView.isPitchEnabled = false
+        mapView.isPitchEnabled = true
         mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest]
         mapView.layoutMargins = .init(length: preview ? -25 : 5)
         
