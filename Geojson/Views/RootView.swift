@@ -53,7 +53,7 @@ struct RootView: View {
             .navigationDestination(item: $selectedGeoData) { data in
                 DataView(data: data, scenePhase: scenePhase)
             }
-            .searchable(text: $searchText)
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Geodata Viewer")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

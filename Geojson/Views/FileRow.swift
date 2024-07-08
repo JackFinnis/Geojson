@@ -23,11 +23,11 @@ struct FileRow: View {
             VStack(alignment: .leading) {
                 ZStack {
                     if let geoData {
-                        MapView(selectedAnnotation: .constant(nil), trackingMode: .constant(.none), data: geoData, mapType: .satellite, preview: true)
+                        MapView(selectedAnnotation: .constant(nil), trackingMode: .constant(.none), data: geoData, mapType: .standard, preview: true)
                             .overlay(alignment: .bottomTrailing) {
                                 if file.webURL != nil {
                                     Image(systemName: "safari.fill")
-                                        .foregroundStyle(.white)
+                                        .foregroundStyle(.white, Color.accentColor)
                                         .padding(5)
                                 }
                             }
@@ -45,6 +45,8 @@ struct FileRow: View {
                 .aspectRatio(1, contentMode: .fit)
                 .cornerRadius(10)
                 .allowsHitTesting(false)
+                .compositingGroup()
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(.fill))
                 
                 TextField("Name", text: $file.name, axis: .vertical)
                     .focused($focused)
