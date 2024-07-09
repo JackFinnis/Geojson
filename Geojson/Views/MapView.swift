@@ -12,7 +12,7 @@ struct MapView: UIViewRepresentable {
     @Binding var selectedAnnotation: MKAnnotation?
     @Binding var trackingMode: MKUserTrackingMode
     let data: GeoData
-    let mapType: MKMapType
+    let mapStandard: Bool
     let preview: Bool
     
     func makeCoordinator() -> Coordinator {
@@ -27,6 +27,8 @@ struct MapView: UIViewRepresentable {
         mapView.isPitchEnabled = true
         mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest]
         mapView.layoutMargins = .init(length: preview ? -25 : 5)
+        mapView.showsUserTrackingButton = !preview
+        mapView.pitchButtonVisibility = preview ? .hidden : .visible
         
         mapView.addAnnotations(data.points)
         mapView.addOverlay(MKMultiPolyline(data.polylines), level: .aboveRoads)
@@ -37,7 +39,7 @@ struct MapView: UIViewRepresentable {
     }
     
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        mapView.mapType = mapType
+        mapView.preferredConfiguration = mapStandard ? MKStandardMapConfiguration(elevationStyle: .realistic) : MKHybridMapConfiguration(elevationStyle: .realistic)
         mapView.setUserTrackingMode(trackingMode, animated: true)
         if selectedAnnotation == nil {
             mapView.selectedAnnotations.forEach { annotation in

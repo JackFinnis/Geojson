@@ -13,9 +13,10 @@ struct DataView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
     @State var trackingMode = MKUserTrackingMode.none
-    @State var mapType = MKMapType.standard
+    @State var mapStandard = true
     @State var selectedAnnotation: MKAnnotation?
     @State var droppedPoint: Point?
+    @State var lookAroundScene: MKLookAroundScene?
     @AppState("visitedCoords") var visitedCoords = Set<CLLocationCoordinate2D>()
     
     let data: GeoData
@@ -23,7 +24,7 @@ struct DataView: View {
     
     var body: some View {
         ZStack {
-            MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapType: mapType, preview: false)
+            MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false)
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
@@ -49,17 +50,9 @@ struct DataView: View {
                     }
                     .mapButton()
                     Button {
-                        updateMapType()
+                        mapStandard.toggle()
                     } label: {
-                        Image(systemName: mapTypeImage)
-                            .contentTransition(.symbolEffect(.replace))
-                            .mapBox()
-                    }
-                    .mapButton()
-                    Button {
-                        updateTrackingMode()
-                    } label: {
-                        Image(systemName: trackingModeImage)
+                        Image(systemName: mapStandard ? "map" : "globe.europe.africa.fill")
                             .contentTransition(.symbolEffect(.replace))
                             .mapBox()
                     }
@@ -91,23 +84,42 @@ struct DataView: View {
                             visitedCoords.insert(point.coordinate)
                         }
                     }
+                    
                     if let url = point.googleURL,
                        UIApplication.shared.canOpenURL(url) {
-                        Button("Search Google") {
+                        Button("Info") {
                             openURL(url)
                         }
                     }
                 }
+                Button("Look Around") {
+                    Task {
+                        await lookAround(coord: selectedAnnotation.coordinate)
+                    }
+                }
                 let user = selectedAnnotation is MKUserLocation
-                Button(user ? "Open in Maps" : "Directions") {
+                Button(user ? "Open in Maps" : "Get Directions") {
                     Task {
                         await openInMaps(selectedAnnotation)
                     }
                 }
             }
         }
+        .fullScreenCover(item: $lookAroundScene) { scene in
+            LookAroundPreview(initialScene: scene)
+                .ignoresSafeArea()
+        }
         .onAppear {
             CLLocationManager().requestWhenInUseAuthorization()
+        }
+    }
+    
+    func lookAround(coord: CLLocationCoordinate2D) async {
+        do {
+            lookAroundScene = try await MKLookAroundSceneRequest(coordinate: coord).scene
+        } catch {
+            print(error)
+            Haptics.error()
         }
     }
     
@@ -124,48 +136,12 @@ struct DataView: View {
             MKMapItem.forCurrentLocation().openInMaps()
         }
     }
-    
-    func updateTrackingMode() {
-        switch trackingMode {
-        case .none:
-            trackingMode = .follow
-        case .follow:
-            trackingMode = .followWithHeading
-        default:
-            trackingMode = .none
-        }
-    }
-    
-    func updateMapType() {
-        switch mapType {
-        case .standard:
-            mapType = .hybridFlyover
-        default:
-            mapType = .standard
-        }
-    }
-    
-    var trackingModeImage: String {
-        switch trackingMode {
-        case .none:
-            return "location"
-        case .follow:
-            return "location.fill"
-        default:
-            return "location.north.line.fill"
-        }
-    }
-    
-    var mapTypeImage: String {
-        switch mapType {
-        case .standard:
-            return "globe.europe.africa.fill"
-        default:
-            return "map"
-        }
-    }
 }
 
 #Preview {
     DataView(data: .empty, scenePhase: .active)
+}
+
+extension MKLookAroundScene: Identifiable {
+    public var id: UUID { UUID() }
 }

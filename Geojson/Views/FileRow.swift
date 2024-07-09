@@ -23,7 +23,7 @@ struct FileRow: View {
             VStack(alignment: .leading) {
                 ZStack {
                     if let geoData {
-                        MapView(selectedAnnotation: .constant(nil), trackingMode: .constant(.none), data: geoData, mapType: .standard, preview: true)
+                        MapView(selectedAnnotation: .constant(nil), trackingMode: .constant(.none), data: geoData, mapStandard: true, preview: true)
                             .overlay(alignment: .bottomTrailing) {
                                 if file.webURL != nil {
                                     Image(systemName: "safari.fill")
