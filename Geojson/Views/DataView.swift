@@ -21,6 +21,7 @@ struct DataView: View {
     
     let data: GeoData
     let scenePhase: ScenePhase
+    let fail: (GeoError) -> Void
     
     var body: some View {
         ZStack {
@@ -114,26 +115,37 @@ struct DataView: View {
     }
     
     func lookAround(coord: CLLocationCoordinate2D) async {
-        lookAroundScene = try? await MKLookAroundSceneRequest(coordinate: coord).scene
+        do {
+            lookAroundScene = try await MKLookAroundSceneRequest(coordinate: coord).scene
+            guard lookAroundScene != nil else { throw GeoError.lookAround }
+        } catch {
+            print(error)
+            fail(.lookAround)
+        }
     }
     
     func openInMaps(annotation: MKAnnotation) async {
-        if let point = annotation as? Point {
-            guard let placemark = try? await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
-            let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
-            mapItem.name = point.title ?? mapItem.name
-            mapItem.openInMaps()
-        } else if let feature = annotation as? MKMapFeatureAnnotation {
-            guard let mapItem = try? await MKMapItemRequest(mapFeatureAnnotation: feature).mapItem else { return }
-            mapItem.openInMaps()
-        } else if let _ = annotation as? MKUserLocation {
-            MKMapItem.forCurrentLocation().openInMaps()
+        do {
+            if let point = annotation as? Point {
+                guard let placemark = try await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
+                let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+                mapItem.name = point.title ?? mapItem.name
+                mapItem.openInMaps()
+            } else if let feature = annotation as? MKMapFeatureAnnotation {
+                let mapItem = try await MKMapItemRequest(mapFeatureAnnotation: feature).mapItem
+                mapItem.openInMaps()
+            } else if let _ = annotation as? MKUserLocation {
+                MKMapItem.forCurrentLocation().openInMaps()
+            }
+        } catch {
+            print(error)
+            fail(.lookAround)
         }
     }
 }
 
 #Preview {
-    DataView(data: .empty, scenePhase: .active)
+    DataView(data: .empty, scenePhase: .active, fail: { _ in })
 }
 
 extension MKLookAroundScene: Identifiable {

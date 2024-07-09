@@ -51,7 +51,7 @@ struct RootView: View {
                 }
             }
             .navigationDestination(item: $selectedGeoData) { data in
-                DataView(data: data, scenePhase: scenePhase)
+                DataView(data: data, scenePhase: scenePhase, fail: fail)
             }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Geodata Viewer")
@@ -100,7 +100,7 @@ struct RootView: View {
                 }
             }
         }
-        .alert("Import Failed", isPresented: $showErrorAlert) {} message: {
+        .alert(error?.title ?? "", isPresented: $showErrorAlert) {} message: {
             if let error {
                 Text(error.description)
             }

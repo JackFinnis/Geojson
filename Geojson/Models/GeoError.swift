@@ -17,6 +17,17 @@ enum GeoError: Error {
     case invalidGPX
     case invalidKML
     case internet
+    case lookAround
+    case getDirections
+    
+    var title: String {
+        switch self {
+        case .unknown, .fileType, .fileCorrupted, .fileEmpty, .fileManager, .invalidGeoJSON, .invalidGPX, .invalidKML, .internet:
+            "Import Failed"
+        case .lookAround, .getDirections:
+            "Operation Failed"
+        }
+    }
     
     var description: String {
         switch self {
@@ -38,6 +49,10 @@ enum GeoError: Error {
             return "This file contains invalid KML data"
         case .internet:
             return "Check your internet connection and try again."
+        case .lookAround:
+            return "Unable to look around this place."
+        case .getDirections:
+            return "Unable to get directions to this place."
         }
     }
 }
