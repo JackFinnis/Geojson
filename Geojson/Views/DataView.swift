@@ -75,6 +75,12 @@ struct DataView: View {
         }), titleVisibility: selectedAnnotation?.name == nil ? .hidden : .visible) {
             if let selectedAnnotation {
                 if let point = selectedAnnotation as? Point {
+                    if let url = point.googleURL,
+                       UIApplication.shared.canOpenURL(url) {
+                        Button("Info") {
+                            openURL(url)
+                        }
+                    }
                     if visitedCoords.contains(point.coordinate) {
                         Button("Undo Visited", role: .destructive) {
                             visitedCoords.remove(point.coordinate)
@@ -82,13 +88,6 @@ struct DataView: View {
                     } else {
                         Button("Mark as Visited") {
                             visitedCoords.insert(point.coordinate)
-                        }
-                    }
-                    
-                    if let url = point.googleURL,
-                       UIApplication.shared.canOpenURL(url) {
-                        Button("Info") {
-                            openURL(url)
                         }
                     }
                 }
@@ -100,7 +99,7 @@ struct DataView: View {
                 let user = selectedAnnotation is MKUserLocation
                 Button(user ? "Open in Maps" : "Get Directions") {
                     Task {
-                        await openInMaps(selectedAnnotation)
+                        await openInMaps(annotation: selectedAnnotation)
                     }
                 }
             }
@@ -115,15 +114,10 @@ struct DataView: View {
     }
     
     func lookAround(coord: CLLocationCoordinate2D) async {
-        do {
-            lookAroundScene = try await MKLookAroundSceneRequest(coordinate: coord).scene
-        } catch {
-            print(error)
-            Haptics.error()
-        }
+        lookAroundScene = try? await MKLookAroundSceneRequest(coordinate: coord).scene
     }
     
-    func openInMaps(_ annotation: MKAnnotation) async {
+    func openInMaps(annotation: MKAnnotation) async {
         if let point = annotation as? Point {
             guard let placemark = try? await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
             let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
