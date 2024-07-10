@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-struct DataView: View {
+struct FileView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
@@ -19,52 +19,52 @@ struct DataView: View {
     @State var lookAroundScene: MKLookAroundScene?
     @AppState("visitedCoords") var visitedCoords = Set<CLLocationCoordinate2D>()
     
+    @Bindable var file: File
     let data: GeoData
     let scenePhase: ScenePhase
     let fail: (GeoError) -> Void
     
     var body: some View {
-        ZStack {
-            MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                CarbonCopy()
-                    .id(scenePhase)
-                    .blur(radius: 5, opaque: true)
-                    .mask {
-                        LinearGradient(colors: [.white, .white, .clear], startPoint: .top, endPoint: .bottom)
-                    }
+        GeometryReader { geo in
+            ZStack {
+                MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false)
                     .ignoresSafeArea()
-                Spacer()
-                    .layoutPriority(1)
-            }
-            
-            HStack {
-                VStack(alignment: .leading, spacing: 10) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .bold()
-                            .mapBox()
-                    }
-                    .mapButton()
-                    Button {
-                        mapStandard.toggle()
-                    } label: {
-                        Image(systemName: mapStandard ? "map" : "globe.europe.africa.fill")
-                            .contentTransition(.symbolEffect(.replace))
-                            .mapBox()
-                    }
-                    .mapButton()
+                
+                VStack(spacing: 0) {
+                    CarbonCopy()
+                        .frame(height: geo.safeAreaInsets.top + 20)
+                        .id(scenePhase)
+                        .blur(radius: 5, opaque: true)
+                        .mask {
+                            LinearGradient(colors: [.white, .white, .white, .clear], startPoint: .top, endPoint: .bottom)
+                        }
                     Spacer()
                 }
-                Spacer()
+                .ignoresSafeArea()
+                
+                Button {
+                    mapStandard.toggle()
+                } label: {
+                    Image(systemName: mapStandard ? "map" : "globe.europe.africa.fill")
+                        .contentTransition(.symbolEffect(.replace))
+                        .mapBox()
+                }
+                .mapButton()
+                .position(x: geo.size.width - 32, y: -22)
             }
-            .padding(10)
         }
-        .toolbar(.hidden, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    mapStandard.toggle()
+                } label: {
+                    Image(systemName: "map")
+                        .foregroundStyle(.clear)
+                }
+            }
+        }
+        .navigationTitle($file.name)
+        .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog(selectedAnnotation?.name ?? "", isPresented: Binding(get: {
             selectedAnnotation != nil
         }, set: { isPresented in
@@ -142,10 +142,6 @@ struct DataView: View {
             fail(.lookAround)
         }
     }
-}
-
-#Preview {
-    DataView(data: .empty, scenePhase: .active, fail: { _ in })
 }
 
 extension MKLookAroundScene: Identifiable {

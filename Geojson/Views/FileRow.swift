@@ -17,7 +17,7 @@ struct FileRow: View {
     @Query var files: [File]
     let loadFile: (File) -> Void
     let deleteFile: (File) -> Void
-    let fetchFile: (URL) async -> Void
+    let fetchFile: (URL, Folder?) async -> Void
     
     var body: some View {
         Button {
@@ -75,7 +75,7 @@ struct FileRow: View {
                 Button {
                     Task {
                         deleteFile(file)
-                        await fetchFile(url)
+                        await fetchFile(url, file.folder)
                     }
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")

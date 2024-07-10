@@ -8,28 +8,45 @@
 import SwiftUI
 
 struct FolderView: View {
+    @AppStorage("sortBy") var sortBy = SortBy.name
+    @State var searchText = ""
+    
     @Bindable var folder: Folder
     let loadFile: (File) -> Void
     let deleteFile: (File) -> Void
-    let fetchFile: (URL) async -> Void
+    let importFile: (URL, URL?, Folder?) -> Void
+    let fetchFile: (URL, Folder?) async -> Void
     
     var body: some View {
-        let files = folder.files.sorted(using: SortDescriptor(\File.name))
+        let filteredFiles = folder.files.filter { file in
+            searchText.isEmpty || file.name.localizedStandardContains(searchText)
+        }.sorted(using: sortBy.fileDescriptor)
+        
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
-                ForEach(files) { file in
+                ForEach(filteredFiles) { file in
                     FileRow(file: file, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
                 }
             }
             .padding(.horizontal, 8)
         }
         .overlay {
-            if files.isEmpty {
+            if folder.files.isEmpty {
                 ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Drag and drop files into this folder."))
+                    .allowsHitTesting(false)
+            } else if filteredFiles.isEmpty && searchText.isNotEmpty {
+                ContentUnavailableView.search(text: searchText)
                     .allowsHitTesting(false)
             }
         }
+        .animation(.default, value: filteredFiles)
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .navigationTitle($folder.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                PrimaryActions(folder: folder, importFile: importFile, fetchFile: fetchFile)
+            }
+        }
     }
 }

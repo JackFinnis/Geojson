@@ -11,12 +11,21 @@ enum SortBy: String, CaseIterable {
     case name = "Name"
     case date = "Recent"
     
-    var descriptor: any SortComparator<File> {
+    var fileDescriptor: any SortComparator<File> {
         switch self {
         case .name:
             return SortDescriptor(\File.name)
         case .date:
             return SortDescriptor(\File.date, order: .reverse)
+        }
+    }
+    
+    var folderDescriptor: any SortComparator<Folder> {
+        switch self {
+        case .name:
+            return SortDescriptor(\Folder.name)
+        case .date:
+            return SortDescriptor(\Folder.date, order: .reverse)
         }
     }
 }
