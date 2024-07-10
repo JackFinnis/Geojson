@@ -7,20 +7,23 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 class File {
     let id = UUID()
-    let fileExtension: String
+    var fileExtension: String
     var name: String
     var date: Date
     var webURL: URL?
+    var folder: Folder?
     
-    init(fileExtension: String, name: String, date: Date = .now, webURL: URL? = nil) {
+    init(fileExtension: String, name: String, date: Date = .now, webURL: URL? = nil, folder: Folder? = nil) {
         self.fileExtension = fileExtension
         self.name = name
         self.date = date
         self.webURL = webURL
+        self.folder = folder
     }
     
     var url: URL {

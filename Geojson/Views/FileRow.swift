@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FileRow: View {
+    @Environment(\.modelContext) var modelContext
     @FocusState var focused: Bool
     @State var geoData: GeoData?
     
     @Bindable var file: File
+    @Query var files: [File]
     let loadFile: (File) -> Void
     let deleteFile: (File) -> Void
     let fetchFile: (URL) async -> Void
@@ -88,6 +91,20 @@ struct FileRow: View {
             } label: {
                 Label("Delete", systemImage: "trash")
             }
+        }
+        .draggable(file.id.uuidString)
+        .dropDestination(for: String.self) { ids, point in
+            var folderFiles: [File] = ids.compactMap { id in
+                files.first { $0.id.uuidString == id }
+            }
+            guard folderFiles.isNotEmpty,
+                  file.folder == nil
+            else { return false }
+            folderFiles.append(file)
+            let folder = Folder()
+            folder.files = folderFiles
+            modelContext.insert(folder)
+            return true
         }
     }
 }

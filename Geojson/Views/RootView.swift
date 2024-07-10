@@ -13,47 +13,55 @@ struct RootView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
     @AppStorage("sortBy") var sortBy = SortBy.name
+    @State var path = NavigationPath()
     @State var urls = [URL]()
     @State var searchText = ""
     @State var showFileImporter = false
-    @State var selectedGeoData: GeoData?
     @Query var files: [File]
+    @Query var folders: [Folder]
     
     @State var error: GeoError?
     @State var showErrorAlert = false
     
-    var filteredFiles: [File] {
-        files.filter { file in
-            searchText.isEmpty || file.name.localizedStandardContains(searchText)
-        }
-        .sorted(using: SortDescriptor(\File.name))
-    }
-    
     var body: some View {
-        let filteredFiles = filteredFiles
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
-                    ForEach(filteredFiles) { file in
+                    ForEach(folders.sorted(using: SortDescriptor(\Folder.name))) { folder in
+                        FolderRow(folder: folder)
+                    }
+                    let files = files.filter { $0.folder == nil }.sorted(using: SortDescriptor(\File.name))
+                    ForEach(files) { file in
                         FileRow(file: file, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
                     }
                 }
                 .padding(.horizontal, 8)
             }
-            .animation(.default, value: filteredFiles)
+            .animation(.default, value: files)
+            .animation(.default, value: folders)
             .overlay {
-                if files.isEmpty {
+                if files.isEmpty && folders.isEmpty {
                     ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Files you import will appear here.\nTap + to import a file."))
-                        .allowsHitTesting(false)
-                } else if filteredFiles.isEmpty {
-                    ContentUnavailableView.search(text: searchText)
                         .allowsHitTesting(false)
                 }
             }
-            .navigationDestination(item: $selectedGeoData) { data in
+            .dropDestination(for: String.self) { ids, point in
+                let folderFiles: [File] = ids.compactMap { id in
+                    files.first { $0.id.uuidString == id }
+                }
+                guard folderFiles.isNotEmpty else { return false }
+                folderFiles.forEach { file in
+                    file.folder = nil
+                }
+                return true
+            }
+            .navigationDestination(for: GeoData.self) { data in
                 DataView(data: data, scenePhase: scenePhase, fail: fail)
             }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+            .navigationDestination(for: Folder.self) { folder in
+                FolderView(folder: folder, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
+            }
             .navigationTitle("Geodata Viewer")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -176,8 +184,9 @@ struct RootView: View {
     
     func loadFile(file: File) {
         do {
-            selectedGeoData = try GeoParser().parse(url: file.url)
+            let geoData = try GeoParser().parse(url: file.url)
             file.date = .now
+            path.append(geoData)
             Haptics.tap()
         } catch let error as GeoError {
             fail(error: error)
