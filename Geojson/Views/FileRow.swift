@@ -14,6 +14,7 @@ struct FileRow: View {
     
     @Bindable var file: File
     @Query var files: [File]
+    @Query var folders: [Folder]
     let loadFile: (File) -> Void
     let deleteFile: (File) -> Void
     let fetchFile: (URL, Folder?) async -> Void
@@ -41,15 +42,19 @@ struct FileRow: View {
                 .cornerRadius(10)
                 .allowsHitTesting(false)
                 .compositingGroup()
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(.fill))
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(.separator))
                 
                 Text(file.name)
                     .multilineTextAlignment(.leading)
             }
             .padding(8)
+            #if os(iOS)
             .background(.background)
+            #endif
+            .contentShape(RoundedRectangle(cornerRadius: 18))
+            .hoverEffect()
         }
-        .foregroundStyle(.primary)
+        .buttonStyle(.plain)
         .contextMenu {
             if let url = file.webURL {
                 Button {
@@ -59,6 +64,20 @@ struct FileRow: View {
                     }
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
+                }
+            }
+            if folders.isNotEmpty {
+                Menu {
+                    Picker("Move", selection: $file.folder) {
+                        Text("No Folder")
+                            .tag(nil as Folder?)
+                        ForEach(folders.sorted(using: SortBy.name.folderDescriptor)) { folder in
+                            Text(folder.name)
+                                .tag(folder as Folder?)
+                        }
+                    }
+                } label: {
+                    Label("Move", systemImage: "folder")
                 }
             }
             Button(role: .destructive) {

@@ -26,17 +26,17 @@ struct FileView: View {
     
     var body: some View {
         GeometryReader { geo in
-            ZStack {
+            ZStack(alignment: .topLeading) {
                 MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false)
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
                     CarbonCopy()
-                        .frame(height: geo.safeAreaInsets.top + 20)
+                        .frame(height: geo.safeAreaInsets.top)
                         .id(scenePhase)
                         .blur(radius: 5, opaque: true)
                         .mask {
-                            LinearGradient(colors: [.white, .white, .white, .clear], startPoint: .top, endPoint: .bottom)
+                            LinearGradient(colors: [.white, .white, .clear], startPoint: .top, endPoint: .bottom)
                         }
                     Spacer()
                 }
@@ -50,7 +50,7 @@ struct FileView: View {
                         .mapBox()
                 }
                 .mapButton()
-                .position(x: geo.size.width - 32, y: -22)
+                .padding(10)
             }
         }
         .toolbar {
@@ -61,6 +61,7 @@ struct FileView: View {
                     Image(systemName: "map")
                         .foregroundStyle(.clear)
                 }
+                .buttonStyle(.plain)
             }
         }
         .navigationTitle($file.name)

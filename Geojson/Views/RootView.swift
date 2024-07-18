@@ -26,18 +26,19 @@ struct RootView: View {
         let filteredFiles = files.filter { file in
             isSearching ? file.name.localizedStandardContains(searchText) : file.folder == nil
         }.sorted(using: sortBy.fileDescriptor)
+        let folders = folders.sorted(using: sortBy.folderDescriptor)
         
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     if !isSearching {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
-                            ForEach(folders.sorted(using: sortBy.folderDescriptor)) { folder in
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 0, alignment: .top)], spacing: 0) {
+                            ForEach(folders) { folder in
                                 FolderRow(folder: folder)
                             }
                         }
                     }
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 0, alignment: .top)], spacing: 0) {
                         ForEach(filteredFiles) { file in
                             FileRow(file: file, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
                         }
@@ -60,7 +61,10 @@ struct RootView: View {
             .navigationDestination(for: FileData.self) { fileData in
                 FileView(file: fileData.file, data: fileData.data, scenePhase: scenePhase, fail: fail)
             }
-            .searchable(text: $searchText, isPresented: $isSearching, placement: .navigationBarDrawer(displayMode: .always))
+            #if os(iOS)
+            .scrollDismissesKeyboard(.immediately)
+            #endif
+            .searchable(text: $searchText, isPresented: $isSearching)
             .navigationDestination(for: Folder.self) { folder in
                 FolderView(folder: folder, loadFile: loadFile, deleteFile: deleteFile, importFile: importFile, fetchFile: fetchFile)
             }
@@ -71,7 +75,7 @@ struct RootView: View {
                         let folder = Folder()
                         modelContext.insert(folder)
                     } label: {
-                        Label("Add Folder", systemImage: "folder.badge.plus")
+                        Label("Add Folder", systemImage: "folder.fill.badge.plus")
                     }
                     .buttonStyle(.bordered)
                     .buttonBorderShape(.circle)
@@ -207,21 +211,23 @@ struct PrimaryActions: View {
         .font(.headline)
         
         Menu {
-            Button {
-                showFileImporter = true
-            } label: {
-                Label("Choose File", systemImage: "folder")
-            }
-            if UIPasteboard.general.hasStrings {
+            Section("Import File") {
                 Button {
-                    guard let string = UIPasteboard.general.string,
-                          let url = URL(string: string)
-                    else { return }
-                    Task {
-                        await fetchFile(url, folder)
-                    }
+                    showFileImporter = true
                 } label: {
-                    Label("Paste URL", systemImage: "doc.on.doc")
+                    Label("Choose File", systemImage: "folder")
+                }
+                if UIPasteboard.general.hasStrings {
+                    Button {
+                        guard let string = UIPasteboard.general.string,
+                              let url = URL(string: string)
+                        else { return }
+                        Task {
+                            await fetchFile(url, folder)
+                        }
+                    } label: {
+                        Label("Paste File URL", systemImage: "doc.on.doc")
+                    }
                 }
             }
         } label: {

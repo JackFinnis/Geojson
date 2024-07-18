@@ -40,7 +40,9 @@ struct FolderView: View {
             }
         }
         .animation(.default, value: filteredFiles)
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
+        #if os(iOS)
+        .searchable(text: $searchText)
+        #endif
         .navigationTitle($folder.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

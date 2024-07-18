@@ -24,9 +24,13 @@ struct FolderRow: View {
                 Spacer(minLength: 0)
             }
             .padding(8)
+            #if os(iOS)
             .background(.background)
+            #endif
+            .contentShape(RoundedRectangle(cornerRadius: 18))
+            .hoverEffect()
         }
-        .foregroundStyle(.primary)
+        .buttonStyle(.plain)
         .contextMenu {
             Button(role: .destructive) {
                 modelContext.delete(folder)
