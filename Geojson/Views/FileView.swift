@@ -76,12 +76,6 @@ struct FileView: View {
         }), titleVisibility: selectedAnnotation?.name == nil ? .hidden : .visible) {
             if let selectedAnnotation {
                 if let point = selectedAnnotation as? Point {
-                    if let url = point.googleURL,
-                       UIApplication.shared.canOpenURL(url) {
-                        Button("Info") {
-                            openURL(url)
-                        }
-                    }
                     if visitedCoords.contains(point.coordinate) {
                         Button("Undo Visited", role: .destructive) {
                             visitedCoords.remove(point.coordinate)
@@ -90,6 +84,12 @@ struct FileView: View {
                         Button("Mark as Visited") {
                             visitedCoords.insert(point.coordinate)
                         }
+                    }
+                }
+                if let url = selectedAnnotation.googleURL,
+                   UIApplication.shared.canOpenURL(url) {
+                    Button("Info") {
+                        openURL(url)
                     }
                 }
                 Button("Look Around") {

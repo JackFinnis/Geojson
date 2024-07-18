@@ -20,4 +20,9 @@ extension MKAnnotation {
             return nil
         }
     }
+    
+    var googleURL: URL? {
+        guard let query = title??.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: "https://google.com/search?q=\(query)")
+    }
 }

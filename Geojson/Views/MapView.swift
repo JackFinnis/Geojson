@@ -9,6 +9,8 @@ import SwiftUI
 import MapKit
 
 struct MapView: UIViewRepresentable {
+    let mapView = MKMapView()
+    
     @Binding var selectedAnnotation: MKAnnotation?
     @Binding var trackingMode: MKUserTrackingMode
     let data: GeoData
@@ -20,7 +22,6 @@ struct MapView: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> MKMapView {
-        let mapView = MKMapView()
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = !preview
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
@@ -35,6 +36,9 @@ struct MapView: UIViewRepresentable {
         mapView.addOverlay(MKMultiPolygon(data.polygons), level: .aboveRoads)
         mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: preview ? 35 : 10), animated: false)
         
+        let longPressRecognizer = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleLongPress))
+        mapView.addGestureRecognizer(longPressRecognizer)
+        
         return mapView
     }
     
@@ -45,7 +49,9 @@ struct MapView: UIViewRepresentable {
             mapView.selectedAnnotations.forEach { annotation in
                 mapView.deselectAnnotation(annotation, animated: true)
                 mapView.removeAnnotation(annotation)
-                mapView.addAnnotation(annotation)
+                if let point = annotation as? Point, point.title != "Dropped Pin" {
+                    mapView.addAnnotation(annotation)
+                }
             }
         }
     }
@@ -97,6 +103,19 @@ struct MapView: UIViewRepresentable {
                 return marker
             }
             return nil
+        }
+        
+        @objc
+        func handleLongPress(_ press: UILongPressGestureRecognizer) {
+            let mapView = parent.mapView
+            guard press.state == .began else { return }
+            let location = press.location(in: mapView)
+            let coord = mapView.convert(location, toCoordinateFrom: mapView)
+            let point = Point(coordinate: coord, title: "Dropped Pin")
+            mapView.addAnnotation(point)
+            mapView.selectAnnotation(point, animated: true)
+            parent.selectedAnnotation = point
+            Haptics.tap()
         }
     }
 }

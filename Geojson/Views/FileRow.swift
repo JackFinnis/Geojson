@@ -10,7 +10,6 @@ import SwiftData
 
 struct FileRow: View {
     @Environment(\.modelContext) var modelContext
-    @FocusState var focused: Bool
     @State var geoData: GeoData?
     
     @Bindable var file: File
@@ -51,20 +50,8 @@ struct FileRow: View {
                 .compositingGroup()
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(.fill))
                 
-                TextField("Name", text: $file.name, axis: .vertical)
-                    .focused($focused)
-                    .submitLabel(.done)
-                    .textInputAutocapitalization(.words)
+                Text(file.name)
                     .multilineTextAlignment(.leading)
-                    .onChange(of: file.name) { _, name in
-                        if file.name.last == "\n" {
-                            focused = false
-                            file.name = file.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                            if file.name.isEmpty {
-                                file.name = "File"
-                            }
-                        }
-                    }
             }
             .padding(8)
             .background(.background)
@@ -80,11 +67,6 @@ struct FileRow: View {
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
-            }
-            Button {
-                focused = true
-            } label: {
-                Label("Rename", systemImage: "pencil")
             }
             Button(role: .destructive) {
                 deleteFile(file)

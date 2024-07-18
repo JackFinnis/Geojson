@@ -22,11 +22,6 @@ class Point: NSObject, MKAnnotation {
         self.subtitle = subtitle
         self.index = index
     }
-    
-    var googleURL: URL? {
-        guard let query = title?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: "https://google.com/search?q=\(query)")
-    }
 }
 
 extension Point {
