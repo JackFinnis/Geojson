@@ -30,12 +30,16 @@ class Point: NSObject, MKAnnotation {
 }
 
 extension Point {
-    convenience init?(i: Int, waypoint: GPXWaypoint) {
+    convenience init?(index: Int, waypoint: GPXWaypoint) {
         guard let coord = waypoint.coord else { return nil }
-        self.init(coordinate: coord, title: waypoint.name, subtitle: waypoint.desc ?? waypoint.comment, index: i)
+        self.init(coordinate: coord, title: waypoint.name, subtitle: waypoint.desc ?? waypoint.comment, index: index)
     }
     
     convenience init(point: KMLPoint, placemark: KMLPlacemark) {
-        self.init(coordinate: point.coordinate.coord, title: placemark.name)
+        if let index = Int(placemark.name) {
+            self.init(coordinate: point.coordinate.coord, title: placemark.featureDescription, index: index)
+        } else {
+            self.init(coordinate: point.coordinate.coord, title: placemark.name, subtitle: placemark.featureDescription)
+        }
     }
 }

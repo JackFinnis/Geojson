@@ -25,7 +25,7 @@ struct MapView: UIViewRepresentable {
         mapView.showsUserLocation = !preview
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.isPitchEnabled = true
-        mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest]
+        mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest, .territories]
         mapView.layoutMargins = .init(length: preview ? -25 : 5)
         mapView.showsUserTrackingButton = !preview
         mapView.pitchButtonVisibility = preview ? .hidden : .visible

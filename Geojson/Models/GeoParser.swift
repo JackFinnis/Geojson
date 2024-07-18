@@ -103,7 +103,7 @@ class GeoParser {
     
     func handleGPXWaypoints(_ waypoints: [GPXWaypoint]) {
         let points = waypoints.enumerated().compactMap { i, waypoint in
-            Point(i: i + 1, waypoint: waypoint)
+            Point(index: i + 1, waypoint: waypoint)
         }
         self.points.append(contentsOf: points)
     }
