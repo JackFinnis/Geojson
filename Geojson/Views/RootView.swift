@@ -29,14 +29,18 @@ struct RootView: View {
         
         NavigationStack(path: $path) {
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
                     if !isSearching {
-                        ForEach(folders.sorted(using: sortBy.folderDescriptor)) { folder in
-                            FolderRow(folder: folder)
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
+                            ForEach(folders.sorted(using: sortBy.folderDescriptor)) { folder in
+                                FolderRow(folder: folder)
+                            }
                         }
                     }
-                    ForEach(filteredFiles) { file in
-                        FileRow(file: file, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 0, alignment: .top)], spacing: 0) {
+                        ForEach(filteredFiles) { file in
+                            FileRow(file: file, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
+                        }
                     }
                 }
                 .padding(.horizontal, 8)
@@ -52,16 +56,7 @@ struct RootView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .dropDestination(for: String.self) { ids, point in
-                let folderFiles: [File] = ids.compactMap { id in
-                    files.first { $0.id.uuidString == id }
-                }
-                guard folderFiles.isNotEmpty else { return false }
-                folderFiles.forEach { file in
-                    file.folder = nil
-                }
-                return true
-            }
+            .dropDestination(for: String.self, action: removeFromFolder)
             .navigationDestination(for: FileData.self) { fileData in
                 FileView(file: fileData.file, data: fileData.data, scenePhase: scenePhase, fail: fail)
             }
@@ -71,6 +66,17 @@ struct RootView: View {
             }
             .navigationTitle("Geodata Viewer")
             .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        let folder = Folder()
+                        modelContext.insert(folder)
+                    } label: {
+                        Label("Add Folder", systemImage: "folder.badge.plus")
+                    }
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.circle)
+                    .font(.headline)
+                }
                 ToolbarItemGroup(placement: .primaryAction) {
                     PrimaryActions(folder: nil, importFile: importFile, fetchFile: fetchFile)
                 }
@@ -84,6 +90,17 @@ struct RootView: View {
         .onOpenURL { url in
             importFile(url: url, webURL: nil, folder: nil)
         }
+    }
+    
+    func removeFromFolder(ids: [String], point: CGPoint) -> Bool {
+        let folderFiles: [File] = ids.compactMap { id in
+            files.first { $0.id.uuidString == id }
+        }
+        guard folderFiles.isNotEmpty else { return false }
+        folderFiles.forEach { file in
+            file.folder = nil
+        }
+        return true
     }
     
     func fail(error: GeoError) {
@@ -182,7 +199,7 @@ struct PrimaryActions: View {
                 }
             }
         } label: {
-            Image(systemName: "arrow.up.arrow.down")
+            Label("Sort Files", systemImage: "arrow.up.arrow.down")
         }
         .menuStyle(.button)
         .buttonStyle(.bordered)

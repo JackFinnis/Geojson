@@ -26,13 +26,6 @@ struct FileRow: View {
                 ZStack {
                     if let geoData {
                         MapView(selectedAnnotation: .constant(nil), trackingMode: .constant(.none), data: geoData, mapStandard: true, preview: true)
-                            .overlay(alignment: .bottomTrailing) {
-                                if file.webURL != nil {
-                                    Image(systemName: "safari.fill")
-                                        .foregroundStyle(.white, Color.accentColor)
-                                        .padding(5)
-                                }
-                            }
                     } else {
                         Rectangle()
                             .fill(.fill)
@@ -75,18 +68,20 @@ struct FileRow: View {
             }
         }
         .draggable(file.id.uuidString)
-        .dropDestination(for: String.self) { ids, point in
-            var folderFiles: [File] = ids.compactMap { id in
-                files.first { $0.id.uuidString == id }
-            }
-            guard folderFiles.isNotEmpty,
-                  file.folder == nil
-            else { return false }
-            folderFiles.append(file)
-            let folder = Folder()
-            folder.files = folderFiles
-            modelContext.insert(folder)
-            return true
+        .dropDestination(for: String.self, action: addToNewFolder)
+    }
+    
+    func addToNewFolder(ids: [String], point: CGPoint) -> Bool {
+        var folderFiles: [File] = ids.compactMap { id in
+            files.first { $0.id.uuidString == id }
         }
+        guard folderFiles.isNotEmpty,
+              file.folder == nil
+        else { return false }
+        folderFiles.append(file)
+        let folder = Folder()
+        folder.files = folderFiles
+        modelContext.insert(folder)
+        return true
     }
 }
