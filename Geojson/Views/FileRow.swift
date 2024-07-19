@@ -26,7 +26,7 @@ struct FileRow: View {
             VStack(alignment: .leading) {
                 ZStack {
                     if let geoData {
-                        MapView(selectedAnnotation: .constant(nil), trackingMode: .constant(.none), data: geoData, mapStandard: true, preview: true)
+                        MapView(trackingMode: .constant(.none), lookAroundScene: .constant(nil), data: geoData, mapStandard: true, preview: true, fail: { _ in })
                     } else {
                         Rectangle()
                             .fill(.fill)
