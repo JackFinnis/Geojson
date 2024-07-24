@@ -61,9 +61,7 @@ struct RootView: View {
             .navigationDestination(for: FileData.self) { fileData in
                 FileView(file: fileData.file, data: fileData.data, scenePhase: scenePhase, fail: fail)
             }
-            #if os(iOS)
             .scrollDismissesKeyboard(.immediately)
-            #endif
             .searchable(text: $searchText, isPresented: $isSearching)
             .navigationDestination(for: Folder.self) { folder in
                 FolderView(folder: folder, loadFile: loadFile, deleteFile: deleteFile, importFile: importFile, fetchFile: fetchFile)

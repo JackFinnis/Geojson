@@ -26,7 +26,7 @@ struct FileRow: View {
             VStack(alignment: .leading) {
                 ZStack {
                     if let geoData {
-                        MapView(trackingMode: .constant(.none), lookAroundScene: .constant(nil), data: geoData, mapStandard: true, preview: true, fail: { _ in })
+                        MapView(selectedAnnotation: .constant(.none), trackingMode: .constant(.none), data: geoData, mapStandard: true, preview: true, fail: { _ in })
                     } else {
                         Rectangle()
                             .fill(.fill)
@@ -48,10 +48,8 @@ struct FileRow: View {
                     .multilineTextAlignment(.leading)
             }
             .padding(8)
-            #if os(iOS)
             .background(.background)
-            #endif
-            .contentShape(RoundedRectangle(cornerRadius: 18))
+            .contentShape(.rect(cornerRadius: 18))
             .hoverEffect()
         }
         .buttonStyle(.plain)

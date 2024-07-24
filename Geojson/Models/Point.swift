@@ -20,11 +20,6 @@ class Point: NSObject, MKAnnotation {
         title == "Dropped Pin"
     }
     
-    var googleURL: URL? {
-        guard let query = title?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: "https://google.com/search?q=\(query)")
-    }
-    
     init(coordinate: CLLocationCoordinate2D, title: String? = nil, subtitle: String? = nil, index: Int? = nil) {
         self.coordinate = coordinate
         self.title = title
