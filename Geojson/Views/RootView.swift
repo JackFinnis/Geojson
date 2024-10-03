@@ -146,7 +146,6 @@ struct RootView: View {
         let fileExtension = source.pathExtension
         let name = String(source.lastPathComponent.dropLast(fileExtension.count + 1))
         let file = File(fileExtension: fileExtension, name: name, webURL: webURL, folder: folder)
-        modelContext.insert(file)
         
         do {
             try? FileManager.default.removeItem(at: file.url)
@@ -166,6 +165,7 @@ struct RootView: View {
             let geoData = try GeoParser().parse(url: file.url)
             file.date = .now
             path.append(FileData(file: file, data: geoData))
+            modelContext.insert(file)
             Haptics.tap()
         } catch let error as GeoError {
             fail(error: error)
