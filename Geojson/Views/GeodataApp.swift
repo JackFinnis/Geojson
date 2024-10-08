@@ -8,6 +8,8 @@
 import SwiftUI
 import SwiftData
 
+let size = 44.0
+
 @main
 struct GeodataApp: App {
     var body: some Scene {

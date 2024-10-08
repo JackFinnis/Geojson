@@ -10,7 +10,6 @@ import SwiftData
 import MapKit
 
 struct RootView: View {
-    @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
     @AppStorage("sortBy") var sortBy = SortBy.name
     @State var path = NavigationPath()
@@ -59,7 +58,7 @@ struct RootView: View {
             }
             .dropDestination(for: String.self, action: removeFromFolder)
             .navigationDestination(for: FileData.self) { fileData in
-                FileView(file: fileData.file, data: fileData.data, scenePhase: scenePhase, fail: fail)
+                FileView(file: fileData.file, data: fileData.data, fail: fail)
             }
             .scrollDismissesKeyboard(.immediately)
             .searchable(text: $searchText, isPresented: $isSearching)

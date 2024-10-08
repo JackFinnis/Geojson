@@ -11,7 +11,7 @@ import SwiftUI
 
 @Model
 class File {
-    let id = UUID()
+    var id = UUID()
     var fileExtension: String
     var name: String
     var date: Date
@@ -27,8 +27,13 @@ class File {
     }
     
     var url: URL {
-        URL.documentsDirectory
+        URL
+            .documentsDirectory
             .appending(path: id.uuidString)
             .appendingPathExtension(fileExtension)
+    }
+    
+    func removeFile() {
+        try? FileManager.default.removeItem(at: url)
     }
 }

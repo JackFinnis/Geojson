@@ -21,7 +21,6 @@ struct FileView: View {
     
     @Bindable var file: File
     let data: GeoData
-    let scenePhase: ScenePhase
     let fail: (GeoError) -> Void
     
     var body: some View {
@@ -29,18 +28,6 @@ struct FileView: View {
             ZStack {
                 MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false, fail: fail)
                     .ignoresSafeArea()
-                
-                VStack(spacing: 0) {
-                    CarbonCopy()
-                        .frame(height: geo.safeAreaInsets.top + 20)
-                        .id(scenePhase)
-                        .blur(radius: 5, opaque: true)
-                        .mask {
-                            LinearGradient(colors: [.white, .white, .white, .clear], startPoint: .top, endPoint: .bottom)
-                        }
-                    Spacer()
-                }
-                .ignoresSafeArea()
                 
                 Button {
                     mapStandard.toggle()
@@ -145,6 +132,6 @@ struct FileView: View {
     }
 }
 
-extension MKLookAroundScene: Identifiable {
+extension MKLookAroundScene: @retroactive Identifiable {
     public var id: UUID { UUID() }
 }

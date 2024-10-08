@@ -79,7 +79,8 @@ struct FileRow: View {
                 }
             }
             Button(role: .destructive) {
-                deleteFile(file)
+                file.removeFile()
+                modelContext.delete(file)
             } label: {
                 Label("Delete", systemImage: "trash")
             }
