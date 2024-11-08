@@ -9,16 +9,15 @@ import SwiftUI
 
 extension View {
     func mapBox() -> some View {
-        frame(width: size, height: size)
+        frame(width: 44, height: 44)
     }
     
     func mapButton() -> some View {
         self
             .foregroundStyle(Color.accentColor)
             .buttonStyle(.plain)
-            .font(.system(size: 19))
+            .font(.system(size: 20))
             .background(.ultraThickMaterial)
             .clipShape(.rect(cornerRadius: 8))
-            .shadow(color: Color.black.opacity(0.1), radius: 5)
     }
 }

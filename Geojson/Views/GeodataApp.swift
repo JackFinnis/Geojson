@@ -9,8 +9,9 @@ import SwiftUI
 import SwiftData
 
 // https://cycling.data.tfl.gov.uk/CycleRoutes/CycleRoutes.json
-
-let size = 44.0
+// polyline colour/width
+// polyline properties eg name
+// edit/add/delete data
 
 @main
 struct GeodataApp: App {
@@ -21,7 +22,3 @@ struct GeodataApp: App {
         .modelContainer(for: File.self)
     }
 }
-
-// polyline colour/width
-// polyline properties eg name
-// edit/add/delete data
