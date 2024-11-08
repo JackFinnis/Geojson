@@ -28,7 +28,7 @@ class GeoParser {
             data = try Data(contentsOf: url)
         } catch {
             print(error)
-            throw GeoError.fileCorrupted
+            throw GeoError.readFile
         }
         
         switch url.pathExtension {
@@ -39,7 +39,7 @@ class GeoParser {
         case "kml", "kmz":
             try parseKML(data: data, fileExtension: url.pathExtension)
         default:
-            throw GeoError.fileType
+            throw GeoError.unsupportedFileType
         }
         
         guard !geoData.empty else {

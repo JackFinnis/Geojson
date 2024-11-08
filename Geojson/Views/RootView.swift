@@ -19,7 +19,6 @@ struct RootView: View {
     @Query var files: [File]
     @Query var folders: [Folder]
     @State var error: GeoError?
-    @State var showErrorAlert = false
     
     var body: some View {
         let filteredFiles = files.filter { file in
@@ -83,7 +82,13 @@ struct RootView: View {
                 }
             }
         }
-        .alert(error?.title ?? "", isPresented: $showErrorAlert) {} message: {
+        .alert("Import Failed", isPresented: .init(get: {
+            error != nil
+        }, set: { isPresented in
+            if !isPresented {
+                error = nil
+            }
+        })) {} message: {
             if let error {
                 Text(error.description)
             }
@@ -106,7 +111,6 @@ struct RootView: View {
     
     func fail(error: GeoError) {
         self.error = error
-        showErrorAlert = true
         Haptics.error()
     }
     
@@ -116,18 +120,23 @@ struct RootView: View {
     }
     
     func fetchFile(url: URL, folder: Folder?) async {
+        guard UIApplication.shared.canOpenURL(url) else {
+            fail(error: .invalidURL)
+            return
+        }
+        
         let data: Data
         let response: URLResponse
         do {
             (data, response) = try await URLSession.shared.data(from: url)
         } catch {
             print(error)
-            fail(error: .internet)
+            fail(error: .noInternet)
             return
         }
         
         guard let filename = response.suggestedFilename else {
-            fail(error: .fileType)
+            fail(error: .unsupportedFileType)
             return
         }
         
@@ -137,7 +146,7 @@ struct RootView: View {
             importFile(url: temp, webURL: url, folder: folder)
         } catch {
             print(error)
-            fail(error: .fileManager)
+            fail(error: .writeFile)
         }
     }
     
@@ -155,7 +164,7 @@ struct RootView: View {
             loadFile(file: file)
         } catch {
             print(error)
-            fail(error: .fileManager)
+            fail(error: .writeFile)
         }
     }
     
@@ -170,18 +179,12 @@ struct RootView: View {
             fail(error: error)
         } catch {
             print(error)
-            fail(error: .unknown)
         }
     }
 }
 
 #Preview {
     RootView()
-}
-
-struct FileData: Hashable {
-    let file: File
-    let data: GeoData
 }
 
 struct PrimaryActions: View {
@@ -222,7 +225,7 @@ struct PrimaryActions: View {
                         await fetchFile(url, folder)
                     }
                 } label: {
-                    Label("Paste File URL", systemImage: "doc.on.doc")
+                    Label("Paste File URL", systemImage: "document.on.clipboard")
                 }
             }
         } label: {

@@ -8,51 +8,36 @@
 import Foundation
 
 enum GeoError: Error {
-    case unknown
-    case fileType
-    case fileCorrupted
+    case invalidURL
+    case noInternet
+    case unsupportedFileType
     case fileEmpty
-    case fileManager
     case invalidGeoJSON
     case invalidGPX
     case invalidKML
-    case internet
-    case lookAround
-    case getDirections
-    
-    var title: String {
-        switch self {
-        case .unknown, .fileType, .fileCorrupted, .fileEmpty, .fileManager, .invalidGeoJSON, .invalidGPX, .invalidKML, .internet:
-            "Import Failed"
-        case .lookAround, .getDirections:
-            "Operation Failed"
-        }
-    }
+    case readFile
+    case writeFile
     
     var description: String {
         switch self {
-        case .unknown:
-            return "An unknown error occured. Please try again later."
-        case .fileType:
-            return "This file has an invalid file type. Only files with the following file extensions can be imported: .json, .geojson, .gpx, .kml, .kmz"
-        case .fileCorrupted:
-            return "This file cannot be read. Try importing it again."
+        case .unsupportedFileType:
+            return "This file has an unsupported file type. Only files with the following file extensions can be imported: .json, .geojson, .gpx, .kml, .kmz"
+        case .readFile:
+            return "Unable to read this file."
+        case .writeFile:
+            return "Unable to save this file."
         case .fileEmpty:
             return "This file contains no points, lines or shapes."
-        case .fileManager:
-            return "An error occured with saving this file. Try importing it again."
         case .invalidGeoJSON:
             return "This file contains invalid GeoJSON data."
         case .invalidGPX:
             return "This file contains invalid GPX data."
         case .invalidKML:
             return "This file contains invalid KML data"
-        case .internet:
+        case .noInternet:
             return "Check your internet connection and try again."
-        case .lookAround:
-            return "Unable to look around this place."
-        case .getDirections:
-            return "Unable to get directions to this place."
+        case .invalidURL:
+            return "Please copy a valid URL and try again."
         }
     }
 }
