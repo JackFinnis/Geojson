@@ -10,7 +10,7 @@ import SwiftData
 
 @Model
 class Folder {
-    let id = UUID()
+    var id = UUID()
     var name: String
     var date: Date
     var files: [File]
