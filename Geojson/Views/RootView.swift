@@ -214,17 +214,15 @@ struct PrimaryActions: View {
                 } label: {
                     Label("Choose File", systemImage: "folder")
                 }
-                if UIPasteboard.general.hasStrings {
-                    Button {
-                        guard let string = UIPasteboard.general.string,
-                              let url = URL(string: string)
-                        else { return }
-                        Task {
-                            await fetchFile(url, folder)
-                        }
-                    } label: {
-                        Label("Paste File URL", systemImage: "doc.on.doc")
+                Button {
+                    guard let string = UIPasteboard.general.string,
+                          let url = URL(string: string)
+                    else { return }
+                    Task {
+                        await fetchFile(url, folder)
                     }
+                } label: {
+                    Label("Paste File URL", systemImage: "doc.on.doc")
                 }
             }
         } label: {

@@ -9,14 +9,14 @@ import SwiftUI
 import MapKit
 
 struct MapView: UIViewRepresentable {
-    let mapView = MKMapView()
-    
     @Binding var selectedAnnotation: MKAnnotation?
     @Binding var trackingMode: MKUserTrackingMode
     let data: GeoData
     let mapStandard: Bool
     let preview: Bool
     let fail: (GeoError) -> Void
+    
+    let mapView = MKMapView()
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)

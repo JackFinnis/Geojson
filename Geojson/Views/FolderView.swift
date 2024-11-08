@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct FolderView: View {
-    @AppStorage("sortBy") var sortBy = SortBy.name
-    @State var searchText = ""
-    
     @Bindable var folder: Folder
     let loadFile: (File) -> Void
     let deleteFile: (File) -> Void
     let importFile: (URL, URL?, Folder?) -> Void
     let fetchFile: (URL, Folder?) async -> Void
+    
+    @AppStorage("sortBy") var sortBy = SortBy.name
+    @State var searchText = ""
     
     var body: some View {
         let filteredFiles = folder.files.filter { file in

@@ -9,15 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct FileRow: View {
-    @Environment(\.modelContext) var modelContext
-    @State var geoData: GeoData?
-    
     @Bindable var file: File
     @Query var files: [File]
     @Query var folders: [Folder]
     let loadFile: (File) -> Void
     let deleteFile: (File) -> Void
     let fetchFile: (URL, Folder?) async -> Void
+    
+    @Environment(\.modelContext) var modelContext
+    @State var geoData: GeoData?
     
     var body: some View {
         Button {
@@ -79,8 +79,7 @@ struct FileRow: View {
                 }
             }
             Button(role: .destructive) {
-                file.removeFile()
-                modelContext.delete(file)
+                deleteFile(file)
             } label: {
                 Label("Delete", systemImage: "trash")
             }

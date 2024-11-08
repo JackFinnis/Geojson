@@ -9,6 +9,10 @@ import SwiftUI
 import MapKit
 
 struct FileView: View {
+    @Bindable var file: File
+    let data: GeoData
+    let fail: (GeoError) -> Void
+    
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
@@ -18,10 +22,6 @@ struct FileView: View {
     @State var droppedPoint: Point?
     @State var lookAroundScene: MKLookAroundScene?
     @AppState("visitedCoords") var visitedCoords = Set<CLLocationCoordinate2D>()
-    
-    @Bindable var file: File
-    let data: GeoData
-    let fail: (GeoError) -> Void
     
     var body: some View {
         GeometryReader { geo in

@@ -32,8 +32,4 @@ class File {
             .appending(path: id.uuidString)
             .appendingPathExtension(fileExtension)
     }
-    
-    func removeFile() {
-        try? FileManager.default.removeItem(at: url)
-    }
 }

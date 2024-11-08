@@ -9,10 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct FolderRow: View {
-    @Environment(\.modelContext) var modelContext
-    
     @Bindable var folder: Folder
     @Query var files: [File]
+    
+    @Environment(\.modelContext) var modelContext
     
     var body: some View {
         NavigationLink(value: folder) {
