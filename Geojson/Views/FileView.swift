@@ -36,6 +36,26 @@ struct FileView: View {
                 }
                 .mapButton()
                 .position(x: geo.size.width - 32, y: -22)
+                
+                Color.clear.mapBox()
+                    .confirmationDialog(selectedAnnotation?.name ?? "", isPresented: Binding(get: {
+                        selectedAnnotation != nil
+                    }, set: { isPresented in
+                        withAnimation {
+                            if !isPresented {
+                                selectedAnnotation = nil
+                            }
+                        }
+                    }), titleVisibility: selectedAnnotation?.name == nil ? .hidden : .visible) {
+                        if let selectedAnnotation {
+                            let user = selectedAnnotation is MKUserLocation
+                            Button(user ? "Open in Maps" : "Get Directions") {
+                                Task {
+                                    try? await getDirections(to: selectedAnnotation)
+                                }
+                            }
+                        }
+                    }
             }
         }
         .toolbar {
@@ -50,24 +70,6 @@ struct FileView: View {
         }
         .navigationTitle($file.name)
         .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog(selectedAnnotation?.name ?? "", isPresented: Binding(get: {
-            selectedAnnotation != nil
-        }, set: { isPresented in
-            withAnimation {
-                if !isPresented {
-                    selectedAnnotation = nil
-                }
-            }
-        }), titleVisibility: selectedAnnotation?.name == nil ? .hidden : .visible) {
-            if let selectedAnnotation {
-                let user = selectedAnnotation is MKUserLocation
-                Button(user ? "Open in Maps" : "Get Directions") {
-                    Task {
-                        try? await getDirections(to: selectedAnnotation)
-                    }
-                }
-            }
-        }
         .onAppear {
             CLLocationManager().requestWhenInUseAuthorization()
         }
