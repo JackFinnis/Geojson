@@ -26,6 +26,11 @@ class File {
         self.folder = folder
     }
     
+    func delete() {
+        try? FileManager.default.removeItem(at: url)
+        modelContext?.delete(self)
+    }
+    
     var url: URL {
         URL
             .documentsDirectory

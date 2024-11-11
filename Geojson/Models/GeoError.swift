@@ -21,13 +21,13 @@ enum GeoError: Error {
     var description: String {
         switch self {
         case .unsupportedFileType:
-            return "This file has an unsupported file type. Only files with the following file extensions can be imported: .json, .geojson, .gpx, .kml, .kmz"
+            return "This file type is not supported. Only files with the following file extensions can be imported: .json, .geojson, .gpx, .kml, .kmz"
         case .readFile:
             return "Unable to read this file."
         case .writeFile:
             return "Unable to save this file."
         case .fileEmpty:
-            return "This file contains no points, lines or shapes."
+            return "This file contains no data that can be shown on the map."
         case .invalidGeoJSON:
             return "This file contains invalid GeoJSON data."
         case .invalidGPX:
@@ -37,7 +37,7 @@ enum GeoError: Error {
         case .noInternet:
             return "Check your internet connection and try again."
         case .invalidURL:
-            return "Please copy a valid URL and try again."
+            return "Copy to your clipboard the URL of the file and try again."
         }
     }
 }

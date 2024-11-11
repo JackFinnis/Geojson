@@ -59,8 +59,6 @@ struct MapView: UIViewRepresentable {
     }
     
     class Coordinator: NSObject, MKMapViewDelegate {
-        @AppState("visitedCoords") var visitedCoords = Set<CLLocationCoordinate2D>()
-        
         let parent: MapView
         
         init(_ parent: MapView) {
@@ -96,12 +94,10 @@ struct MapView: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
             if let point = annotation as? Point,
                let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
-                let visited = visitedCoords.contains(point.coordinate)
-                
                 marker.titleVisibility = parent.preview ? .hidden : .adaptive
                 marker.displayPriority = .required
                 marker.glyphText = point.index.map(String.init)
-                marker.markerTintColor = UIColor(visited ? .blue : .orange)
+                marker.markerTintColor = UIColor(.orange)
                 return marker
             }
             return nil

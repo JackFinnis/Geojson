@@ -13,13 +13,15 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 class GeoParser {
-    var points = [Point]()
-    var polylines = [MKPolyline]()
-    var polygons = [MKPolygon]()
-    
     var geoData: GeoData {
         GeoData(points: points, polylines: polylines, polygons: polygons)
     }
+    
+    private var points = [Point]()
+    private var polylines = [MKPolyline]()
+    private var polygons = [MKPolygon]()
+    
+    private let decoder = JSONDecoder()
     
     // MARK: - Parse File
     func parse(url: URL) throws -> GeoData {
@@ -59,14 +61,15 @@ class GeoParser {
             throw GeoError.invalidGeoJSON
         }
         
-        objects.forEach(handleGeoJSONObject)
+        objects.forEach { handleGeoJSONObject($0, properties: nil) }
     }
     
-    func handleGeoJSONObject(_ object: MKGeoJSONObject) {
+    func handleGeoJSONObject(_ object: MKGeoJSONObject, properties: Properties?) {
         if let feature = object as? MKGeoJSONFeature {
-            feature.geometry.forEach(handleGeoJSONObject)
+            let properties = try? decoder.decode(Properties.self, from: feature.properties ?? .init())
+            feature.geometry.forEach { handleGeoJSONObject($0, properties: properties) }
         } else if let point = object as? MKPointAnnotation {
-            points.append(Point(coordinate: point.coordinate))
+            points.append(Point(coordinate: point.coordinate, properties: properties))
         } else if let polyline = object as? MKPolyline {
             polylines.append(polyline)
         } else if let multiPolyline = object as? MKMultiPolyline {
@@ -76,7 +79,7 @@ class GeoParser {
         } else if let multiPolygon = object as? MKMultiPolygon {
             polygons.append(contentsOf: multiPolygon.polygons)
         } else if let multiPoint = object as? MKMultiPoint {
-            points.append(contentsOf: multiPoint.coordinates.map { Point(coordinate: $0) })
+            points.append(contentsOf: multiPoint.coordinates.map { Point(coordinate: $0, properties: properties) })
         }
     }
     
@@ -94,18 +97,15 @@ class GeoParser {
             throw GeoError.fileEmpty
         }
         
-        handleGPXWaypoints(root.waypoints)
-        root.routes.map(\.points).forEach(handleGPXWaypoints)
-        polylines = root.tracks.flatMap(\.segments).map { segment in
+        points.append(contentsOf: root.waypoints.compactMap { waypoint in
+            Point(waypoint: waypoint)
+        })
+        polylines.append(contentsOf: root.routes.map(\.points).map { points in
+            MKPolyline(coords: points.compactMap(\.coord))
+        })
+        polylines.append(contentsOf: root.tracks.flatMap(\.segments).map { segment in
             MKPolyline(coords: segment.points.compactMap(\.coord))
-        }
-    }
-    
-    func handleGPXWaypoints(_ waypoints: [GPXWaypoint]) {
-        let points = waypoints.enumerated().compactMap { i, waypoint in
-            Point(index: i + 1, waypoint: waypoint)
-        }
-        self.points.append(contentsOf: points)
+        })
     }
     
     // MARK: - Parse KML
@@ -129,19 +129,15 @@ class GeoParser {
         if let folder = feature as? KMLContainer {
             folder.features.forEach(handleKMLFeature)
         } else if let placemark = feature as? KMLPlacemark {
-            if let point = placemark.geometry as? KMLPoint {
-                points.append(Point(point: point, placemark: placemark))
-            } else {
-                handleKMLGeometry(placemark.geometry)
-            }
+            handleKMLGeometry(placemark.geometry, placemark: placemark)
         }
     }
     
-    func handleKMLGeometry(_ geometry: KMLGeometry) {
+    func handleKMLGeometry(_ geometry: KMLGeometry, placemark: KMLPlacemark) {
         if let multiGeometry = geometry as? KMLMultiGeometry {
-            multiGeometry.geometries.forEach(handleKMLGeometry)
+            multiGeometry.geometries.forEach { handleKMLGeometry($0, placemark: placemark) }
         } else if let point = geometry as? KMLPoint {
-            points.append(Point(coordinate: point.coordinate.coord))
+            points.append(Point(point: point, placemark: placemark))
         } else if let lineString = geometry as? KMLLineString {
             polylines.append(MKPolyline(coords: lineString.coordinates.map(\.coord)))
         } else if let polygon = geometry as? KMLPolygon {
@@ -150,4 +146,11 @@ class GeoParser {
             polygons.append(MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords))
         }
     }
+}
+
+struct Properties: Codable {
+    let name: String?
+    let title: String?
+    let address: String?
+    let description: String?
 }

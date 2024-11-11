@@ -20,9 +20,3 @@ extension Array where Element: MKAnnotation {
         return MKPolyline(coords: coords).boundingMapRect
     }
 }
-
-extension Array where Element: Equatable {
-    mutating func removeAll(_ element: Element) {
-        removeAll { $0 == element }
-    }
-}

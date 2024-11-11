@@ -15,7 +15,7 @@ class Folder {
     var date: Date
     var files: [File]
     
-    init(name: String = "Folder", date: Date = .now, files: [File] = []) {
+    init(name: String = "New Folder", date: Date = .now, files: [File] = []) {
         self.name = name
         self.date = date
         self.files = files

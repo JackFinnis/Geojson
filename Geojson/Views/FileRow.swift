@@ -10,13 +10,10 @@ import SwiftData
 
 struct FileRow: View {
     @Bindable var file: File
-    @Query var files: [File]
     @Query var folders: [Folder]
     let loadFile: (File) -> Void
-    let deleteFile: (File) -> Void
     let fetchFile: (URL, Folder?) async -> Void
     
-    @Environment(\.modelContext) var modelContext
     @State var geoData: GeoData?
     
     var body: some View {
@@ -49,15 +46,13 @@ struct FileRow: View {
             }
             .padding(8)
             .background(.background)
-            .contentShape(.rect(cornerRadius: 18))
-            .hoverEffect()
         }
         .buttonStyle(.plain)
         .contextMenu {
             if let url = file.webURL {
                 Button {
                     Task {
-                        deleteFile(file)
+                        file.delete()
                         await fetchFile(url, file.folder)
                     }
                 } label: {
@@ -66,39 +61,23 @@ struct FileRow: View {
             }
             if folders.isNotEmpty {
                 Menu {
-                    Picker("Move", selection: $file.folder) {
+                    Picker("Move...", selection: $file.folder) {
                         Text("No Folder")
                             .tag(nil as Folder?)
-                        ForEach(folders.sorted(using: SortBy.name.folderDescriptor)) { folder in
+                        ForEach(folders.sorted(using: SortBy.name.folderComparator)) { folder in
                             Text(folder.name)
                                 .tag(folder as Folder?)
                         }
                     }
                 } label: {
-                    Label("Move", systemImage: "folder")
+                    Label("Move...", systemImage: "folder")
                 }
             }
             Button(role: .destructive) {
-                deleteFile(file)
+                file.delete()
             } label: {
                 Label("Delete", systemImage: "trash")
             }
         }
-        .draggable(file.id.uuidString)
-        .dropDestination(for: String.self, action: addToNewFolder)
-    }
-    
-    func addToNewFolder(ids: [String], point: CGPoint) -> Bool {
-        var folderFiles: [File] = ids.compactMap { id in
-            files.first { $0.id.uuidString == id }
-        }
-        guard folderFiles.isNotEmpty,
-              file.folder == nil
-        else { return false }
-        folderFiles.append(file)
-        let folder = Folder()
-        folder.files = folderFiles
-        modelContext.insert(folder)
-        return true
     }
 }

@@ -10,7 +10,6 @@ import SwiftData
 
 struct FolderRow: View {
     @Bindable var folder: Folder
-    @Query var files: [File]
     
     @Environment(\.modelContext) var modelContext
     
@@ -25,8 +24,6 @@ struct FolderRow: View {
             }
             .padding(8)
             .background(.background)
-            .contentShape(RoundedRectangle(cornerRadius: 18))
-            .hoverEffect()
         }
         .buttonStyle(.plain)
         .contextMenu {
@@ -36,15 +33,5 @@ struct FolderRow: View {
                 Label("Delete", systemImage: "trash")
             }
         }
-        .dropDestination(for: String.self, action: addToThisFolder)
-    }
-    
-    func addToThisFolder(ids: [String], point: CGPoint) -> Bool {
-        let folderFiles: [File] = ids.compactMap { id in
-            files.first { $0.id.uuidString == id }
-        }
-        guard folderFiles.isNotEmpty else { return false }
-        folder.files.append(contentsOf: folderFiles)
-        return true
     }
 }

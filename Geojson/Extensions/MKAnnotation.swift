@@ -9,20 +9,9 @@ import Foundation
 import MapKit
 
 extension MKAnnotation {
-    var googleURL: URL? {
-        guard let query = title??.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: "https://google.com/search?q=\(query)")
-    }
-    
     var name: String? {
-        if let title, let title, title.isNotEmpty {
-            if let subtitle, let subtitle, subtitle.isNotEmpty {
-                return "\(title)\n\(subtitle)"
-            } else {
-                return title
-            }
-        } else {
-            return nil
-        }
+        guard let title, let title, title.isNotEmpty else { return nil }
+        guard let subtitle, let subtitle, subtitle.isNotEmpty else { return title }
+        return title + "\n" + subtitle
     }
 }

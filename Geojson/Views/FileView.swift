@@ -76,15 +76,14 @@ struct FileView: View {
     }
     
     func getDirections(to annotation: MKAnnotation) async throws {
-        let launchOptions = [MKLaunchOptionsDirectionsModeKey : MKLaunchOptionsDirectionsModeDefault]
         if let point = annotation as? Point {
             guard let placemark = try await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
             let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
             mapItem.name = point.title ?? mapItem.name
-            mapItem.openInMaps(launchOptions: launchOptions)
+            mapItem.openInMaps()
         } else if let feature = annotation as? MKMapFeatureAnnotation {
             let mapItem = try await MKMapItemRequest(mapFeatureAnnotation: feature).mapItem
-            mapItem.openInMaps(launchOptions: launchOptions)
+            mapItem.openInMaps()
         } else if let _ = annotation as? MKUserLocation {
             MKMapItem.forCurrentLocation().openInMaps()
         }

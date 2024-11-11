@@ -23,8 +23,8 @@ struct RootView: View {
     var body: some View {
         let filteredFiles = files.filter { file in
             isSearching ? file.name.localizedStandardContains(searchText) : file.folder == nil
-        }.sorted(using: sortBy.fileDescriptor)
-        let folders = folders.sorted(using: sortBy.folderDescriptor)
+        }.sorted(using: sortBy.fileComparator)
+        let folders = folders.sorted(using: sortBy.folderComparator)
         
         NavigationStack(path: $path) {
             ScrollView {
@@ -38,14 +38,12 @@ struct RootView: View {
                     }
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 0, alignment: .top)], spacing: 0) {
                         ForEach(filteredFiles) { file in
-                            FileRow(file: file, loadFile: loadFile, deleteFile: deleteFile, fetchFile: fetchFile)
+                            FileRow(file: file, loadFile: loadFile, fetchFile: fetchFile)
                         }
                     }
                 }
                 .padding(.horizontal, 8)
             }
-            .animation(.default, value: filteredFiles)
-            .animation(.default, value: folders)
             .overlay {
                 if files.isEmpty && folders.isEmpty {
                     ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Files you import will appear here.\nTap + to import a file."))
@@ -55,28 +53,18 @@ struct RootView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .dropDestination(for: String.self, action: removeFromFolder)
+            .animation(.default, value: filteredFiles)
+            .animation(.default, value: folders)
             .navigationDestination(for: FileData.self) { fileData in
                 FileView(file: fileData.file, data: fileData.data, fail: fail)
             }
             .scrollDismissesKeyboard(.immediately)
             .searchable(text: $searchText, isPresented: $isSearching)
             .navigationDestination(for: Folder.self) { folder in
-                FolderView(folder: folder, loadFile: loadFile, deleteFile: deleteFile, importFile: importFile, fetchFile: fetchFile)
+                FolderView(folder: folder, loadFile: loadFile, importFile: importFile, fetchFile: fetchFile)
             }
             .navigationTitle("Geodata Viewer")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        let folder = Folder()
-                        modelContext.insert(folder)
-                    } label: {
-                        Label("Add Folder", systemImage: "folder.fill.badge.plus")
-                    }
-                    .buttonStyle(.bordered)
-                    .buttonBorderShape(.circle)
-                    .font(.headline)
-                }
                 ToolbarItemGroup(placement: .primaryAction) {
                     PrimaryActions(folder: nil, importFile: importFile, fetchFile: fetchFile)
                 }
@@ -88,7 +76,9 @@ struct RootView: View {
             if !isPresented {
                 error = nil
             }
-        })) {} message: {
+        })) {
+            // no actions
+        } message: {
             if let error {
                 Text(error.description)
             }
@@ -98,25 +88,9 @@ struct RootView: View {
         }
     }
     
-    func removeFromFolder(ids: [String], point: CGPoint) -> Bool {
-        let folderFiles: [File] = ids.compactMap { id in
-            files.first { $0.id.uuidString == id }
-        }
-        guard folderFiles.isNotEmpty else { return false }
-        folderFiles.forEach { file in
-            file.folder = nil
-        }
-        return true
-    }
-    
     func fail(error: GeoError) {
         self.error = error
         Haptics.error()
-    }
-    
-    func deleteFile(file: File) {
-        try? FileManager.default.removeItem(at: file.url)
-        modelContext.delete(file)
     }
     
     func fetchFile(url: URL, folder: Folder?) async {
@@ -188,12 +162,14 @@ struct RootView: View {
 }
 
 struct PrimaryActions: View {
-    @AppStorage("sortBy") var sortBy = SortBy.name
-    @State var showFileImporter = false
-    
     let folder: Folder?
     let importFile: (URL, URL?, Folder?) -> Void
     let fetchFile: (URL, Folder?) async -> Void
+    
+    @Environment(\.modelContext) var modelContext
+    @AppStorage("sortBy") var sortBy = SortBy.name
+    @State var showFileImporter = false
+    @Query var files: [File]
     
     var body: some View {
         Menu {
@@ -215,7 +191,7 @@ struct PrimaryActions: View {
                 Button {
                     showFileImporter = true
                 } label: {
-                    Label("Choose File", systemImage: "folder")
+                    Label("Choose File...", systemImage: "folder")
                 }
                 Button {
                     guard let string = UIPasteboard.general.string,
@@ -226,6 +202,16 @@ struct PrimaryActions: View {
                     }
                 } label: {
                     Label("Paste File URL", systemImage: "document.on.clipboard")
+                }
+            }
+            if folder == nil, files.isNotEmpty {
+                Section("Organise Files") {
+                    Button {
+                        let folder = Folder()
+                        modelContext.insert(folder)
+                    } label: {
+                        Label("New Folder", systemImage: "folder.badge.plus")
+                    }
                 }
             }
         } label: {
