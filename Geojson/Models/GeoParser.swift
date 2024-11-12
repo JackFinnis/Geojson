@@ -86,14 +86,10 @@ class GeoParser {
     // MARK: - Parse GPX
     func parseGPX(data: Data) throws {
         let parser = GPXParser(withData: data)
-        let root: GPXRoot?
-        do {
-            root = try parser.fallibleParsedData(forceContinue: false)
-        } catch {
-            print(error)
+        guard let root = parser.parsedData() else {
             throw GeoError.invalidGPX
         }
-        guard let root, root.waypoints.isNotEmpty || root.routes.isNotEmpty || root.tracks.isNotEmpty else {
+        guard root.waypoints.isNotEmpty || root.routes.isNotEmpty || root.tracks.isNotEmpty else {
             throw GeoError.fileEmpty
         }
         

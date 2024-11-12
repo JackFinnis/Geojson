@@ -44,32 +44,32 @@ struct RootView: View {
                 }
                 .padding(.horizontal, 8)
             }
-            .overlay {
-                if files.isEmpty && folders.isEmpty {
-                    ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Files you import will appear here.\nTap + to import a file."))
-                        .allowsHitTesting(false)
-                } else if filteredFiles.isEmpty && searchText.isNotEmpty {
-                    ContentUnavailableView.search(text: searchText)
-                        .allowsHitTesting(false)
-                }
-            }
-            .animation(.default, value: filteredFiles)
-            .animation(.default, value: folders)
-            .navigationDestination(for: FileData.self) { fileData in
-                FileView(file: fileData.file, data: fileData.data, fail: fail)
-            }
             .scrollDismissesKeyboard(.immediately)
             .searchable(text: $searchText, isPresented: $isSearching)
-            .navigationDestination(for: Folder.self) { folder in
-                FolderView(folder: folder, loadFile: loadFile, importFile: importFile, fetchFile: fetchFile)
-            }
             .navigationTitle("Geodata Viewer")
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
                     PrimaryActions(folder: nil, importFile: importFile, fetchFile: fetchFile)
                 }
             }
+            .navigationDestination(for: Folder.self) { folder in
+                FolderView(folder: folder, loadFile: loadFile, importFile: importFile, fetchFile: fetchFile)
+            }
+            .navigationDestination(for: FileData.self) { fileData in
+                FileView(file: fileData.file, data: fileData.data, fail: fail)
+            }
         }
+        .overlay {
+            if files.isEmpty && folders.isEmpty {
+                ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Files you import will appear here.\nTap + to import a file."))
+                    .allowsHitTesting(false)
+            } else if filteredFiles.isEmpty && searchText.isNotEmpty {
+                ContentUnavailableView.search(text: searchText)
+                    .allowsHitTesting(false)
+            }
+        }
+        .animation(.default, value: filteredFiles)
+        .animation(.default, value: folders)
         .alert("Import Failed", isPresented: .init(get: {
             error != nil
         }, set: { isPresented in
@@ -155,6 +155,11 @@ struct RootView: View {
             print(error)
         }
     }
+}
+
+struct FileData: Hashable {
+    let file: File
+    let data: GeoData
 }
 
 #Preview {
