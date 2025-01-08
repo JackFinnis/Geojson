@@ -7,6 +7,7 @@
 
 import UIKit
 
+@MainActor
 struct Haptics {
     static func tap() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()

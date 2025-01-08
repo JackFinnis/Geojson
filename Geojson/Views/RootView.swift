@@ -202,6 +202,7 @@ struct PrimaryActions: View {
                     guard let string = UIPasteboard.general.string,
                           let url = URL(string: string)
                     else { return }
+                    let folder = folder
                     Task {
                         await fetchFile(url, folder)
                     }

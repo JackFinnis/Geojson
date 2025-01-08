@@ -50,10 +50,11 @@ struct FileRow: View {
         .buttonStyle(.plain)
         .contextMenu {
             if let url = file.webURL {
+                let folder = file.folder
                 Button {
                     Task {
                         file.delete()
-                        await fetchFile(url, file.folder)
+                        await fetchFile(url, folder)
                     }
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
