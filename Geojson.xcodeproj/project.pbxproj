@@ -38,6 +38,10 @@
 		04BA4C632B9E5073006AF820 /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C622B9E5073006AF820 /* GeoData.swift */; };
 		04BA4C652B9E50D5006AF820 /* GeoParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA4C642B9E50D5006AF820 /* GeoParser.swift */; };
 		04C71FFD2A08EC8B00417249 /* CoreGPX in Frameworks */ = {isa = PBXBuildFile; productRef = 04C71FFC2A08EC8B00417249 /* CoreGPX */; };
+		04F435B22D56BC2D005CA0ED /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F435B12D56BC2B005CA0ED /* UIColor.swift */; };
+		04F435B42D56BD38005CA0ED /* Polyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F435B32D56BD38005CA0ED /* Polyline.swift */; };
+		04F435B62D56BD56005CA0ED /* Polygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F435B52D56BD54005CA0ED /* Polygon.swift */; };
+		04F435B82D56BDF6005CA0ED /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F435B72D56BDF4005CA0ED /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +76,10 @@
 		04BA4C602B9E4FAB006AF820 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		04BA4C622B9E5073006AF820 /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
 		04BA4C642B9E50D5006AF820 /* GeoParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoParser.swift; sourceTree = "<group>"; };
+		04F435B12D56BC2B005CA0ED /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		04F435B32D56BD38005CA0ED /* Polyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyline.swift; sourceTree = "<group>"; };
+		04F435B52D56BD54005CA0ED /* Polygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polygon.swift; sourceTree = "<group>"; };
+		04F435B72D56BDF4005CA0ED /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +135,8 @@
 		04A65584293D58B30084CC6A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				04F435B72D56BDF4005CA0ED /* String.swift */,
+				04F435B12D56BC2B005CA0ED /* UIColor.swift */,
 				0402C6262A0D175300238C51 /* Array.swift */,
 				049C0F9B292953A400C6521A /* Collection.swift */,
 				047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */,
@@ -176,6 +186,8 @@
 				04092D092C3E03AB0015EAE7 /* Folder.swift */,
 				04092D022C3B1B1E0015EAE7 /* SortBy.swift */,
 				0402C61C2A0D0CF700238C51 /* Point.swift */,
+				04F435B32D56BD38005CA0ED /* Polyline.swift */,
+				04F435B52D56BD54005CA0ED /* Polygon.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -274,6 +286,8 @@
 				04092CEF2C378D0A0015EAE7 /* UTType.swift in Sources */,
 				04BA4C652B9E50D5006AF820 /* GeoParser.swift in Sources */,
 				0402C60B2A0903C900238C51 /* KMLCoordinate.swift in Sources */,
+				04F435B62D56BD56005CA0ED /* Polygon.swift in Sources */,
+				04F435B22D56BC2D005CA0ED /* UIColor.swift in Sources */,
 				04BA4C5B2B9E4A4A006AF820 /* MKPolygon.swift in Sources */,
 				047114A82BF4D360005D9DBC /* AppState.swift in Sources */,
 				04092CF32C380C490015EAE7 /* MKAnnotation.swift in Sources */,
@@ -283,7 +297,9 @@
 				04092CED2C378A110015EAE7 /* GeoError.swift in Sources */,
 				0402C6252A0D10FA00238C51 /* GPXWaypoint.swift in Sources */,
 				04092D032C3B1B1E0015EAE7 /* SortBy.swift in Sources */,
+				04F435B42D56BD38005CA0ED /* Polyline.swift in Sources */,
 				04092CFB2C3AFD880015EAE7 /* FileRow.swift in Sources */,
+				04F435B82D56BDF6005CA0ED /* String.swift in Sources */,
 				04092D0A2C3E03AB0015EAE7 /* Folder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
