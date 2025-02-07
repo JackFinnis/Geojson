@@ -18,13 +18,13 @@ struct FileView: View {
     @Environment(\.openURL) var openURL
     @State var trackingMode = MKUserTrackingMode.none
     @State var mapStandard = true
-    @State var selectedAnnotation: MKAnnotation?
+    @State var selectedPoint: Point?
     @State var droppedPoint: Point?
     
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                MapView(selectedAnnotation: $selectedAnnotation, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false, fail: fail)
+                MapView(selectedPoint: $selectedPoint, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false, fail: fail)
                     .ignoresSafeArea()
                 
                 Button {
@@ -38,20 +38,19 @@ struct FileView: View {
                 .position(x: geo.size.width - 32, y: -22)
                 
                 Color.clear.mapBox()
-                    .confirmationDialog(selectedAnnotation?.name ?? "", isPresented: Binding(get: {
-                        selectedAnnotation != nil
+                    .confirmationDialog(selectedPoint?.name ?? "", isPresented: Binding(get: {
+                        selectedPoint != nil
                     }, set: { isPresented in
                         withAnimation {
                             if !isPresented {
-                                selectedAnnotation = nil
+                                selectedPoint = nil
                             }
                         }
-                    }), titleVisibility: selectedAnnotation?.name == nil ? .hidden : .visible) {
-                        if let selectedAnnotation {
-                            let user = selectedAnnotation is MKUserLocation
-                            Button(user ? "Open in Maps" : "Get Directions") {
+                    }), titleVisibility: selectedPoint?.name == nil ? .hidden : .visible) {
+                        if let selectedPoint {
+                            Button("Get Directions") {
                                 Task {
-                                    try? await getDirections(to: selectedAnnotation)
+                                    try? await getDirections(to: selectedPoint)
                                 }
                             }
                         }
@@ -75,18 +74,10 @@ struct FileView: View {
         }
     }
     
-    nonisolated func getDirections(to annotation: MKAnnotation) async throws {
-        if let point = annotation as? Point {
-            guard let placemark = try await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
-            let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
-            mapItem.name = point.title ?? mapItem.name
-            mapItem.openInMaps()
-        } else if let feature = annotation as? MKMapFeatureAnnotation {
-            let request = MKMapItemRequest(mapFeatureAnnotation: feature)
-            let mapItem = try await request.mapItem
-            mapItem.openInMaps()
-        } else if let _ = annotation as? MKUserLocation {
-            MKMapItem.forCurrentLocation().openInMaps()
-        }
+    nonisolated func getDirections(to point: Point) async throws {
+        guard let placemark = try await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
+        let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+        mapItem.name = point.title ?? mapItem.name
+        mapItem.openInMaps()
     }
 }

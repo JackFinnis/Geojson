@@ -9,7 +9,8 @@ import SwiftUI
 import MapKit
 
 struct MapView: UIViewRepresentable {
-    @Binding var selectedAnnotation: MKAnnotation?
+    @Binding var selectedPoint: Point?
+
     @Binding var trackingMode: MKUserTrackingMode
     let data: GeoData
     let mapStandard: Bool
@@ -27,7 +28,7 @@ struct MapView: UIViewRepresentable {
         mapView.showsUserLocation = !preview
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.isPitchEnabled = true
-        mapView.selectableMapFeatures = [.physicalFeatures, .pointsOfInterest, .territories]
+        mapView.selectableMapFeatures = .pointsOfInterest
         mapView.layoutMargins = .init(length: preview ? -25 : 5)
         mapView.showsUserTrackingButton = !preview
         mapView.pitchButtonVisibility = preview ? .hidden : .visible
@@ -47,7 +48,7 @@ struct MapView: UIViewRepresentable {
         mapView.preferredConfiguration = mapStandard ? MKStandardMapConfiguration(elevationStyle: .realistic) : MKHybridMapConfiguration(elevationStyle: .realistic)
         mapView.setUserTrackingMode(trackingMode, animated: true)
         
-        if selectedAnnotation == nil {
+        if selectedPoint == nil {
             mapView.selectedAnnotations.forEach { annotation in
                 mapView.deselectAnnotation(annotation, animated: true)
                 mapView.removeAnnotation(annotation)
@@ -65,8 +66,15 @@ struct MapView: UIViewRepresentable {
             self.parent = parent
         }
         
+        @available(iOS 18.0, *)
+        func mapView(_ mapView: MKMapView, selectionAccessoryFor annotation: any MKAnnotation) -> MKSelectionAccessory? {
+            .mapItemDetail(.openInMaps)
+        }
+        
         func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
-            parent.selectedAnnotation = annotation
+            if let point = annotation as? Point {
+                parent.selectedPoint = point
+            }
         }
         
         func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
