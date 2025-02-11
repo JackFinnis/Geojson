@@ -15,8 +15,8 @@ class GeoParser {
     var geoData: GeoData {
         GeoData(
             points: points,
-            multiPolylines: Dictionary(grouping: polylines, by: \.color).map { uiColor, polylines in
-                MultiPolyline(mkMultiPolyline: MKMultiPolyline(polylines.map(\.mkPolyline)), uiColor: uiColor)
+            multiPolylines: Dictionary(grouping: polylines, by: \.color).map { color, polylines in
+                MultiPolyline(mkMultiPolyline: MKMultiPolyline(polylines.map(\.mkPolyline)), color: color)
             },
             multiPolygons: Dictionary(grouping: polygons, by: \.color).map { color, polygons in
                 MultiPolygon(mkMultiPolygon: MKMultiPolygon(polygons.map(\.mkPolygon)), color: color)
@@ -24,9 +24,9 @@ class GeoParser {
         )
     }
     
-    private var points = [Point]()
-    private var polylines = [Polyline]()
-    private var polygons = [Polygon]()
+    private var points: [Point] = []
+    private var polylines: [Polyline] = []
+    private var polygons: [Polygon] = []
     
     private let decoder = JSONDecoder()
     
@@ -101,14 +101,8 @@ class GeoParser {
         }
         
         points.append(contentsOf: root.waypoints.compactMap(Point.init))
-        polylines.append(contentsOf: root.routes.map(\.points).map { points in
-            let mkPolyline = MKPolyline(coords: points.compactMap(\.coord))
-            return .init(mkPolyline: mkPolyline)
-        })
-        polylines.append(contentsOf: root.tracks.flatMap(\.segments).map { segment in
-            let mkPolyline = MKPolyline(coords: segment.points.compactMap(\.coord))
-            return .init(mkPolyline: mkPolyline)
-        })
+        polylines.append(contentsOf: root.routes.map(Polyline.init))
+        polylines.append(contentsOf: root.tracks.flatMap(\.segments).map(Polyline.init))
     }
     
     // MARK: - Parse KML
@@ -122,25 +116,33 @@ class GeoParser {
             if let point = placemark.geometry as? GMUPoint {
                 points.append(Point(point: point, placemark: placemark, style: style))
             } else if let line = placemark.geometry as? GMULineString {
-                let mkPolyline = MKPolyline(coords: line.path.coords)
-                let polyline = Polyline(mkPolyline: mkPolyline, style: style)
-                polylines.append(polyline)
+                polylines.append(Polyline(line: line, style: style))
             } else if let polygon = placemark.geometry as? GMUPolygon {
-                let exteriorCoords = polygon.paths.first?.coords ?? []
-                let interiorCoords = polygon.paths.dropFirst().map(\.coords)
-                let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
-                let polygon = Polygon(mkPolygon: mkPolygon, style: style)
-                polygons.append(polygon)
+                polygons.append(Polygon(polygon: polygon, style: style))
             }
         }
     }
 }
 
 struct Properties: Codable {
-    let name: String?
-    let title: String?
-    let address: String?
-    let description: String?
-    let color: String?
-    let colour: String?
+    private let name: String?
+    private let title: String?
+    private let address: String?
+    private let description: String?
+    private let color: String?
+    private let colour: String?
+    private let strokeColor: String?
+    private let strokeColour: String?
+    private let fillColor: String?
+    private let fillColour: String?
+    
+    var color_: UIColor? {
+        [color, colour, strokeColor, strokeColour, fillColor, fillColour].compactMap(\.self).first?.hexColor
+    }
+    var title_: String? {
+        title ?? name
+    }
+    var subtitle_: String? {
+        description ?? address
+    }
 }

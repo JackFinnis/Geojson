@@ -50,6 +50,6 @@ extension Point {
     }
     
     convenience init(coordinate: CLLocationCoordinate2D, properties: Properties?) {
-        self.init(coordinate: coordinate, title: properties?.title ?? properties?.name, subtitle: properties?.description ?? properties?.address, index: nil, color: properties?.color?.hexColor ?? properties?.colour?.hexColor)
+        self.init(coordinate: coordinate, title: properties?.title_, subtitle: properties?.subtitle_, index: nil, color: properties?.color_)
     }
 }

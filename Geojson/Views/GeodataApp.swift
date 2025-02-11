@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 // https://cycling.data.tfl.gov.uk/CycleRoutes/CycleRoutes.json
-// polyline colour/width
 // polyline properties eg name
 // edit/add/delete data
 

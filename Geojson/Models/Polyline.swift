@@ -8,6 +8,7 @@
 import Foundation
 import MapKit
 import GoogleMapsUtils
+import CoreGPX
 
 class Polyline: NSObject {
     let mkPolyline: MKPolyline
@@ -20,15 +21,24 @@ class Polyline: NSObject {
 }
 
 extension Polyline {
-    convenience init(mkPolyline: MKPolyline) {
+    convenience init(route: GPXRoute) {
+        let coords = route.points.compactMap(\.coord)
+        let mkPolyline = MKPolyline(coords: coords)
+        self.init(mkPolyline: mkPolyline, color: nil)
+    }
+    
+    convenience init(segment: GPXTrackSegment) {
+        let coords = segment.points.compactMap(\.coord)
+        let mkPolyline = MKPolyline(coords: coords)
         self.init(mkPolyline: mkPolyline, color: nil)
     }
     
     convenience init(mkPolyline: MKPolyline, properties: Properties?) {
-        self.init(mkPolyline: mkPolyline, color: properties?.color?.hexColor ?? properties?.colour?.hexColor)
+        self.init(mkPolyline: mkPolyline, color: properties?.color_)
     }
     
-    convenience init(mkPolyline: MKPolyline, style: GMUStyle?) {
+    convenience init(line: GMULineString, style: GMUStyle?) {
+        let mkPolyline = MKPolyline(coords: line.path.coords)
         self.init(mkPolyline: mkPolyline, color: style?.strokeColor)
     }
 }
@@ -40,11 +50,11 @@ extension Polyline: MKOverlay {
 
 class MultiPolyline: NSObject {
     let mkMultiPolyline: MKMultiPolyline
-    let uiColor: UIColor?
+    let color: UIColor?
     
-    init(mkMultiPolyline: MKMultiPolyline, uiColor: UIColor?) {
+    init(mkMultiPolyline: MKMultiPolyline, color: UIColor?) {
         self.mkMultiPolyline = mkMultiPolyline
-        self.uiColor = uiColor
+        self.color = color
     }
 }
 

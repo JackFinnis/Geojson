@@ -82,10 +82,10 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
-            let defaultColor = UIColor(Color.orange)
+            let defaultColor = UIColor(.orange)
             let lineWidth = parent.preview ? 2.0 : 3.0
             if let multiPolyline = overlay as? MultiPolyline {
-                let color = multiPolyline.uiColor ?? defaultColor
+                let color = multiPolyline.color ?? defaultColor
                 let renderer = MKMultiPolylineRenderer(multiPolyline: multiPolyline.mkMultiPolyline)
                 renderer.lineWidth = lineWidth
                 renderer.strokeColor = color
@@ -107,7 +107,7 @@ struct MapView: UIViewRepresentable {
                 marker.titleVisibility = parent.preview ? .hidden : .adaptive
                 marker.displayPriority = .required
                 marker.glyphText = point.index.map(String.init)
-                marker.markerTintColor = UIColor(.orange)
+                marker.markerTintColor = point.color ?? UIColor(.orange)
                 return marker
             }
             return nil

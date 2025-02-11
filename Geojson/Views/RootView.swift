@@ -13,7 +13,7 @@ struct RootView: View {
     @Environment(\.modelContext) var modelContext
     @AppStorage("sortBy") var sortBy = SortBy.name
     @State var path = NavigationPath()
-    @State var urls = [URL]()
+    @State var urls: [URL] = []
     @State var isSearching = false
     @State var searchText = ""
     @Query var files: [File]

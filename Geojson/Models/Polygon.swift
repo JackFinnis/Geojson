@@ -24,12 +24,15 @@ extension Polygon {
         self.init(mkPolygon: mkPolygon, color: nil)
     }
     
-    convenience init(mkPolygon: MKPolygon, style: GMUStyle?) {
+    convenience init(polygon: GMUPolygon, style: GMUStyle?) {
+        let exteriorCoords = polygon.paths.first?.coords ?? []
+        let interiorCoords = polygon.paths.dropFirst().map(\.coords)
+        let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
         self.init(mkPolygon: mkPolygon, color: style?.strokeColor ?? style?.fillColor)
     }
     
     convenience init(mkPolygon: MKPolygon, properties: Properties?) {
-        self.init(mkPolygon: mkPolygon, color: properties?.color?.hexColor ?? properties?.colour?.hexColor)
+        self.init(mkPolygon: mkPolygon, color: properties?.color_)
     }
 }
 
