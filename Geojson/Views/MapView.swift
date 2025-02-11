@@ -34,8 +34,8 @@ struct MapView: UIViewRepresentable {
         mapView.pitchButtonVisibility = preview ? .hidden : .visible
         
         mapView.addAnnotations(data.points)
-        mapView.addOverlay(MKMultiPolyline(data.polylines), level: .aboveRoads)
-        mapView.addOverlay(MKMultiPolygon(data.polygons), level: .aboveRoads)
+        mapView.addOverlays(data.multiPolylines, level: .aboveRoads)
+        mapView.addOverlays(data.multiPolygons, level: .aboveRoads)
         mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: preview ? 35 : 10), animated: false)
         
         let longPressRecognizer = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleLongPress))
@@ -82,15 +82,17 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
-            let color = UIColor(Color.orange)
+            let defaultColor = UIColor(Color.orange)
             let lineWidth = parent.preview ? 2.0 : 3.0
-            if let multiPolyline = overlay as? MKMultiPolyline {
-                let renderer = MKMultiPolylineRenderer(multiPolyline: multiPolyline)
+            if let multiPolyline = overlay as? MultiPolyline {
+                let color = multiPolyline.color ?? defaultColor
+                let renderer = MKMultiPolylineRenderer(multiPolyline: multiPolyline.mkMultiPolyline)
                 renderer.lineWidth = lineWidth
                 renderer.strokeColor = color
                 return renderer
-            } else if let multiPolygon = overlay as? MKMultiPolygon {
-                let renderer = MKMultiPolygonRenderer(multiPolygon: multiPolygon)
+            } else if let multiPolygon = overlay as? MultiPolygon {
+                let color = multiPolygon.color ?? defaultColor
+                let renderer = MKMultiPolygonRenderer(multiPolygon: multiPolygon.mkMultiPolygon)
                 renderer.lineWidth = lineWidth
                 renderer.strokeColor = color
                 renderer.fillColor = color.withAlphaComponent(0.1)

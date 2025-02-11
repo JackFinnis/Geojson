@@ -10,12 +10,12 @@ import MapKit
 
 struct GeoData: Hashable {
     let points: [Point]
-    let polylines: [Polyline]
-    let polygons: [Polygon]
+    let multiPolylines: [MultiPolyline]
+    let multiPolygons: [MultiPolygon]
     
-    var rect: MKMapRect { polygons.rect.union(polylines.rect).union(points.rect) }
-    var empty: Bool { points.isEmpty && polylines.isEmpty && polygons.isEmpty }
+    var rect: MKMapRect { multiPolygons.rect.union(multiPolylines.rect).union(points.rect) }
+    var empty: Bool { points.isEmpty && multiPolylines.isEmpty && multiPolygons.isEmpty }
     
     @MainActor
-    static let empty = GeoData(points: [], polylines: [], polygons: [])
+    static let empty = GeoData(points: [], multiPolylines: [], multiPolygons: [])
 }
