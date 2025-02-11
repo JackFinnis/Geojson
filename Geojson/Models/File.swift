@@ -18,10 +18,10 @@ class File {
     var webURL: URL?
     var folder: Folder?
     
-    init(fileExtension: String, name: String, date: Date = .now, webURL: URL? = nil, folder: Folder? = nil) {
+    init(fileExtension: String, name: String, webURL: URL? = nil, folder: Folder? = nil) {
         self.fileExtension = fileExtension
         self.name = name
-        self.date = date
+        self.date = .now
         self.webURL = webURL
         self.folder = folder
     }

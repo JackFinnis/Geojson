@@ -85,7 +85,7 @@ struct MapView: UIViewRepresentable {
             let defaultColor = UIColor(Color.orange)
             let lineWidth = parent.preview ? 2.0 : 3.0
             if let multiPolyline = overlay as? MultiPolyline {
-                let color = multiPolyline.color ?? defaultColor
+                let color = multiPolyline.uiColor ?? defaultColor
                 let renderer = MKMultiPolylineRenderer(multiPolyline: multiPolyline.mkMultiPolyline)
                 renderer.lineWidth = lineWidth
                 renderer.strokeColor = color
@@ -119,7 +119,7 @@ struct MapView: UIViewRepresentable {
             guard press.state == .began else { return }
             let location = press.location(in: mapView)
             let coord = mapView.convert(location, toCoordinateFrom: mapView)
-            let point = Point(coordinate: coord, title: "Dropped Pin")
+            let point = Point.droppedPin(coordindate: coord)
             mapView.addAnnotation(point)
             mapView.selectAnnotation(point, animated: true)
             Haptics.tap()

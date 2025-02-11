@@ -7,14 +7,29 @@
 
 import Foundation
 import MapKit
+import GoogleMapsUtils
 
 class Polyline: NSObject {
     let mkPolyline: MKPolyline
     let color: UIColor?
     
-    init(mkPolyline: MKPolyline, properties: Properties?) {
+    private init(mkPolyline: MKPolyline, color: UIColor?) {
         self.mkPolyline = mkPolyline
-        self.color = properties?.color?.hexColor ?? properties?.colour?.hexColor
+        self.color = color
+    }
+}
+
+extension Polyline {
+    convenience init(mkPolyline: MKPolyline) {
+        self.init(mkPolyline: mkPolyline, color: nil)
+    }
+    
+    convenience init(mkPolyline: MKPolyline, properties: Properties?) {
+        self.init(mkPolyline: mkPolyline, color: properties?.color?.hexColor ?? properties?.colour?.hexColor)
+    }
+    
+    convenience init(mkPolyline: MKPolyline, style: GMUStyle?) {
+        self.init(mkPolyline: mkPolyline, color: style?.strokeColor)
     }
 }
 
@@ -25,11 +40,11 @@ extension Polyline: MKOverlay {
 
 class MultiPolyline: NSObject {
     let mkMultiPolyline: MKMultiPolyline
-    let color: UIColor?
+    let uiColor: UIColor?
     
-    init(mkMultiPolyline: MKMultiPolyline, color: UIColor?) {
+    init(mkMultiPolyline: MKMultiPolyline, uiColor: UIColor?) {
         self.mkMultiPolyline = mkMultiPolyline
-        self.color = color
+        self.uiColor = uiColor
     }
 }
 

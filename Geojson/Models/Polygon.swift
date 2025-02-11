@@ -7,14 +7,29 @@
 
 import Foundation
 import MapKit
+import GoogleMapsUtils
 
 class Polygon: NSObject {
     let mkPolygon: MKPolygon
     let color: UIColor?
     
-    init(mkPolygon: MKPolygon, properties: Properties?) {
+    private init(mkPolygon: MKPolygon, color: UIColor?) {
         self.mkPolygon = mkPolygon
-        self.color = properties?.color?.hexColor ?? properties?.colour?.hexColor
+        self.color = color
+    }
+}
+
+extension Polygon {
+    convenience init(mkPolygon: MKPolygon) {
+        self.init(mkPolygon: mkPolygon, color: nil)
+    }
+    
+    convenience init(mkPolygon: MKPolygon, style: GMUStyle?) {
+        self.init(mkPolygon: mkPolygon, color: style?.strokeColor ?? style?.fillColor)
+    }
+    
+    convenience init(mkPolygon: MKPolygon, properties: Properties?) {
+        self.init(mkPolygon: mkPolygon, color: properties?.color?.hexColor ?? properties?.colour?.hexColor)
     }
 }
 

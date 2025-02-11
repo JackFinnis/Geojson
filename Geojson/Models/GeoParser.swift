@@ -7,17 +7,16 @@
 
 import MapKit
 import CoreGPX
-import RCKML
-import AEXML
 import SwiftUI
+import GoogleMapsUtils
 import UniformTypeIdentifiers
 
 class GeoParser {
     var geoData: GeoData {
         GeoData(
             points: points,
-            multiPolylines: Dictionary(grouping: polylines, by: \.color).map { color, polylines in
-                MultiPolyline(mkMultiPolyline: MKMultiPolyline(polylines.map(\.mkPolyline)), color: color)
+            multiPolylines: Dictionary(grouping: polylines, by: \.color).map { uiColor, polylines in
+                MultiPolyline(mkMultiPolyline: MKMultiPolyline(polylines.map(\.mkPolyline)), uiColor: uiColor)
             },
             multiPolygons: Dictionary(grouping: polygons, by: \.color).map { color, polygons in
                 MultiPolygon(mkMultiPolygon: MKMultiPolygon(polygons.map(\.mkPolygon)), color: color)
@@ -104,62 +103,35 @@ class GeoParser {
         points.append(contentsOf: root.waypoints.compactMap(Point.init))
         polylines.append(contentsOf: root.routes.map(\.points).map { points in
             let mkPolyline = MKPolyline(coords: points.compactMap(\.coord))
-            return .init(mkPolyline: mkPolyline, properties: nil)
+            return .init(mkPolyline: mkPolyline)
         })
         polylines.append(contentsOf: root.tracks.flatMap(\.segments).map { segment in
             let mkPolyline = MKPolyline(coords: segment.points.compactMap(\.coord))
-            return .init(mkPolyline: mkPolyline, properties: nil)
+            return .init(mkPolyline: mkPolyline)
         })
     }
     
     // MARK: - Parse KML
     func parseKML(data: Data, fileExtension: String) throws {
-        let document: KMLDocument
-        do {
-            if fileExtension == "kml" {
-                document = try KMLDocument(data)
-            } else {
-                document = try KMLDocument(kmzData: data)
+        let parser = GMUKMLParser(data: data)
+        parser.parse()
+        
+        let placemarks = parser.placemarks.compactMap { $0 as? GMUPlacemark }
+        placemarks.forEach { placemark in
+            let style = parser.styles.first { $0.styleID.removingStyleVariant == placemark.styleUrl }
+            if let point = placemark.geometry as? GMUPoint {
+                points.append(Point(point: point, placemark: placemark, style: style))
+            } else if let line = placemark.geometry as? GMULineString {
+                let mkPolyline = MKPolyline(coords: line.path.coords)
+                let polyline = Polyline(mkPolyline: mkPolyline, style: style)
+                polylines.append(polyline)
+            } else if let polygon = placemark.geometry as? GMUPolygon {
+                let exteriorCoords = polygon.paths.first?.coords ?? []
+                let interiorCoords = polygon.paths.dropFirst().map(\.coords)
+                let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
+                let polygon = Polygon(mkPolygon: mkPolygon, style: style)
+                polygons.append(polygon)
             }
-        } catch {
-            print(error)
-            throw GeoError.invalidKML
-        }
-        
-        print(document.styles)
-        
-        document.features.forEach { handleKMLFeature($0, document: document) }
-    }
-    
-    func handleKMLFeature(_ feature: KMLFeature, document: KMLDocument) {
-        if let folder = feature as? KMLContainer {
-            folder.features.forEach { handleKMLFeature($0, document: document) }
-        } else if let placemark = feature as? KMLPlacemark {
-            handleKMLGeometry(placemark.geometry, placemark: placemark, document: document)
-        }
-    }
-    
-    func handleKMLGeometry(_ geometry: KMLGeometry, placemark: KMLPlacemark, document: KMLDocument) {
-        print(placemark.styleUrl)
-        print(placemark.style)
-        if let url = placemark.styleUrl {
-            print(document.getStyleFromUrl(url))
-        }
-        
-        if let multiGeometry = geometry as? KMLMultiGeometry {
-            multiGeometry.geometries.forEach { handleKMLGeometry($0, placemark: placemark, document: document) }
-        } else if let point = geometry as? KMLPoint {
-            points.append(Point(point: point, placemark: placemark))
-        } else if let lineString = geometry as? KMLLineString {
-            let mkPolyline = MKPolyline(coords: lineString.coordinates.map(\.coord))
-            let polyline = Polyline(mkPolyline: mkPolyline, properties: nil)
-            polylines.append(polyline)
-        } else if let polygon = geometry as? KMLPolygon {
-            let exteriorCoords = polygon.outerBoundaryIs.coordinates.map(\.coord)
-            let interiorCoords = polygon.innerBoundaryIs?.map { $0.coordinates.map(\.coord) }
-            let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
-            let polygon = Polygon(mkPolygon: mkPolygon, properties: nil)
-            polygons.append(polygon)
         }
     }
 }

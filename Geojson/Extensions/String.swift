@@ -11,4 +11,9 @@ extension String {
     var hexColor: UIColor? {
         UIColor(hex: self)
     }
+    
+    var removingStyleVariant: String {
+        self.replacing("-normal", with: "")
+            .replacing("-highlight", with: "")
+    }
 }
