@@ -18,8 +18,8 @@ class GeoParser {
     }
     
     private var points = [Point]()
-    private var polylines = [MKPolyline]()
-    private var polygons = [MKPolygon]()
+    private var polylines = [Polyline]()
+    private var polygons = [Polygon]()
     
     private let decoder = JSONDecoder()
     
@@ -70,14 +70,14 @@ class GeoParser {
             feature.geometry.forEach { handleGeoJSONObject($0, properties: properties) }
         } else if let point = object as? MKPointAnnotation {
             points.append(Point(coordinate: point.coordinate, properties: properties))
-        } else if let polyline = object as? MKPolyline {
-            polylines.append(polyline)
+        } else if let mkPolyline = object as? MKPolyline {
+            polylines.append(Polyline(mkPolyline: mkPolyline, properties: properties))
         } else if let multiPolyline = object as? MKMultiPolyline {
-            polylines.append(contentsOf: multiPolyline.polylines)
-        } else if let polygon = object as? MKPolygon {
-            polygons.append(polygon)
+            polylines.append(contentsOf: multiPolyline.polylines.map { Polyline(mkPolyline: $0, properties: properties) })
+        } else if let mkPolygon = object as? MKPolygon {
+            polygons.append(Polygon(mkPolygon: mkPolygon, properties: properties))
         } else if let multiPolygon = object as? MKMultiPolygon {
-            polygons.append(contentsOf: multiPolygon.polygons)
+            polygons.append(contentsOf: multiPolygon.polygons.map { Polygon(mkPolygon: $0, properties: properties) })
         } else if let multiPoint = object as? MKMultiPoint {
             points.append(contentsOf: multiPoint.coordinates.map { Point(coordinate: $0, properties: properties) })
         }
@@ -97,10 +97,12 @@ class GeoParser {
             Point(waypoint: waypoint)
         })
         polylines.append(contentsOf: root.routes.map(\.points).map { points in
-            MKPolyline(coords: points.compactMap(\.coord))
+            let mkPolyline = MKPolyline(coords: points.compactMap(\.coord))
+            return .init(mkPolyline: mkPolyline, properties: nil)
         })
         polylines.append(contentsOf: root.tracks.flatMap(\.segments).map { segment in
-            MKPolyline(coords: segment.points.compactMap(\.coord))
+            let mkPolyline = MKPolyline(coords: segment.points.compactMap(\.coord))
+            return .init(mkPolyline: mkPolyline, properties: nil)
         })
     }
     
@@ -135,11 +137,15 @@ class GeoParser {
         } else if let point = geometry as? KMLPoint {
             points.append(Point(point: point, placemark: placemark))
         } else if let lineString = geometry as? KMLLineString {
-            polylines.append(MKPolyline(coords: lineString.coordinates.map(\.coord)))
+            let mkPolyline = MKPolyline(coords: lineString.coordinates.map(\.coord))
+            let polyline = Polyline(mkPolyline: mkPolyline, properties: nil)
+            polylines.append(polyline)
         } else if let polygon = geometry as? KMLPolygon {
             let exteriorCoords = polygon.outerBoundaryIs.coordinates.map(\.coord)
             let interiorCoords = polygon.innerBoundaryIs?.map { $0.coordinates.map(\.coord) }
-            polygons.append(MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords))
+            let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
+            let polygon = Polygon(mkPolygon: mkPolygon, properties: nil)
+            polygons.append(polygon)
         }
     }
 }
@@ -149,4 +155,6 @@ struct Properties: Codable {
     let title: String?
     let address: String?
     let description: String?
+    let color: String?
+    let colour: String?
 }

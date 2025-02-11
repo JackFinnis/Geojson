@@ -10,8 +10,8 @@ import MapKit
 
 struct GeoData: Hashable {
     let points: [Point]
-    let polylines: [MKPolyline]
-    let polygons: [MKPolygon]
+    let polylines: [Polyline]
+    let polygons: [Polygon]
     
     var rect: MKMapRect { polygons.rect.union(polylines.rect).union(points.rect) }
     var empty: Bool { points.isEmpty && polylines.isEmpty && polygons.isEmpty }
