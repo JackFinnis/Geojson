@@ -52,6 +52,7 @@ struct FileRow: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .lineLimit(1)
             .padding(8)
             .background(.background)
         }

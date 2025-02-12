@@ -74,7 +74,6 @@ struct FoldersView: View {
                 FileView(file: fileData.file, data: fileData.data, namespace: namespace)
             }
         }
-        .sensoryFeedback(.error, trigger: model.error)
         .alert("Import Failed", isPresented: $model.showAlert) {} message: {
             if let error = model.error {
                 Text(error.description)

@@ -79,5 +79,6 @@ class Model {
     func fail(error: GeoError) {
         self.error = error
         self.showAlert = true
+        Haptics.error()
     }
 }
