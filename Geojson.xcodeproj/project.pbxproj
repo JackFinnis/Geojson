@@ -18,6 +18,8 @@
 		04092D0A2C3E03AB0015EAE7 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04092D092C3E03AB0015EAE7 /* Folder.swift */; };
 		0443D4322B9F968000018470 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443D4312B9F968000018470 /* MapView.swift */; };
 		044C1F3E2D5C9CBF00396E4D /* FileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F3D2D5C9CBF00396E4D /* FileData.swift */; };
+		044C1F402D5CAD3300396E4D /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F3F2D5CAD3100396E4D /* NSObject.swift */; };
+		044C1F422D5CAD8500396E4D /* OverlayAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F412D5CAD8100396E4D /* OverlayAnnotationView.swift */; };
 		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
 		049C0F75292936F600C6521A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* App.swift */; };
 		049C0F79292936F700C6521A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049C0F78292936F700C6521A /* Assets.xcassets */; };
@@ -56,6 +58,8 @@
 		04092D092C3E03AB0015EAE7 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		0443D4312B9F968000018470 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		044C1F3D2D5C9CBF00396E4D /* FileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileData.swift; sourceTree = "<group>"; };
+		044C1F3F2D5CAD3100396E4D /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
+		044C1F412D5CAD8100396E4D /* OverlayAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayAnnotationView.swift; sourceTree = "<group>"; };
 		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		049C0F71292936F600C6521A /* Geojson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geojson.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,6 +139,7 @@
 		04A65584293D58B30084CC6A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				044C1F3F2D5CAD3100396E4D /* NSObject.swift */,
 				04BCBC372D5C28F7002BB5E8 /* Int.swift */,
 				04F435B72D56BDF4005CA0ED /* String.swift */,
 				04F435B12D56BC2B005CA0ED /* UIColor.swift */,
@@ -170,6 +175,7 @@
 				04092CFA2C3AFD880015EAE7 /* FileRow.swift */,
 				049E167E2C00EDDE00ABB106 /* FileView.swift */,
 				0443D4312B9F968000018470 /* MapView.swift */,
+				044C1F412D5CAD8100396E4D /* OverlayAnnotationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -275,12 +281,14 @@
 				044C1F3E2D5C9CBF00396E4D /* FileData.swift in Sources */,
 				04BA4C632B9E5073006AF820 /* GeoData.swift in Sources */,
 				0402C61D2A0D0CF700238C51 /* Point.swift in Sources */,
+				044C1F422D5CAD8500396E4D /* OverlayAnnotationView.swift in Sources */,
 				049E16812C00F10A00ABB106 /* UIEdgeInsets.swift in Sources */,
 				04BCBC362D5C1ED4002BB5E8 /* GeoFileType.swift in Sources */,
 				04BA4C5D2B9E4AB5006AF820 /* MKPolyline.swift in Sources */,
 				0443D4322B9F968000018470 /* MapView.swift in Sources */,
 				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
 				04BCBC402D5C3B65002BB5E8 /* ImportButton.swift in Sources */,
+				044C1F402D5CAD3300396E4D /* NSObject.swift in Sources */,
 				049E167F2C00EDDE00ABB106 /* FileView.swift in Sources */,
 				049C0F75292936F600C6521A /* App.swift in Sources */,
 				047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */,

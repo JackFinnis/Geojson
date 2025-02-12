@@ -24,14 +24,18 @@ struct MapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = !preview
-        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         mapView.isPitchEnabled = true
         mapView.selectableMapFeatures = .pointsOfInterest
         mapView.layoutMargins = .init(length: preview ? -25 : 5)
         mapView.showsUserTrackingButton = !preview
         mapView.pitchButtonVisibility = preview ? .hidden : .visible
         
+        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMarkerAnnotationView.className)
+        mapView.register(OverlayAnnotationView.self, forAnnotationViewWithReuseIdentifier: OverlayAnnotationView.className)
+        
         mapView.addAnnotations(data.points)
+        mapView.addAnnotations(data.multiPolylines)
+        mapView.addAnnotations(data.multiPolygons)
         mapView.addOverlays(data.multiPolylines, level: .aboveRoads)
         mapView.addOverlays(data.multiPolygons, level: .aboveRoads)
         mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: preview ? 35 : 10), animated: false)
@@ -96,7 +100,7 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
             if let point = annotation as? Point,
-               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
+               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.className, for: annotation) as? MKMarkerAnnotationView {
                 marker.titleVisibility = parent.preview ? .hidden : .adaptive
                 marker.displayPriority = .required
                 marker.glyphText = point.index.map(String.init)
