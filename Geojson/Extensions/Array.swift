@@ -14,10 +14,9 @@ extension Array {
     }
 }
 
-extension Array where Element: Hashable {
-    func removingDuplicates() -> [Element] {
-        var seen = Set<Element>()
-        return self.filter { seen.insert($0).inserted }
+extension Array {
+    var asStrings: [String] {
+        compactMap { $0 as? String }
     }
 }
 

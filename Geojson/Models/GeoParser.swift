@@ -116,16 +116,16 @@ class GeoParser {
 }
 
 struct Properties {
-    let map: [String : Any]
+    let dict: [String : Any]
     
     var strings: [String] {
-        let list: [Any?] = [map["title"], map["name"], map["description"], map["address"]] + Array(map.values)
-        let strings = list.compactMap { $0 as? String }
-        return strings.removingDuplicates()
+        var dict = dict
+        let commonKeys = ["title", "name", "description", "address"]
+        return commonKeys.map { dict.removeValue(forKey: $0) }.asStrings + Array(dict.values).asStrings.sorted(using: SortDescriptor(\.count))
     }
     
     var color: UIColor? {
-        let color = (map["color"] ?? map["colour"]) as? String
+        let color = (dict["color"] ?? dict["colour"]) as? String
         return color?.hexColor
     }
 }

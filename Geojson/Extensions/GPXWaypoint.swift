@@ -14,6 +14,7 @@ extension GPXWaypoint {
         guard let latitude, let longitude else { return nil }
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
+    
     var strings: [String] {
         [name, symbol, comment, desc].compactMap(\.self)
     }

@@ -23,7 +23,7 @@ struct GeoData: Hashable {
         var closestOverlay: Annotation?
         var closestDistance: Double = .greatestFiniteMagnitude
         
-        for polygon in multiPolygons.flatMap(\.polygons) where polygon.mkPolygon.boundingMapRect.contains(targetCoord.point) {
+        for polygon in multiPolygons.flatMap(\.polygons) where polygon.mkPolygon.boundingMapRect.padding().contains(targetCoord.point) {
             let render = MKPolygonRenderer(polygon: polygon.mkPolygon)
             let point = render.point(for: targetCoord.point)
             if render.path.contains(point) {
@@ -31,7 +31,7 @@ struct GeoData: Hashable {
             }
         }
         
-        for polyline in multiPolylines.flatMap(\.polylines) where polyline.mkPolyline.boundingMapRect.contains(targetCoord.point) {
+        for polyline in multiPolylines.flatMap(\.polylines) where polyline.mkPolyline.boundingMapRect.padding().contains(targetCoord.point) {
             for coord in polyline.mkPolyline.coordinates {
                 let delta = coord.distance(to: targetCoord)
                 if delta < closestDistance && delta < 10000 {

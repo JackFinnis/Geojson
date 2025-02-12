@@ -14,12 +14,6 @@ struct Polyline: Annotation {
     let mkPolyline: MKPolyline
     let color: UIColor?
     let strings: [String]
-    
-    private init(mkPolyline: MKPolyline, color: UIColor?, strings: [String]) {
-        self.mkPolyline = mkPolyline
-        self.color = color
-        self.strings = strings.sorted(using: SortDescriptor(\.count))
-    }
 }
 
 extension Polyline {

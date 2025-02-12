@@ -13,12 +13,6 @@ struct Polygon: Annotation {
     let mkPolygon: MKPolygon
     let color: UIColor?
     let strings: [String]
-    
-    private init(mkPolygon: MKPolygon, color: UIColor?, strings: [String]) {
-        self.mkPolygon = mkPolygon
-        self.color = color
-        self.strings = strings.sorted(using: SortDescriptor(\.count))
-    }
 }
 
 extension Polygon {

@@ -42,10 +42,23 @@ struct FileView: View {
                         }
                     }), titleVisibility: (selectedAnnotation?.strings.isEmpty ?? true) ? .hidden : .visible) {
                         Button("Close", role: .cancel) {}
-                        if let point = selectedAnnotation as? Point {
-                            Button("Get Directions") {
-                                Task {
-                                    try? await point.openInMaps()
+                        if let selectedAnnotation {
+                            if let url = selectedAnnotation.strings.compactMap(URL.init).first(where: UIApplication.shared.canOpenURL) {
+                                Button("Open URL") {
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                            if selectedAnnotation.strings.isNotEmpty {
+                                Button("Copy Details") {
+                                    UIPasteboard.general.string = selectedAnnotation.strings.lines
+                                    Haptics.tap()
+                                }
+                            }
+                            if let point = selectedAnnotation as? Point {
+                                Button("Get Directions") {
+                                    Task {
+                                        try? await point.openInMaps()
+                                    }
                                 }
                             }
                         }
