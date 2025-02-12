@@ -11,20 +11,15 @@ import MapKit
 struct FileView: View {
     @Bindable var file: File
     let data: GeoData
-    let fail: (GeoError) -> Void
+    let namespace: Namespace.ID
     
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.colorScheme) var colorScheme
-    @Environment(\.openURL) var openURL
-    @State var trackingMode = MKUserTrackingMode.none
     @State var mapStandard = true
     @State var selectedPoint: Point?
-    @State var droppedPoint: Point?
     
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                MapView(selectedPoint: $selectedPoint, trackingMode: $trackingMode, data: data, mapStandard: mapStandard, preview: false, fail: fail)
+                MapView(selectedPoint: $selectedPoint, data: data, mapStandard: mapStandard, preview: false)
                     .ignoresSafeArea()
                 
                 Button {
@@ -70,6 +65,7 @@ struct FileView: View {
         .onAppear {
             CLLocationManager().requestWhenInUseAuthorization()
         }
+        .zoomChild(id: file.id, in: namespace)
     }
     
     nonisolated func getDirections(to point: Point) async throws {

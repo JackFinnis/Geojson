@@ -11,11 +11,9 @@ import MapKit
 struct MapView: UIViewRepresentable {
     @Binding var selectedPoint: Point?
 
-    @Binding var trackingMode: MKUserTrackingMode
     let data: GeoData
     let mapStandard: Bool
     let preview: Bool
-    let fail: (GeoError) -> Void
     
     let mapView = MKMapView()
     
@@ -46,7 +44,6 @@ struct MapView: UIViewRepresentable {
     
     func updateUIView(_ mapView: MKMapView, context: Context) {
         mapView.preferredConfiguration = mapStandard ? MKStandardMapConfiguration(elevationStyle: .realistic) : MKHybridMapConfiguration(elevationStyle: .realistic)
-        mapView.setUserTrackingMode(trackingMode, animated: true)
         
         if selectedPoint == nil {
             mapView.selectedAnnotations.forEach { annotation in
@@ -75,10 +72,6 @@ struct MapView: UIViewRepresentable {
             if let point = annotation as? Point {
                 parent.selectedPoint = point
             }
-        }
-        
-        func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
-            parent.trackingMode = mode
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {

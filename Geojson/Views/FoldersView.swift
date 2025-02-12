@@ -10,156 +10,89 @@ import SwiftData
 import MapKit
 
 struct FoldersView: View {
-    @Environment(\.modelContext) var modelContext
-    @State var path = NavigationPath()
-    @State var urls: [URL] = []
-    @State var isSearching = false
-    @State var searchText = ""
-    @Query var files: [File]
-    @Query var folders: [Folder]
-    @State var error: GeoError?
+    @State var model = Model()
+    @Environment(\.modelContext) var context
+    @Query(sort: \Folder.name) var folders: [Folder]
+    @Query(sort: \File.name) var files: [File]
+    @Namespace var namespace
     
     var body: some View {
-        let filteredFiles = files.filter { file in
-            isSearching ? file.name.localizedStandardContains(searchText) : file.folder == nil
-        }
+        let noFolder = files.filter { $0.folder == nil }
         
-        NavigationStack(path: $path) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    if !isSearching {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 0, alignment: .top)], spacing: 0) {
-                            ForEach(folders) { folder in
-                                FolderRow(folder: folder)
-                            }
-                        }
+        NavigationStack(path: $model.path) {
+            List {
+                if folders.isNotEmpty {
+                    NavigationLink(value: true) {
+                        Label("All Files", systemImage: "folder")
+                            .badge(files.isEmpty ? "0" : String(files.count))
                     }
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 0, alignment: .top)], spacing: 0) {
-                        ForEach(filteredFiles) { file in
-                            FileRow(file: file, loadFile: loadFile, fetchFile: fetchFile)
+                }
+                NavigationLink(value: false) {
+                    Label("Files", systemImage: "folder")
+                        .badge(noFolder.isEmpty ? "0" : String(noFolder.count))
+                }
+                ForEach(folders) { folder in
+                    NavigationLink(value: folder) {
+                        Label(folder.name, systemImage: "folder")
+                            .badge(folder.files.isEmpty ? "0" : String(folder.files.count))
+                    }
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            context.delete(folder)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
-                .padding(.horizontal, 8)
             }
-            .scrollDismissesKeyboard(.immediately)
-            .searchable(text: $searchText, isPresented: $isSearching)
-            .navigationTitle("Geodata Viewer")
+            .navigationTitle("Folders")
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     Button {
-                        let folder = Folder()
-                        modelContext.insert(folder)
+                        newFolder()
                     } label: {
                         Label("New Folder", systemImage: "folder.badge.plus")
                     }
                 }
                 ToolbarItem(placement: .status) {
-                    Text(files.count.formatted(singular: "file"))
-                        .font(.subheadline)
+                    Text("")
                 }
                 ToolbarItem(placement: .bottomBar) {
-                    ImportButton(folder: nil, importFile: importFile, fetchFile: fetchFile)
+                    ImportButton(folder: nil)
                 }
             }
             .navigationDestination(for: Folder.self) { folder in
-                FolderView(folder: folder, loadFile: loadFile, importFile: importFile, fetchFile: fetchFile)
+                @Bindable var folder = folder
+                FilesView(files: folder.files, folder: folder, namespace: namespace)
+                    .navigationTitle($folder.name)
+            }
+            .navigationDestination(for: Bool.self) { all in
+                FilesView(files: all ? files : noFolder, folder: nil, namespace: namespace)
+                    .navigationTitle(all ? "All Files" : "Files")
             }
             .navigationDestination(for: FileData.self) { fileData in
-                FileView(file: fileData.file, data: fileData.data, fail: fail)
+                FileView(file: fileData.file, data: fileData.data, namespace: namespace)
             }
         }
-        .overlay {
-            if files.isEmpty && folders.isEmpty {
-                ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Files you import will appear here.\nTap + to import a file."))
-                    .allowsHitTesting(false)
-            } else if filteredFiles.isEmpty && searchText.isNotEmpty {
-                ContentUnavailableView.search(text: searchText)
-                    .allowsHitTesting(false)
-            }
-        }
-        .alert("Import Failed", isPresented: .init(get: {
-            error != nil
-        }, set: { isPresented in
-            if !isPresented {
-                error = nil
-            }
-        })) {
-            // no actions
-        } message: {
-            if let error {
+        .sensoryFeedback(.error, trigger: model.error)
+        .alert("Import Failed", isPresented: $model.showAlert) {} message: {
+            if let error = model.error {
                 Text(error.description)
             }
         }
         .onOpenURL { url in
-            importFile(url: url, webURL: nil, folder: nil)
+            model.importFile(url: url, webURL: nil, folder: nil, context: context)
         }
+        .onAppear {
+            model.path.append(folders.isNotEmpty)
+        }
+        .environment(model)
     }
     
-    func fail(error: GeoError) {
-        self.error = error
-        Haptics.error()
-    }
-    
-    func fetchFile(url: URL, folder: Folder?) async {
-        guard UIApplication.shared.canOpenURL(url) else {
-            fail(error: .invalidURL)
-            return
-        }
-        
-        let data: Data
-        let response: URLResponse
-        do {
-            (data, response) = try await URLSession.shared.data(from: url)
-        } catch {
-            print(error)
-            fail(error: .noInternet)
-            return
-        }
-        
-        guard let filename = response.suggestedFilename else {
-            fail(error: .unsupportedFileType)
-            return
-        }
-        
-        do {
-            let temp = URL.temporaryDirectory.appending(path: filename)
-            try data.write(to: temp)
-            importFile(url: temp, webURL: url, folder: folder)
-        } catch {
-            print(error)
-            fail(error: .writeFile)
-        }
-    }
-    
-    func importFile(url source: URL, webURL: URL?, folder: Folder?) {
-        let fileExtension = source.pathExtension
-        let name = String(source.lastPathComponent.dropLast(fileExtension.count + 1))
-        let file = File(fileExtension: fileExtension, name: name, webURL: webURL, folder: folder)
-        
-        do {
-            try? FileManager.default.removeItem(at: file.url)
-            _ = source.startAccessingSecurityScopedResource()
-            try FileManager.default.copyItem(at: source, to: file.url)
-            source.stopAccessingSecurityScopedResource()
-            
-            loadFile(file: file)
-        } catch {
-            print(error)
-            fail(error: .writeFile)
-        }
-    }
-    
-    func loadFile(file: File) {
-        do {
-            let geoData = try GeoParser().parse(url: file.url)
-            file.date = .now
-            path.append(FileData(file: file, data: geoData))
-            modelContext.insert(file)
-            Haptics.tap()
-        } catch {
-            fail(error: error)
-        }
+    func newFolder() {
+        let folder = Folder()
+        context.insert(folder)
+        model.path.append(folder)
     }
 }
 
@@ -172,43 +105,3 @@ struct FileData: Hashable {
     FoldersView()
 }
 
-struct ImportButton: View {
-    let folder: Folder?
-    let importFile: (URL, URL?, Folder?) -> Void
-    let fetchFile: (URL, Folder?) async -> Void
-    
-    @State var showFileImporter = false
-    
-    var body: some View {
-        Menu {
-            Section("Import File") {
-                Button {
-                    showFileImporter = true
-                } label: {
-                    Label("Choose File...", systemImage: "folder")
-                }
-                Button {
-                    guard let string = UIPasteboard.general.string,
-                          let url = URL(string: string)
-                    else { return }
-                    let folder = folder
-                    Task {
-                        await fetchFile(url, folder)
-                    }
-                } label: {
-                    Label("Paste File URL", systemImage: "document.on.clipboard")
-                }
-            }
-        } label: {
-            Label("Import File", systemImage: "plus")
-        }
-        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: GeoFileType.allCases.map(\.type)) { result in
-            switch result {
-            case .failure(let error):
-                print(error)
-            case .success(let url):
-                importFile(url, nil, folder)
-            }
-        }
-    }
-}

@@ -20,4 +20,22 @@ extension View {
             .background(.ultraThickMaterial)
             .clipShape(.rect(cornerRadius: 8))
     }
+    
+    @ViewBuilder
+    func zoomParent(id: some Hashable, in namespace: Namespace.ID) -> some View {
+        if #available(iOS 18, *) {
+            matchedTransitionSource(id: id, in: namespace)
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder
+    func zoomChild(id: some Hashable, in namespace: Namespace.ID) -> some View {
+        if #available(iOS 18, *) {
+            navigationTransition(.zoom(sourceID: id, in: namespace))
+        } else {
+            self
+        }
+    }
 }

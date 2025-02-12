@@ -10,20 +10,22 @@ import SwiftData
 
 struct FileRow: View {
     @Bindable var file: File
-    @Query(sort: \Folder.name) var folders: [Folder]
-    let loadFile: (File) -> Void
-    let fetchFile: (URL, Folder?) async -> Void
+    let namespace: Namespace.ID
+    let showFolder: Bool
     
+    @Environment(\.modelContext) var context
+    @Environment(Model.self) var model
+    @Query(sort: \Folder.name) var folders: [Folder]
     @State var geoData: GeoData?
     
     var body: some View {
         Button {
-            loadFile(file)
+            model.loadFile(file: file, context: context)
         } label: {
             VStack(alignment: .leading) {
                 ZStack {
                     if let geoData {
-                        MapView(selectedPoint: .constant(.none), trackingMode: .constant(.none), data: geoData, mapStandard: true, preview: true, fail: { _ in })
+                        MapView(selectedPoint: .constant(.none), data: geoData, mapStandard: true, preview: true)
                     } else {
                         Rectangle()
                             .fill(.fill)
@@ -40,11 +42,15 @@ struct FileRow: View {
                 .allowsHitTesting(false)
                 .compositingGroup()
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(.separator))
+                .zoomParent(id: file.id, in: namespace)
                 
                 Text(file.name)
                     .multilineTextAlignment(.leading)
-                Text(file.folder?.name ?? "No folder")
-                    .foregroundStyle(.secondary)
+                if showFolder {
+                    Label(file.folder?.name ?? "Files", systemImage: "folder")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                }
             }
             .padding(8)
             .background(.background)
@@ -52,29 +58,32 @@ struct FileRow: View {
         .buttonStyle(.plain)
         .contextMenu {
             if let url = file.webURL {
-                let folder = file.folder
                 Button {
                     Task {
                         file.delete()
-                        await fetchFile(url, folder)
+                        await model.fetchFile(url: url, folder: file.folder, context: context)
                     }
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
             }
-            if folders.isNotEmpty {
-                Menu {
-                    Picker("Move...", selection: $file.folder) {
-                        Text("No Folder")
-                            .tag(nil as Folder?)
-                        ForEach(folders) { folder in
-                            Text(folder.name)
-                                .tag(folder as Folder?)
-                        }
+            Menu {
+                Picker("Move...", selection: $file.folder) {
+                    Label("Files", systemImage: "folder")
+                        .tag(nil as Folder?)
+                    ForEach(folders) { folder in
+                        Label(folder.name, systemImage: "folder")
+                            .tag(folder as Folder?)
                     }
-                } label: {
-                    Label("Move...", systemImage: "folder")
                 }
+                Divider()
+                Button {
+                    moveToNewFolder()
+                } label: {
+                    Label("New Folder", systemImage: "folder.badge.plus")
+                }
+            } label: {
+                Label("Move...", systemImage: "folder")
             }
             Button(role: .destructive) {
                 file.delete()
@@ -82,5 +91,11 @@ struct FileRow: View {
                 Label("Delete", systemImage: "trash")
             }
         }
+    }
+    
+    func moveToNewFolder() {
+        let folder = Folder()
+        file.folder = folder
+        model.path.append(folder)
     }
 }
