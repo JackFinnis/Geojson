@@ -108,7 +108,6 @@ class GeoParser {
         let placemarks = parser.placemarks.compactMap { $0 as? GMUPlacemark }
         placemarks.forEach { placemark in
             let style = parser.styles.first { $0.styleID.removingStyleVariant == placemark.styleUrl }
-            print(parser.styles.filter { $0.styleID.removingStyleVariant == placemark.styleUrl }.map(\.fillColor))
             if let point = placemark.geometry as? GMUPoint {
                 points.append(Point(point: point, placemark: placemark, style: style))
             } else if let line = placemark.geometry as? GMULineString {

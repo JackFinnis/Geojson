@@ -28,7 +28,7 @@ struct FolderView: View {
         }
         .overlay {
             if files.isEmpty {
-                ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Long press on a file to move it into this folder.\nOr tap + to import a new file."))
+                ContentUnavailableView("No Files Yet", systemImage: "mappin.and.ellipse", description: Text("Long press on a file to move it into this folder.\nTap + to import a new file."))
                     .allowsHitTesting(false)
             }
         }
@@ -36,8 +36,15 @@ struct FolderView: View {
         .navigationTitle($folder.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
-                PrimaryActions(folder: folder, importFile: importFile, fetchFile: fetchFile)
+            ToolbarItemGroup(placement: .bottomBar) {
+                Text("")
+            }
+            ToolbarItemGroup(placement: .status) {
+                Text(folder.files.count.formatted(singular: "file"))
+                    .font(.subheadline)
+            }
+            ToolbarItemGroup(placement: .bottomBar) {
+                ImportButton(folder: folder, importFile: importFile, fetchFile: fetchFile)
             }
         }
     }

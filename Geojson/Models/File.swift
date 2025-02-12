@@ -29,6 +29,7 @@ class File {
     func delete() {
         try? FileManager.default.removeItem(at: url)
         modelContext?.delete(self)
+        try? modelContext?.save()
     }
     
     var url: URL {

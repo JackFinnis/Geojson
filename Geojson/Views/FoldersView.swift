@@ -9,9 +9,8 @@ import SwiftUI
 import SwiftData
 import MapKit
 
-struct RootView: View {
+struct FoldersView: View {
     @Environment(\.modelContext) var modelContext
-    @AppStorage("sortBy") var sortBy = SortBy.name
     @State var path = NavigationPath()
     @State var urls: [URL] = []
     @State var isSearching = false
@@ -23,8 +22,7 @@ struct RootView: View {
     var body: some View {
         let filteredFiles = files.filter { file in
             isSearching ? file.name.localizedStandardContains(searchText) : file.folder == nil
-        }.sorted(using: sortBy.fileComparator)
-        let folders = folders.sorted(using: sortBy.folderComparator)
+        }
         
         NavigationStack(path: $path) {
             ScrollView {
@@ -48,8 +46,20 @@ struct RootView: View {
             .searchable(text: $searchText, isPresented: $isSearching)
             .navigationTitle("Geodata Viewer")
             .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-                    PrimaryActions(folder: nil, importFile: importFile, fetchFile: fetchFile)
+                ToolbarItem(placement: .bottomBar) {
+                    Button {
+                        let folder = Folder()
+                        modelContext.insert(folder)
+                    } label: {
+                        Label("New Folder", systemImage: "folder.badge.plus")
+                    }
+                }
+                ToolbarItem(placement: .status) {
+                    Text(files.count.formatted(singular: "file"))
+                        .font(.subheadline)
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    ImportButton(folder: nil, importFile: importFile, fetchFile: fetchFile)
                 }
             }
             .navigationDestination(for: Folder.self) { folder in
@@ -68,8 +78,6 @@ struct RootView: View {
                     .allowsHitTesting(false)
             }
         }
-        .animation(.default, value: filteredFiles)
-        .animation(.default, value: folders)
         .alert("Import Failed", isPresented: .init(get: {
             error != nil
         }, set: { isPresented in
@@ -161,34 +169,17 @@ struct FileData: Hashable {
 }
 
 #Preview {
-    RootView()
+    FoldersView()
 }
 
-struct PrimaryActions: View {
+struct ImportButton: View {
     let folder: Folder?
     let importFile: (URL, URL?, Folder?) -> Void
     let fetchFile: (URL, Folder?) async -> Void
     
-    @Environment(\.modelContext) var modelContext
-    @AppStorage("sortBy") var sortBy = SortBy.name
     @State var showFileImporter = false
-    @Query var files: [File]
     
     var body: some View {
-        Menu {
-            Picker("Sort Files", selection: $sortBy.animation()) {
-                ForEach(SortBy.allCases, id: \.self) { sortBy in
-                    Text(sortBy.rawValue)
-                }
-            }
-        } label: {
-            Label("Sort Files", systemImage: "arrow.up.arrow.down")
-        }
-        .menuStyle(.button)
-        .buttonStyle(.bordered)
-        .buttonBorderShape(.circle)
-        .font(.headline)
-        
         Menu {
             Section("Import File") {
                 Button {
@@ -208,23 +199,9 @@ struct PrimaryActions: View {
                     Label("Paste File URL", systemImage: "document.on.clipboard")
                 }
             }
-            if folder == nil, files.isNotEmpty {
-                Section("Organise Files") {
-                    Button {
-                        let folder = Folder()
-                        modelContext.insert(folder)
-                    } label: {
-                        Label("New Folder", systemImage: "folder.badge.plus")
-                    }
-                }
-            }
         } label: {
             Label("Import File", systemImage: "plus")
         }
-        .menuStyle(.button)
-        .buttonStyle(.borderedProminent)
-        .buttonBorderShape(.circle)
-        .font(.headline)
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: GeoFileType.allCases.map(\.type)) { result in
             switch result {
             case .failure(let error):

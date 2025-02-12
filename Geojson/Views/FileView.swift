@@ -41,10 +41,8 @@ struct FileView: View {
                     .confirmationDialog(selectedPoint?.name ?? "", isPresented: Binding(get: {
                         selectedPoint != nil
                     }, set: { isPresented in
-                        withAnimation {
-                            if !isPresented {
-                                selectedPoint = nil
-                            }
+                        if !isPresented {
+                            selectedPoint = nil
                         }
                     }), titleVisibility: selectedPoint?.name == nil ? .hidden : .visible) {
                         if let selectedPoint {

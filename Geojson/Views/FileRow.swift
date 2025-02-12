@@ -43,6 +43,8 @@ struct FileRow: View {
                 
                 Text(file.name)
                     .multilineTextAlignment(.leading)
+                Text(file.folder?.name ?? "No folder")
+                    .foregroundStyle(.secondary)
             }
             .padding(8)
             .background(.background)

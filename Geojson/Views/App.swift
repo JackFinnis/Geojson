@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 
 // https://cycling.data.tfl.gov.uk/CycleRoutes/CycleRoutes.json
+// https://www.google.com/maps/d/u/0/edit?mid=1SvfUi70Q0zSnkRsslNNGDfLixF39NmA
+// https://www.google.com/maps/d/u/0/kml?mid=1SvfUi70Q0zSnkRsslNNGDfLixF39NmA&forcekml=1
 // polyline properties eg name
 // edit/add/delete data
 
@@ -16,7 +18,7 @@ import SwiftData
 struct GeodataApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
+            FoldersView()
         }
         .modelContainer(for: File.self)
     }
