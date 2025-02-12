@@ -10,7 +10,7 @@ import SwiftData
 
 struct FileRow: View {
     @Bindable var file: File
-    @Query var folders: [Folder]
+    @Query(sort: \Folder.name) var folders: [Folder]
     let loadFile: (File) -> Void
     let fetchFile: (URL, Folder?) async -> Void
     
@@ -67,7 +67,7 @@ struct FileRow: View {
                     Picker("Move...", selection: $file.folder) {
                         Text("No Folder")
                             .tag(nil as Folder?)
-                        ForEach(folders.sorted(using: SortBy.name.folderComparator)) { folder in
+                        ForEach(folders) { folder in
                             Text(folder.name)
                                 .tag(folder as Folder?)
                         }

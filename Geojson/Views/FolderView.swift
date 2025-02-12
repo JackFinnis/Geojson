@@ -13,10 +13,8 @@ struct FolderView: View {
     let importFile: (URL, URL?, Folder?) -> Void
     let fetchFile: (URL, Folder?) async -> Void
     
-    @AppStorage("sortBy") var sortBy = SortBy.name
-    
     var body: some View {
-        let files = folder.files.sorted(using: sortBy.fileComparator)
+        let files = folder.files.sorted(using: SortDescriptor(\.name))
         
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 0, alignment: .top)], spacing: 0) {
