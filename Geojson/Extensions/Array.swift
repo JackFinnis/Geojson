@@ -14,6 +14,13 @@ extension Array {
     }
 }
 
+extension Array where Element: Hashable {
+    func removingDuplicates() -> [Element] {
+        var seen = Set<Element>()
+        return self.filter { seen.insert($0).inserted }
+    }
+}
+
 extension Array where Element: MKOverlay {
     var rect: MKMapRect {
         reduce(MKMapRect.null) { $0.union($1.boundingMapRect) }
@@ -24,5 +31,11 @@ extension Array where Element: MKAnnotation {
     var rect: MKMapRect {
         let coords = map(\.coordinate)
         return MKPolyline(coords: coords).boundingMapRect
+    }
+}
+
+extension Array where Element == String {
+    var lines: String {
+        joined(separator: "\n")
     }
 }

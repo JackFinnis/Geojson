@@ -10,52 +10,51 @@ import MapKit
 import CoreGPX
 import GoogleMapsUtils
 
-class Point: NSObject, MKAnnotation {
+class Point: NSObject, Annotation {
     let coordinate: CLLocationCoordinate2D
-    let title: String?
-    let subtitle: String?
-    let index: Int?
+    let strings: [String]
     let color: UIColor?
     
     var isDroppedPin: Bool {
         title == Self.droppedPinTitle
     }
     
-    var name: String? {
-        guard let title, title.isNotEmpty else { return nil }
-        guard let subtitle, subtitle.isNotEmpty else { return title }
-        return title + "\n" + subtitle
-    }
-    
     static let droppedPinTitle = "Dropped Pin"
     
-    private init(coordinate: CLLocationCoordinate2D, title: String?, subtitle: String?, index: Int?, color: UIColor?) {
+    private init(coordinate: CLLocationCoordinate2D, strings: [String], color: UIColor?) {
         self.coordinate = coordinate
-        self.title = title
-        self.subtitle = subtitle
-        self.index = index
+        self.strings = strings
         self.color = color
     }
+    
+    func openInMaps() async throws {
+        guard let placemark = try await CLGeocoder().reverseGeocodeLocation(coordinate.location).first else { return }
+        let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+        mapItem.name = title ?? mapItem.name
+        mapItem.openInMaps()
+    }
+}
+
+extension Point: MKAnnotation {
+    var title: String? { strings[safe: 0] }
+    var subtitle: String? { strings[safe: 1] }
 }
 
 extension Point {
     static func droppedPin(coordindate: CLLocationCoordinate2D) -> Point {
-        Point(coordinate: coordindate, title: Self.droppedPinTitle, subtitle: nil, index: nil, color: nil)
+        Point(coordinate: coordindate, strings: [Self.droppedPinTitle], color: nil)
     }
     
     convenience init?(waypoint: GPXWaypoint) {
         guard let coord = waypoint.coord else { return nil }
-        let info = [waypoint.name, waypoint.symbol, waypoint.comment, waypoint.desc].compactMap(\.self)
-        let index = info.map(Int.init).compactMap(\.self).first
-        let strings = info.filter { Int($0) == nil }
-        self.init(coordinate: coord, title: strings[safe: 0], subtitle: strings[safe: 1], index: index, color: nil)
+        self.init(coordinate: coord, strings: waypoint.strings, color: nil)
     }
     
     convenience init(point: GMUPoint, placemark: GMUPlacemark, style: GMUStyle?) {
-        self.init(coordinate: point.coordinate, title: placemark.title ?? style?.title, subtitle: placemark.snippet, index: nil, color: style?.fillColor)
+        self.init(coordinate: point.coordinate, strings: placemark.strings, color: style?.fillColor)
     }
     
     convenience init(coordinate: CLLocationCoordinate2D, properties: Properties?) {
-        self.init(coordinate: coordinate, title: properties?.title_, subtitle: properties?.subtitle_, index: nil, color: properties?.color_)
+        self.init(coordinate: coordinate, strings: properties?.strings ?? [], color: properties?.color)
     }
 }

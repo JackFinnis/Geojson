@@ -11,4 +11,7 @@ extension CLLocationCoordinate2D {
     var location: CLLocation {
         CLLocation(latitude: latitude, longitude: longitude)
     }
+    var point: MKMapPoint {
+        MKMapPoint(self)
+    }
 }

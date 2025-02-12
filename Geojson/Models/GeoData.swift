@@ -18,4 +18,29 @@ struct GeoData: Hashable {
     
     @MainActor
     static let empty = GeoData(points: [], multiPolylines: [], multiPolygons: [])
+    
+    func closestOverlay(to targetCoord: CLLocationCoordinate2D) -> Annotation? {
+        var closestOverlay: Annotation?
+        var closestDistance: Double = .greatestFiniteMagnitude
+        
+        for polygon in multiPolygons.flatMap(\.polygons) where polygon.mkPolygon.boundingMapRect.contains(targetCoord.point) {
+            let render = MKPolygonRenderer(polygon: polygon.mkPolygon)
+            let point = render.point(for: targetCoord.point)
+            if render.path.contains(point) {
+                return polygon
+            }
+        }
+        
+        for polyline in multiPolylines.flatMap(\.polylines) where polyline.mkPolyline.boundingMapRect.contains(targetCoord.point) {
+            for coord in polyline.mkPolyline.coordinates {
+                let delta = coord.distance(to: targetCoord)
+                if delta < closestDistance && delta < 10000 {
+                    closestOverlay = polyline
+                    closestDistance = delta
+                }
+            }
+        }
+        
+        return closestOverlay
+    }
 }

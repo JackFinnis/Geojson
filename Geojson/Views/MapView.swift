@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MapView: UIViewRepresentable {
-    @Binding var selectedPoint: Point?
+    @Binding var selectedAnnotation: Annotation?
 
     let data: GeoData
     let mapStandard: Bool
@@ -29,17 +29,15 @@ struct MapView: UIViewRepresentable {
         mapView.layoutMargins = .init(length: preview ? -25 : 5)
         mapView.showsUserTrackingButton = !preview
         mapView.pitchButtonVisibility = preview ? .hidden : .visible
-        
-        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMarkerAnnotationView.className)
-        mapView.register(OverlayAnnotationView.self, forAnnotationViewWithReuseIdentifier: OverlayAnnotationView.className)
+        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
         
         mapView.addAnnotations(data.points)
-        mapView.addAnnotations(data.multiPolylines)
-        mapView.addAnnotations(data.multiPolygons)
         mapView.addOverlays(data.multiPolylines, level: .aboveRoads)
         mapView.addOverlays(data.multiPolygons, level: .aboveRoads)
         mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: preview ? 35 : 10), animated: false)
         
+        let tapRecognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap))
+        mapView.addGestureRecognizer(tapRecognizer)
         let longPressRecognizer = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleLongPress))
         mapView.addGestureRecognizer(longPressRecognizer)
         
@@ -49,12 +47,13 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ mapView: MKMapView, context: Context) {
         mapView.preferredConfiguration = mapStandard ? MKStandardMapConfiguration(elevationStyle: .realistic) : MKHybridMapConfiguration(elevationStyle: .realistic)
         
-        if selectedPoint == nil {
+        if selectedAnnotation == nil {
             mapView.selectedAnnotations.forEach { annotation in
-                mapView.deselectAnnotation(annotation, animated: true)
-                mapView.removeAnnotation(annotation)
-                if let point = annotation as? Point, !point.isDroppedPin {
-                    mapView.addAnnotation(annotation)
+                if let point = annotation as? Point {
+                    mapView.deselectAnnotation(point, animated: true)
+                    if point.isDroppedPin {
+                        mapView.removeAnnotation(point)
+                    }
                 }
             }
         }
@@ -74,7 +73,7 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
             if let point = annotation as? Point {
-                parent.selectedPoint = point
+                parent.selectedAnnotation = point
             }
         }
         
@@ -100,14 +99,23 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
             if let point = annotation as? Point,
-               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.className, for: annotation) as? MKMarkerAnnotationView {
+               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
                 marker.titleVisibility = parent.preview ? .hidden : .adaptive
                 marker.displayPriority = .required
-                marker.glyphText = point.index.map(String.init)
+                marker.glyphText = point.strings.map(Int.init).first?.map(String.init)
                 marker.markerTintColor = point.color ?? UIColor(.orange)
                 return marker
             }
             return nil
+        }
+        
+        @objc
+        func handleTap(_ tap: UITapGestureRecognizer) {
+            guard parent.mapView.selectedAnnotations.isEmpty else { return }
+            let mapView = parent.mapView
+            let location = tap.location(in: mapView)
+            let coord = mapView.convert(location, toCoordinateFrom: mapView)
+            parent.selectedAnnotation = parent.data.closestOverlay(to: coord)
         }
         
         @objc

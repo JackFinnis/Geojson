@@ -14,12 +14,12 @@ struct FileView: View {
     let namespace: Namespace.ID
     
     @State var mapStandard = true
-    @State var selectedPoint: Point?
+    @State var selectedAnnotation: Annotation?
     
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                MapView(selectedPoint: $selectedPoint, data: data, mapStandard: mapStandard, preview: false)
+                MapView(selectedAnnotation: $selectedAnnotation, data: data, mapStandard: mapStandard, preview: false)
                     .ignoresSafeArea()
                 
                 Button {
@@ -32,18 +32,20 @@ struct FileView: View {
                 .mapButton()
                 .position(x: geo.size.width - 32, y: -22)
                 
-                Color.clear.mapBox()
-                    .confirmationDialog(selectedPoint?.name ?? "", isPresented: Binding(get: {
-                        selectedPoint != nil
+                Color.clear
+                    .mapBox()
+                    .confirmationDialog(selectedAnnotation?.strings.lines ?? "", isPresented: Binding(get: {
+                        selectedAnnotation is Point || selectedAnnotation?.strings.isNotEmpty ?? false
                     }, set: { isPresented in
                         if !isPresented {
-                            selectedPoint = nil
+                            selectedAnnotation = nil
                         }
-                    }), titleVisibility: selectedPoint?.name == nil ? .hidden : .visible) {
-                        if let selectedPoint {
+                    }), titleVisibility: (selectedAnnotation?.strings.isEmpty ?? true) ? .hidden : .visible) {
+                        Button("Close", role: .cancel) {}
+                        if let point = selectedAnnotation as? Point {
                             Button("Get Directions") {
                                 Task {
-                                    try? await getDirections(to: selectedPoint)
+                                    try? await point.openInMaps()
                                 }
                             }
                         }
@@ -66,12 +68,5 @@ struct FileView: View {
             CLLocationManager().requestWhenInUseAuthorization()
         }
         .zoomChild(id: file.id, in: namespace)
-    }
-    
-    nonisolated func getDirections(to point: Point) async throws {
-        guard let placemark = try await CLGeocoder().reverseGeocodeLocation(point.coordinate.location).first else { return }
-        let mapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
-        mapItem.name = point.title ?? mapItem.name
-        mapItem.openInMaps()
     }
 }

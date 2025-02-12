@@ -9,30 +9,39 @@ import Foundation
 import MapKit
 import GoogleMapsUtils
 
-struct Polygon {
+struct Polygon: Annotation {
     let mkPolygon: MKPolygon
     let color: UIColor?
+    let strings: [String]
+    
+    private init(mkPolygon: MKPolygon, color: UIColor?, strings: [String]) {
+        self.mkPolygon = mkPolygon
+        self.color = color
+        self.strings = strings.sorted(using: SortDescriptor(\.count))
+    }
 }
 
 extension Polygon {
-    init(polygon: GMUPolygon, style: GMUStyle?) {
+    init(polygon: GMUPolygon, placemark: GMUPlacemark, style: GMUStyle?) {
         let exteriorCoords = polygon.paths.first?.coords ?? []
         let interiorCoords = polygon.paths.dropFirst().map(\.coords)
         let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
-        self.init(mkPolygon: mkPolygon, color: style?.strokeColor ?? style?.fillColor)
+        self.init(mkPolygon: mkPolygon, color: style?.strokeColor ?? style?.fillColor, strings: [placemark.title, placemark.snippet].compactMap(\.self))
     }
     
     init(mkPolygon: MKPolygon, properties: Properties?) {
-        self.init(mkPolygon: mkPolygon, color: properties?.color_)
+        self.init(mkPolygon: mkPolygon, color: properties?.color, strings: properties?.strings ?? [])
     }
 }
 
 class MultiPolygon: NSObject {
     let mkMultiPolygon: MKMultiPolygon
+    let polygons: [Polygon]
     let color: UIColor?
     
-    init(mkMultiPolygon: MKMultiPolygon, color: UIColor?) {
-        self.mkMultiPolygon = mkMultiPolygon
+    init(color: UIColor?, polygons: [Polygon]) {
+        self.mkMultiPolygon = MKMultiPolygon(polygons.map(\.mkPolygon))
+        self.polygons = polygons
         self.color = color
     }
 }

@@ -15,12 +15,8 @@ class GeoParser {
     var geoData: GeoData {
         GeoData(
             points: points,
-            multiPolylines: Dictionary(grouping: polylines, by: \.color).map { color, polylines in
-                MultiPolyline(mkMultiPolyline: MKMultiPolyline(polylines.map(\.mkPolyline)), color: color)
-            },
-            multiPolygons: Dictionary(grouping: polygons, by: \.color).map { color, polygons in
-                MultiPolygon(mkMultiPolygon: MKMultiPolygon(polygons.map(\.mkPolygon)), color: color)
-            }
+            multiPolylines: Dictionary(grouping: polylines, by: \.color).map(MultiPolyline.init),
+            multiPolygons: Dictionary(grouping: polygons, by: \.color).map(MultiPolygon.init)
         )
     }
     
@@ -67,7 +63,8 @@ class GeoParser {
     
     func handleGeoJSONObject(_ object: MKGeoJSONObject, properties: Properties?) {
         if let feature = object as? MKGeoJSONFeature {
-            let properties = try? decoder.decode(Properties.self, from: feature.properties ?? .init())
+            let object = try? JSONSerialization.jsonObject(with: feature.properties ?? .init()) as? [String : Any]
+            let properties = object.map(Properties.init)
             feature.geometry.forEach { handleGeoJSONObject($0, properties: properties) }
         } else if let point = object as? MKPointAnnotation {
             points.append(Point(coordinate: point.coordinate, properties: properties))
@@ -110,33 +107,25 @@ class GeoParser {
             if let point = placemark.geometry as? GMUPoint {
                 points.append(Point(point: point, placemark: placemark, style: style))
             } else if let line = placemark.geometry as? GMULineString {
-                polylines.append(Polyline(line: line, style: style))
+                polylines.append(Polyline(line: line, placemark: placemark, style: style))
             } else if let polygon = placemark.geometry as? GMUPolygon {
-                polygons.append(Polygon(polygon: polygon, style: style))
+                polygons.append(Polygon(polygon: polygon, placemark: placemark, style: style))
             }
         }
     }
 }
 
-struct Properties: Codable {
-    private let name: String?
-    private let title: String?
-    private let address: String?
-    private let description: String?
-    private let color: String?
-    private let colour: String?
-    private let strokeColor: String?
-    private let strokeColour: String?
-    private let fillColor: String?
-    private let fillColour: String?
+struct Properties {
+    let map: [String : Any]
     
-    var color_: UIColor? {
-        [color, colour, strokeColor, strokeColour, fillColor, fillColour].compactMap(\.self).first?.hexColor
+    var strings: [String] {
+        let list: [Any?] = [map["title"], map["name"], map["description"], map["address"]] + Array(map.values)
+        let strings = list.compactMap { $0 as? String }
+        return strings.removingDuplicates()
     }
-    var title_: String? {
-        title ?? name
-    }
-    var subtitle_: String? {
-        description ?? address
+    
+    var color: UIColor? {
+        let color = (map["color"] ?? map["colour"]) as? String
+        return color?.hexColor
     }
 }
