@@ -96,11 +96,6 @@ struct FoldersView: View {
     }
 }
 
-struct FileData: Hashable {
-    let file: File
-    let data: GeoData
-}
-
 #Preview {
     FoldersView()
 }

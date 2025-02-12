@@ -17,6 +17,7 @@
 		04092D012C3B0BD10015EAE7 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04092D002C3B0BD10015EAE7 /* View.swift */; };
 		04092D0A2C3E03AB0015EAE7 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04092D092C3E03AB0015EAE7 /* Folder.swift */; };
 		0443D4322B9F968000018470 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443D4312B9F968000018470 /* MapView.swift */; };
+		044C1F3E2D5C9CBF00396E4D /* FileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F3D2D5C9CBF00396E4D /* FileData.swift */; };
 		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
 		049C0F75292936F600C6521A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* App.swift */; };
 		049C0F79292936F700C6521A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049C0F78292936F700C6521A /* Assets.xcassets */; };
@@ -54,6 +55,7 @@
 		04092D002C3B0BD10015EAE7 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		04092D092C3E03AB0015EAE7 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		0443D4312B9F968000018470 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		044C1F3D2D5C9CBF00396E4D /* FileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileData.swift; sourceTree = "<group>"; };
 		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		049C0F71292936F600C6521A /* Geojson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geojson.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +183,7 @@
 				04092CEC2C378A110015EAE7 /* GeoError.swift */,
 				04BCBC352D5C1ED0002BB5E8 /* GeoFileType.swift */,
 				04092CFC2C3B00E60015EAE7 /* File.swift */,
+				044C1F3D2D5C9CBF00396E4D /* FileData.swift */,
 				04092D092C3E03AB0015EAE7 /* Folder.swift */,
 				0402C61C2A0D0CF700238C51 /* Point.swift */,
 				04F435B32D56BD38005CA0ED /* Polyline.swift */,
@@ -269,6 +272,7 @@
 				04092D012C3B0BD10015EAE7 /* View.swift in Sources */,
 				04BCBC3C2D5C35FA002BB5E8 /* FilesView.swift in Sources */,
 				04092CFD2C3B00E60015EAE7 /* File.swift in Sources */,
+				044C1F3E2D5C9CBF00396E4D /* FileData.swift in Sources */,
 				04BA4C632B9E5073006AF820 /* GeoData.swift in Sources */,
 				0402C61D2A0D0CF700238C51 /* Point.swift in Sources */,
 				049E16812C00F10A00ABB106 /* UIEdgeInsets.swift in Sources */,
