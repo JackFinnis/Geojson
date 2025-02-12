@@ -34,23 +34,23 @@ struct FileView: View {
                 
                 Color.clear
                     .mapBox()
-                    .confirmationDialog(selectedAnnotation?.strings.lines ?? "", isPresented: Binding(get: {
-                        selectedAnnotation is Point || selectedAnnotation?.strings.isNotEmpty ?? false
+                    .confirmationDialog(selectedAnnotation?.properties.string ?? "", isPresented: Binding(get: {
+                        selectedAnnotation is Point || selectedAnnotation?.properties.dict.isNotEmpty ?? false
                     }, set: { isPresented in
                         if !isPresented {
                             selectedAnnotation = nil
                         }
-                    }), titleVisibility: (selectedAnnotation?.strings.isEmpty ?? true) ? .hidden : .visible) {
+                    }), titleVisibility: (selectedAnnotation?.properties.dict.isEmpty ?? true) ? .hidden : .visible) {
                         Button("Close", role: .cancel) {}
                         if let selectedAnnotation {
-                            if let url = selectedAnnotation.strings.compactMap(URL.init).first(where: UIApplication.shared.canOpenURL) {
+                            if let url = selectedAnnotation.properties.urls.first(where: UIApplication.shared.canOpenURL) {
                                 Button("Open URL") {
                                     UIApplication.shared.open(url)
                                 }
                             }
-                            if selectedAnnotation.strings.isNotEmpty {
+                            if selectedAnnotation.properties.dict.isNotEmpty {
                                 Button("Copy Details") {
-                                    UIPasteboard.general.string = selectedAnnotation.strings.lines
+                                    UIPasteboard.general.string = selectedAnnotation.properties.string
                                     Haptics.tap()
                                 }
                             }

@@ -12,7 +12,7 @@ import GoogleMapsUtils
 struct Polygon: Annotation {
     let mkPolygon: MKPolygon
     let color: UIColor?
-    let strings: [String]
+    let properties: Properties
 }
 
 extension Polygon {
@@ -20,11 +20,11 @@ extension Polygon {
         let exteriorCoords = polygon.paths.first?.coords ?? []
         let interiorCoords = polygon.paths.dropFirst().map(\.coords)
         let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
-        self.init(mkPolygon: mkPolygon, color: style?.strokeColor ?? style?.fillColor, strings: [placemark.title, placemark.snippet].compactMap(\.self))
+        self.init(mkPolygon: mkPolygon, color: style?.strokeColor ?? style?.fillColor, properties: placemark.properties)
     }
     
     init(mkPolygon: MKPolygon, properties: Properties?) {
-        self.init(mkPolygon: mkPolygon, color: properties?.color, strings: properties?.strings ?? [])
+        self.init(mkPolygon: mkPolygon, color: properties?.color, properties: properties ?? .empty)
     }
 }
 

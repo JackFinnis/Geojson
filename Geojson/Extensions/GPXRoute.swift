@@ -10,7 +10,11 @@ import CoreGPX
 import CoreLocation
 
 extension GPXRoute {
-    var strings: [String] {
-        [name, comment, desc].compactMap(\.self)
+    var properties: Properties {
+        var dict: [String : Any] = [:]
+        dict["Name"] = name
+        dict["Comment"] = comment
+        dict["Description"] = desc
+        return .init(dict: dict)
     }
 }

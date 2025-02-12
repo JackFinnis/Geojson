@@ -15,7 +15,11 @@ extension GPXWaypoint {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    var strings: [String] {
-        [name, symbol, comment, desc].compactMap(\.self)
+    var properties: Properties {
+        var dict: [String : Any] = [:]
+        dict["Name"] = name
+        dict["Comment"] = comment
+        dict["Description"] = desc
+        return .init(dict: dict)
     }
 }

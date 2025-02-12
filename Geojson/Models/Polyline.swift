@@ -13,29 +13,29 @@ import CoreGPX
 struct Polyline: Annotation {
     let mkPolyline: MKPolyline
     let color: UIColor?
-    let strings: [String]
+    let properties: Properties
 }
 
 extension Polyline {
     init(route: GPXRoute) {
         let coords = route.points.compactMap(\.coord)
         let mkPolyline = MKPolyline(coords: coords)
-        self.init(mkPolyline: mkPolyline, color: nil, strings: route.strings)
+        self.init(mkPolyline: mkPolyline, color: nil, properties: route.properties)
     }
     
     init(segment: GPXTrackSegment) {
         let coords = segment.points.compactMap(\.coord)
         let mkPolyline = MKPolyline(coords: coords)
-        self.init(mkPolyline: mkPolyline, color: nil, strings: [])
+        self.init(mkPolyline: mkPolyline, color: nil, properties: .empty)
     }
     
     init(mkPolyline: MKPolyline, properties: Properties?) {
-        self.init(mkPolyline: mkPolyline, color: properties?.color, strings: properties?.strings ?? [])
+        self.init(mkPolyline: mkPolyline, color: properties?.color, properties: properties ?? .empty)
     }
     
     init(line: GMULineString, placemark: GMUPlacemark, style: GMUStyle?) {
         let mkPolyline = MKPolyline(coords: line.path.coords)
-        self.init(mkPolyline: mkPolyline, color: style?.strokeColor, strings: placemark.strings)
+        self.init(mkPolyline: mkPolyline, color: style?.strokeColor, properties: placemark.properties)
     }
 }
 

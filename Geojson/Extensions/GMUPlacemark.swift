@@ -8,7 +8,10 @@
 import GoogleMapsUtils
 
 extension GMUPlacemark {
-    var strings: [String] {
-        [title, snippet].compactMap(\.self)
+    var properties: Properties {
+        var dict: [String : Any] = [:]
+        dict["Title"] = title
+        dict["Snippet"] = snippet
+        return .init(dict: dict)
     }
 }

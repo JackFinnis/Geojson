@@ -8,5 +8,5 @@
 import MapKit
 
 protocol Annotation {
-    var strings: [String] { get }
+    var properties: Properties { get }
 }

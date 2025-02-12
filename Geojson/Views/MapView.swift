@@ -102,7 +102,7 @@ struct MapView: UIViewRepresentable {
                let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
                 marker.titleVisibility = parent.preview ? .hidden : .adaptive
                 marker.displayPriority = .required
-                marker.glyphText = point.strings.map(Int.init).first?.map(String.init)
+                marker.glyphText = point.index.map(String.init)
                 marker.markerTintColor = point.color ?? UIColor(.orange)
                 return marker
             }

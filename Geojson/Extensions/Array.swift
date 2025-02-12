@@ -12,11 +12,9 @@ extension Array {
     subscript(safe index: Index) -> Element? {
         indices.contains(index) ? self[index] : nil
     }
-}
-
-extension Array {
-    var asStrings: [String] {
-        compactMap { $0 as? String }
+    
+    var second: Element? {
+        self[safe: 1]
     }
 }
 
@@ -30,11 +28,5 @@ extension Array where Element: MKAnnotation {
     var rect: MKMapRect {
         let coords = map(\.coordinate)
         return MKPolyline(coords: coords).boundingMapRect
-    }
-}
-
-extension Array where Element == String {
-    var lines: String {
-        joined(separator: "\n")
     }
 }

@@ -115,17 +115,3 @@ class GeoParser {
     }
 }
 
-struct Properties {
-    let dict: [String : Any]
-    
-    var strings: [String] {
-        var dict = dict
-        let commonKeys = ["title", "name", "description", "address"]
-        return commonKeys.map { dict.removeValue(forKey: $0) }.asStrings + Array(dict.values).asStrings.sorted(using: SortDescriptor(\.count))
-    }
-    
-    var color: UIColor? {
-        let color = (dict["color"] ?? dict["colour"]) as? String
-        return color?.hexColor
-    }
-}
