@@ -21,7 +21,7 @@ enum GeoError: Error {
     var description: String {
         switch self {
         case .unsupportedFileType:
-            return "This file type is not supported. Only files with the following file extensions can be imported: .json, .geojson, .gpx, .kml, .kmz"
+            return "This file type is not supported. Only files with the following file extensions can be imported: .geojson, .gpx, .kml"
         case .readFile:
             return "Unable to read this file."
         case .writeFile:

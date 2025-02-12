@@ -20,10 +20,6 @@ class Polygon: NSObject {
 }
 
 extension Polygon {
-    convenience init(mkPolygon: MKPolygon) {
-        self.init(mkPolygon: mkPolygon, color: nil)
-    }
-    
     convenience init(polygon: GMUPolygon, style: GMUStyle?) {
         let exteriorCoords = polygon.paths.first?.coords ?? []
         let interiorCoords = polygon.paths.dropFirst().map(\.coords)

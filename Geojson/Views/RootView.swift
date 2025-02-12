@@ -149,10 +149,8 @@ struct RootView: View {
             path.append(FileData(file: file, data: geoData))
             modelContext.insert(file)
             Haptics.tap()
-        } catch let error as GeoError {
-            fail(error: error)
         } catch {
-            print(error)
+            fail(error: error)
         }
     }
 }
@@ -227,7 +225,7 @@ struct PrimaryActions: View {
         .buttonStyle(.borderedProminent)
         .buttonBorderShape(.circle)
         .font(.headline)
-        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.json, .geojson, .gpx, .kml, .kmz]) { result in
+        .fileImporter(isPresented: $showFileImporter, allowedContentTypes: GeoFileType.allCases.map(\.type)) { result in
             switch result {
             case .failure(let error):
                 print(error)

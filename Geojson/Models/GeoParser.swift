@@ -31,24 +31,18 @@ class GeoParser {
     private let decoder = JSONDecoder()
     
     // MARK: - Parse File
-    func parse(url: URL) throws -> GeoData {
-        let data: Data
-        do {
-            data = try Data(contentsOf: url)
-        } catch {
-            print(error)
-            throw GeoError.readFile
+    func parse(url: URL) throws(GeoError) -> GeoData {
+        guard let type = GeoFileType(rawValue: url.pathExtension) else {
+            throw GeoError.unsupportedFileType
         }
         
-        switch url.pathExtension {
-        case "json", "geojson":
-            try parseGeoJSON(data: data)
-        case "gpx":
-            try parseGPX(data: data)
-        case "kml", "kmz":
-            try parseKML(data: data, fileExtension: url.pathExtension)
-        default:
-            throw GeoError.unsupportedFileType
+        switch type {
+        case .geojson:
+            try parseGeoJSON(url: url)
+        case .kml:
+            try parseKML(url: url)
+        case .gpx:
+            try parseGPX(url: url)
         }
         
         guard !geoData.empty else {
@@ -59,9 +53,10 @@ class GeoParser {
     }
     
     // MARK: - Parse GeoJSON
-    func parseGeoJSON(data: Data) throws {
+    func parseGeoJSON(url: URL) throws(GeoError) {
         let objects: [MKGeoJSONObject]
         do {
+            let data = try Data(contentsOf: url)
             objects = try MKGeoJSONDecoder().decode(data)
         } catch {
             print(error)
@@ -91,9 +86,9 @@ class GeoParser {
     }
     
     // MARK: - Parse GPX
-    func parseGPX(data: Data) throws {
-        let parser = GPXParser(withData: data)
-        guard let root = parser.parsedData() else {
+    func parseGPX(url: URL) throws(GeoError) {
+        guard let parser = GPXParser(withURL: url),
+              let root = parser.parsedData() else {
             throw GeoError.invalidGPX
         }
         guard root.waypoints.isNotEmpty || root.routes.isNotEmpty || root.tracks.isNotEmpty else {
@@ -106,13 +101,14 @@ class GeoParser {
     }
     
     // MARK: - Parse KML
-    func parseKML(data: Data, fileExtension: String) throws {
-        let parser = GMUKMLParser(data: data)
+    func parseKML(url: URL) throws(GeoError) {
+        let parser = GMUKMLParser(url: url)
         parser.parse()
         
         let placemarks = parser.placemarks.compactMap { $0 as? GMUPlacemark }
         placemarks.forEach { placemark in
             let style = parser.styles.first { $0.styleID.removingStyleVariant == placemark.styleUrl }
+            print(parser.styles.filter { $0.styleID.removingStyleVariant == placemark.styleUrl }.map(\.fillColor))
             if let point = placemark.geometry as? GMUPoint {
                 points.append(Point(point: point, placemark: placemark, style: style))
             } else if let line = placemark.geometry as? GMULineString {
@@ -121,28 +117,5 @@ class GeoParser {
                 polygons.append(Polygon(polygon: polygon, style: style))
             }
         }
-    }
-}
-
-struct Properties: Codable {
-    private let name: String?
-    private let title: String?
-    private let address: String?
-    private let description: String?
-    private let color: String?
-    private let colour: String?
-    private let strokeColor: String?
-    private let strokeColour: String?
-    private let fillColor: String?
-    private let fillColour: String?
-    
-    var color_: UIColor? {
-        [color, colour, strokeColor, strokeColour, fillColor, fillColour].compactMap(\.self).first?.hexColor
-    }
-    var title_: String? {
-        title ?? name
-    }
-    var subtitle_: String? {
-        description ?? address
     }
 }

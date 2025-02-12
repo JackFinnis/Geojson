@@ -30,18 +30,6 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>Keyhole Markup Language</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.google.earth.kmz</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
 			<string>GeoJSON</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -52,18 +40,6 @@
 				<string>public.geojson</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>GeoJSON</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>public.json</string>
-			</array>
-		</dict>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -72,25 +48,6 @@
 	</dict>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.zip-archive</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Keyhole Markup Language</string>
-			<key>UTTypeIcons</key>
-			<dict/>
-			<key>UTTypeIdentifier</key>
-			<string>com.google.earth.kmz</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>kmz</string>
-				</array>
-			</dict>
-		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
@@ -145,21 +102,6 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>geojson</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeDescription</key>
-			<string>GeoJSON</string>
-			<key>UTTypeIcons</key>
-			<dict/>
-			<key>UTTypeIdentifier</key>
-			<string>public.json</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>json</string>
 				</array>
 			</dict>
 		</dict>

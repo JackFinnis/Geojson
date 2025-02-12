@@ -21,6 +21,12 @@ class Point: NSObject, MKAnnotation {
         title == Self.droppedPinTitle
     }
     
+    var name: String? {
+        guard let title, title.isNotEmpty else { return nil }
+        guard let subtitle, subtitle.isNotEmpty else { return title }
+        return title + "\n" + subtitle
+    }
+    
     static let droppedPinTitle = "Dropped Pin"
     
     private init(coordinate: CLLocationCoordinate2D, title: String?, subtitle: String?, index: Int?, color: UIColor?) {
@@ -46,7 +52,7 @@ extension Point {
     }
     
     convenience init(point: GMUPoint, placemark: GMUPlacemark, style: GMUStyle?) {
-        self.init(coordinate: point.coordinate, title: placemark.title, subtitle: placemark.snippet, index: nil, color: style?.fillColor)
+        self.init(coordinate: point.coordinate, title: placemark.title ?? style?.title, subtitle: placemark.snippet, index: nil, color: style?.fillColor)
     }
     
     convenience init(coordinate: CLLocationCoordinate2D, properties: Properties?) {
