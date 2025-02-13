@@ -16,6 +16,10 @@ extension Array {
     var second: Element? {
         self[safe: 1]
     }
+    
+    var middle: Element? {
+        self[safe: count/2]
+    }
 }
 
 extension Array where Element: MKOverlay {

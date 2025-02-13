@@ -11,6 +11,7 @@ import MapKit
 struct MapView: UIViewRepresentable {
     @Binding var selectedAnnotation: Annotation?
 
+    let file: File
     let data: GeoData
     let mapStandard: Bool
     let preview: Bool
@@ -29,9 +30,13 @@ struct MapView: UIViewRepresentable {
         mapView.layoutMargins = .init(length: preview ? -25 : 5)
         mapView.showsUserTrackingButton = !preview
         mapView.pitchButtonVisibility = preview ? .hidden : .visible
-        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+        
+        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMarkerAnnotationView.id)
+        mapView.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: AnnotationView.id)
         
         mapView.addAnnotations(data.points)
+        mapView.addAnnotations(data.polygons)
+        mapView.addAnnotations(data.polylines)
         mapView.addOverlays(data.multiPolylines, level: .aboveRoads)
         mapView.addOverlays(data.multiPolygons, level: .aboveRoads)
         mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: preview ? 35 : 10), animated: false)
@@ -54,10 +59,19 @@ struct MapView: UIViewRepresentable {
                 }
             }
         }
+        
+        if file.titleKey != context.coordinator.titleKey {
+            context.coordinator.titleKey = file.titleKey
+            mapView.removeAnnotations(data.polylines)
+            mapView.removeAnnotations(data.polygons)
+            mapView.addAnnotations(data.polylines)
+            mapView.addAnnotations(data.polygons)
+        }
     }
     
     class Coordinator: NSObject, MKMapViewDelegate {
         let parent: MapView
+        var titleKey: String?
         
         init(_ parent: MapView) {
             self.parent = parent
@@ -69,13 +83,12 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
-            if let point = annotation as? Point {
-                parent.selectedAnnotation = point
+            if let annotation = annotation as? Annotation {
+                parent.selectedAnnotation = annotation
             }
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
-            let defaultColor = UIColor(.orange)
             let lineWidth = parent.preview ? 2.0 : 3.0
             if let multiPolyline = overlay as? MultiPolyline {
                 let color = multiPolyline.color ?? defaultColor
@@ -96,12 +109,16 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
             if let point = annotation as? Point,
-               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation) as? MKMarkerAnnotationView {
+               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.id, for: annotation) as? MKMarkerAnnotationView {
                 marker.titleVisibility = parent.preview ? .hidden : .adaptive
                 marker.displayPriority = .required
-                marker.glyphText = point.index.map(String.init)
+                marker.glyphText = point.properties.glyphText
                 marker.markerTintColor = point.color ?? UIColor(.orange)
                 return marker
+            } else if let annotation = annotation as? Annotation,
+                      let view = mapView.dequeueReusableAnnotationView(withIdentifier: AnnotationView.id, for: annotation) as? AnnotationView {
+                view.label.text = annotation.properties.getTitle(key: titleKey)
+                return view
             }
             return nil
         }

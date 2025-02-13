@@ -13,11 +13,7 @@ import UniformTypeIdentifiers
 
 class GeoParser {
     var geoData: GeoData {
-        GeoData(
-            points: points,
-            multiPolylines: Dictionary(grouping: polylines, by: \.color).map(MultiPolyline.init),
-            multiPolygons: Dictionary(grouping: polygons, by: \.color).map(MultiPolygon.init)
-        )
+        .init(points: points, polylines: polylines, polygons: polygons)
     }
     
     private var points: [Point] = []

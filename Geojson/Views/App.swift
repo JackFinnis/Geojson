@@ -12,6 +12,8 @@ import SwiftData
 // https://www.google.com/maps/d/u/0/edit?mid=1SvfUi70Q0zSnkRsslNNGDfLixF39NmA
 // https://www.google.com/maps/d/u/0/kml?mid=1SvfUi70Q0zSnkRsslNNGDfLixF39NmA&forcekml=1
 
+let defaultColor = UIColor(.orange)
+
 @main
 struct GeodataApp: App {
     var body: some Scene {

@@ -9,33 +9,34 @@ import Foundation
 import MapKit
 import GoogleMapsUtils
 
-struct Polygon: Annotation {
+class Polygon: Annotation {
     let mkPolygon: MKPolygon
-    let color: UIColor?
-    let properties: Properties
+    
+    init(mkPolygon: MKPolygon, color: UIColor?, properties: Properties) {
+        self.mkPolygon = mkPolygon
+        super.init(coordinate: mkPolygon.coordinate, properties: properties, color: color)
+    }
 }
 
 extension Polygon {
-    init(polygon: GMUPolygon, placemark: GMUPlacemark, style: GMUStyle?) {
+    convenience init(polygon: GMUPolygon, placemark: GMUPlacemark, style: GMUStyle?) {
         let exteriorCoords = polygon.paths.first?.coords ?? []
         let interiorCoords = polygon.paths.dropFirst().map(\.coords)
         let mkPolygon = MKPolygon(exteriorCoords: exteriorCoords, interiorCoords: interiorCoords)
         self.init(mkPolygon: mkPolygon, color: style?.strokeColor ?? style?.fillColor, properties: placemark.properties)
     }
     
-    init(mkPolygon: MKPolygon, properties: Properties?) {
+    convenience init(mkPolygon: MKPolygon, properties: Properties?) {
         self.init(mkPolygon: mkPolygon, color: properties?.color, properties: properties ?? .empty)
     }
 }
 
 class MultiPolygon: NSObject {
     let mkMultiPolygon: MKMultiPolygon
-    let polygons: [Polygon]
     let color: UIColor?
     
     init(color: UIColor?, polygons: [Polygon]) {
         self.mkMultiPolygon = MKMultiPolygon(polygons.map(\.mkPolygon))
-        self.polygons = polygons
         self.color = color
     }
 }

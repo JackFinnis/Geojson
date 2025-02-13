@@ -23,7 +23,9 @@
 		044C1F602D5CC5CD00396E4D /* GPXRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F5F2D5CC5CD00396E4D /* GPXRoute.swift */; };
 		044C1F642D5D035D00396E4D /* MKMapRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F632D5D035D00396E4D /* MKMapRect.swift */; };
 		044C1F662D5D054A00396E4D /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F652D5D054A00396E4D /* Properties.swift */; };
-		044C1F8C2D5D73FE00396E4D /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F8B2D5D73FE00396E4D /* AnnotationView.swift */; };
+		044C1F8C2D5D73FE00396E4D /* PropertiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F8B2D5D73FE00396E4D /* PropertiesView.swift */; };
+		044C1F8E2D5DF1C500396E4D /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F8D2D5DF1BC00396E4D /* AnnotationView.swift */; };
+		044C1F902D5DF1F800396E4D /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F8F2D5DF1EF00396E4D /* NSObject.swift */; };
 		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
 		049C0F75292936F600C6521A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* App.swift */; };
 		049C0F79292936F700C6521A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049C0F78292936F700C6521A /* Assets.xcassets */; };
@@ -67,7 +69,9 @@
 		044C1F5F2D5CC5CD00396E4D /* GPXRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXRoute.swift; sourceTree = "<group>"; };
 		044C1F632D5D035D00396E4D /* MKMapRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapRect.swift; sourceTree = "<group>"; };
 		044C1F652D5D054A00396E4D /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
-		044C1F8B2D5D73FE00396E4D /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
+		044C1F8B2D5D73FE00396E4D /* PropertiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertiesView.swift; sourceTree = "<group>"; };
+		044C1F8D2D5DF1BC00396E4D /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
+		044C1F8F2D5DF1EF00396E4D /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		049C0F71292936F600C6521A /* Geojson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geojson.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +163,7 @@
 				04BA4C5C2B9E4AB5006AF820 /* MKPolyline.swift */,
 				044C1F632D5D035D00396E4D /* MKMapRect.swift */,
 				0402C61A2A0D0C3700238C51 /* MKMultiPoint.swift */,
+				044C1F8F2D5DF1EF00396E4D /* NSObject.swift */,
 				04F435B72D56BDF4005CA0ED /* String.swift */,
 				04F435B12D56BC2B005CA0ED /* UIColor.swift */,
 				049E16802C00F10A00ABB106 /* UIEdgeInsets.swift */,
@@ -184,8 +189,9 @@
 				04BCBC3B2D5C35FA002BB5E8 /* FilesView.swift */,
 				04092CFA2C3AFD880015EAE7 /* FileRow.swift */,
 				049E167E2C00EDDE00ABB106 /* FileView.swift */,
-				044C1F8B2D5D73FE00396E4D /* AnnotationView.swift */,
+				044C1F8B2D5D73FE00396E4D /* PropertiesView.swift */,
 				0443D4312B9F968000018470 /* MapView.swift */,
+				044C1F8D2D5DF1BC00396E4D /* AnnotationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -302,10 +308,12 @@
 				0443D4322B9F968000018470 /* MapView.swift in Sources */,
 				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
 				04BCBC402D5C3B65002BB5E8 /* ImportButton.swift in Sources */,
-				044C1F8C2D5D73FE00396E4D /* AnnotationView.swift in Sources */,
+				044C1F8C2D5D73FE00396E4D /* PropertiesView.swift in Sources */,
 				049E167F2C00EDDE00ABB106 /* FileView.swift in Sources */,
+				044C1F902D5DF1F800396E4D /* NSObject.swift in Sources */,
 				049C0F75292936F600C6521A /* App.swift in Sources */,
 				047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */,
+				044C1F8E2D5DF1C500396E4D /* AnnotationView.swift in Sources */,
 				04BA4C612B9E4FAB006AF820 /* FoldersView.swift in Sources */,
 				04BCBC382D5C28F7002BB5E8 /* Int.swift in Sources */,
 				04BA4C652B9E50D5006AF820 /* GeoParser.swift in Sources */,

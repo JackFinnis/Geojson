@@ -10,30 +10,34 @@ import MapKit
 import GoogleMapsUtils
 import CoreGPX
 
-struct Polyline: Annotation {
+class Polyline: Annotation {
     let mkPolyline: MKPolyline
-    let color: UIColor?
-    let properties: Properties
+    
+    init(mkPolyline: MKPolyline, color: UIColor?, properties: Properties) {
+        self.mkPolyline = mkPolyline
+        let coordinate = mkPolyline.coordinates.middle ?? mkPolyline.coordinate
+        super.init(coordinate: coordinate, properties: properties, color: color)
+    }
 }
 
 extension Polyline {
-    init(route: GPXRoute) {
+    convenience init(route: GPXRoute) {
         let coords = route.points.compactMap(\.coord)
         let mkPolyline = MKPolyline(coords: coords)
         self.init(mkPolyline: mkPolyline, color: nil, properties: route.properties)
     }
     
-    init(segment: GPXTrackSegment) {
+    convenience init(segment: GPXTrackSegment) {
         let coords = segment.points.compactMap(\.coord)
         let mkPolyline = MKPolyline(coords: coords)
         self.init(mkPolyline: mkPolyline, color: nil, properties: .empty)
     }
     
-    init(mkPolyline: MKPolyline, properties: Properties?) {
+    convenience init(mkPolyline: MKPolyline, properties: Properties?) {
         self.init(mkPolyline: mkPolyline, color: properties?.color, properties: properties ?? .empty)
     }
     
-    init(line: GMULineString, placemark: GMUPlacemark, style: GMUStyle?) {
+    convenience init(line: GMULineString, placemark: GMUPlacemark, style: GMUStyle?) {
         let mkPolyline = MKPolyline(coords: line.path.coords)
         self.init(mkPolyline: mkPolyline, color: style?.strokeColor, properties: placemark.properties)
     }
@@ -41,12 +45,10 @@ extension Polyline {
 
 class MultiPolyline: NSObject {
     let mkMultiPolyline: MKMultiPolyline
-    let polylines: [Polyline]
     let color: UIColor?
     
     init(color: UIColor?, polylines: [Polyline]) {
         self.mkMultiPolyline = MKMultiPolyline(polylines.map(\.mkPolyline))
-        self.polylines = polylines
         self.color = color
     }
 }

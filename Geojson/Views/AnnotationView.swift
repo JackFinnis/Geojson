@@ -5,91 +5,51 @@
 //  Created by Jack Finnis on 13/02/2025.
 //
 
-import SwiftUI
+import MapKit
+import UIKit
 
-struct AnnotationView: View {
-    var file: File
-    let annotation: Annotation
+class AnnotationView: MKAnnotationView {
+    let label = MapLabel()
     
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.openURL) var openURL
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
     
-    var body: some View {
-        NavigationStack {
-            List(annotation.properties.dict.sorted(using: SortDescriptor(\.key)), id: \.key) { key, value in
-                let string = "\(value)"
-                let title = key == file.titleKey
-                Menu {
-                    if let url = URL(string: string), UIApplication.shared.canOpenURL(url) {
-                        Button {
-                            openURL(url)
-                        } label: {
-                            Label("Open", systemImage: "safari")
-                        }
-                    }
-                    Button {
-                        UIPasteboard.general.string = string
-                        Haptics.tap()
-                    } label: {
-                        Label("Copy", systemImage: "doc.on.doc")
-                    }
-                    if title {
-                        Button(role: .destructive) {
-                            file.titleKey = nil
-                        } label: {
-                            Label("Undo Title", systemImage: "star.slash")
-                        }
-                    } else {
-                        Button {
-                            file.titleKey = key
-                        } label: {
-                            Label("Set Title", systemImage: "star")
-                        }
-                    }
-                } label: {
-                    HStack {
-                        Text(key)
-                            .layoutPriority(1)
-                        Spacer()
-                        Text(string)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.trailing)
-                    }
-                }
-                .tint(title ? Color.accentColor : .primary)
-            }
-            .listStyle(.plain)
-            .navigationTitle((file.titleKey.map(annotation.properties.getString) ?? nil) ?? annotation.properties.title ?? "")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    if let point = annotation as? Point {
-                        Button {
-                            Task {
-                                try? await point.openInMaps()
-                            }
-                        } label: {
-                            Image(systemName: "map")
-                        }
-                        .font(.headline)
-                        .buttonBorderShape(.circle)
-                        .buttonStyle(.bordered)
-                        .foregroundStyle(.secondary)
-                    }
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                    }
-                    .font(.headline)
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.bordered)
-                    .foregroundStyle(.secondary)
-                }
-            }
-        }
-        .presentationDetents([.medium, .large])
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+    
+    override func prepareForReuse() {
+        label.text = nil
+    }
+    
+    func setup() {
+        frame = CGRect(x: 0, y: 0, width: 150, height: 50)
+        
+        label.frame = frame
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        addSubview(label)
+        
+        displayPriority = .defaultHigh
+        collisionMode = .rectangle
+    }
+}
+
+class MapLabel: UILabel {
+    override func drawText(in rect: CGRect) {
+        let context = UIGraphicsGetCurrentContext()
+        context?.setLineWidth(2)
+        context?.setLineJoin(CGLineJoin.round)
+        context?.setTextDrawingMode(CGTextDrawingMode.stroke)
+        textColor = .systemBackground
+        super.drawText(in: rect)
+        
+        context?.setTextDrawingMode(.fill)
+        textColor = .label
+        super.drawText(in: rect)
     }
 }

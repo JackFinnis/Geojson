@@ -19,7 +19,7 @@ struct FileView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                MapView(selectedAnnotation: $selectedAnnotation, data: data, mapStandard: mapStandard, preview: false)
+                MapView(selectedAnnotation: $selectedAnnotation, file: file, data: data, mapStandard: mapStandard, preview: false)
                     .ignoresSafeArea()
                 
                 Button {
@@ -53,7 +53,7 @@ struct FileView: View {
             }
         }) {
             if let selectedAnnotation {
-                AnnotationView(file: file, annotation: selectedAnnotation)
+                PropertiesView(file: file, annotation: selectedAnnotation)
             }
         }
         .onAppear {

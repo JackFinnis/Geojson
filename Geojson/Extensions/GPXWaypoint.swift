@@ -22,6 +22,7 @@ extension GPXWaypoint {
         dict["description"] = desc
         dict["elevation"] = elevation
         dict["source"] = source
+        dict["symbol"] = symbol
         links.enumerated().forEach { i, link in
             dict["link\(i)"] = link.href
         }
