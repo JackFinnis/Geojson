@@ -126,7 +126,6 @@ struct MapView: UIViewRepresentable {
         
         @objc
         func handleTap(_ tap: UITapGestureRecognizer) {
-            guard parent.mapView.selectedAnnotations.isEmpty else { return }
             let mapView = parent.mapView
             let location = tap.location(in: mapView)
             let coord = mapView.convert(location, toCoordinateFrom: mapView)
