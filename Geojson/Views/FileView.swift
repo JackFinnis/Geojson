@@ -31,38 +31,6 @@ struct FileView: View {
                 }
                 .mapButton()
                 .position(x: geo.size.width - 32, y: -22)
-                
-                Color.clear
-                    .mapBox()
-                    .confirmationDialog(selectedAnnotation?.properties.string ?? "", isPresented: Binding(get: {
-                        selectedAnnotation is Point || selectedAnnotation?.properties.dict.isNotEmpty ?? false
-                    }, set: { isPresented in
-                        if !isPresented {
-                            selectedAnnotation = nil
-                        }
-                    }), titleVisibility: (selectedAnnotation?.properties.dict.isEmpty ?? true) ? .hidden : .visible) {
-                        Button("Close", role: .cancel) {}
-                        if let selectedAnnotation {
-                            if let url = selectedAnnotation.properties.urls.first(where: UIApplication.shared.canOpenURL) {
-                                Button("Open URL") {
-                                    UIApplication.shared.open(url)
-                                }
-                            }
-                            if selectedAnnotation.properties.dict.isNotEmpty {
-                                Button("Copy Details") {
-                                    UIPasteboard.general.string = selectedAnnotation.properties.string
-                                    Haptics.tap()
-                                }
-                            }
-                            if let point = selectedAnnotation as? Point {
-                                Button("Get Directions") {
-                                    Task {
-                                        try? await point.openInMaps()
-                                    }
-                                }
-                            }
-                        }
-                    }
             }
         }
         .toolbar {
@@ -77,9 +45,21 @@ struct FileView: View {
         }
         .navigationTitle($file.name)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: .init(get: {
+            selectedAnnotation is Point || selectedAnnotation?.properties.dict.isNotEmpty ?? false
+        }, set: { isPresented in
+            if !isPresented {
+                selectedAnnotation = nil
+            }
+        })) {
+            if let selectedAnnotation {
+                AnnotationView(annotation: selectedAnnotation)
+            }
+        }
         .onAppear {
             CLLocationManager().requestWhenInUseAuthorization()
         }
         .zoomChild(id: file.id, in: namespace)
     }
 }
+

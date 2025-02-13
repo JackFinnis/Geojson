@@ -12,9 +12,9 @@ import CoreLocation
 extension GPXRoute {
     var properties: Properties {
         var dict: [String : Any] = [:]
-        dict["Name"] = name
-        dict["Comment"] = comment
-        dict["Description"] = desc
+        dict["name"] = name
+        dict["comment"] = comment
+        dict["description"] = desc
         return .init(dict: dict)
     }
 }

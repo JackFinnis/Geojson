@@ -23,6 +23,7 @@
 		044C1F602D5CC5CD00396E4D /* GPXRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F5F2D5CC5CD00396E4D /* GPXRoute.swift */; };
 		044C1F642D5D035D00396E4D /* MKMapRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F632D5D035D00396E4D /* MKMapRect.swift */; };
 		044C1F662D5D054A00396E4D /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F652D5D054A00396E4D /* Properties.swift */; };
+		044C1F8C2D5D73FE00396E4D /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C1F8B2D5D73FE00396E4D /* AnnotationView.swift */; };
 		047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */; };
 		049C0F75292936F600C6521A /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C0F74292936F600C6521A /* App.swift */; };
 		049C0F79292936F700C6521A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049C0F78292936F700C6521A /* Assets.xcassets */; };
@@ -66,6 +67,7 @@
 		044C1F5F2D5CC5CD00396E4D /* GPXRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPXRoute.swift; sourceTree = "<group>"; };
 		044C1F632D5D035D00396E4D /* MKMapRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMapRect.swift; sourceTree = "<group>"; };
 		044C1F652D5D054A00396E4D /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
+		044C1F8B2D5D73FE00396E4D /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		047BF5602A7405FA0022505C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047BF5632A7432490022505C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		049C0F71292936F600C6521A /* Geojson.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Geojson.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,6 +184,7 @@
 				04BCBC3B2D5C35FA002BB5E8 /* FilesView.swift */,
 				04092CFA2C3AFD880015EAE7 /* FileRow.swift */,
 				049E167E2C00EDDE00ABB106 /* FileView.swift */,
+				044C1F8B2D5D73FE00396E4D /* AnnotationView.swift */,
 				0443D4312B9F968000018470 /* MapView.swift */,
 			);
 			path = Views;
@@ -299,6 +302,7 @@
 				0443D4322B9F968000018470 /* MapView.swift in Sources */,
 				0402C61B2A0D0C3700238C51 /* MKMultiPoint.swift in Sources */,
 				04BCBC402D5C3B65002BB5E8 /* ImportButton.swift in Sources */,
+				044C1F8C2D5D73FE00396E4D /* AnnotationView.swift in Sources */,
 				049E167F2C00EDDE00ABB106 /* FileView.swift in Sources */,
 				049C0F75292936F600C6521A /* App.swift in Sources */,
 				047BF5642A7432490022505C /* CLLocationCoordinate2D.swift in Sources */,

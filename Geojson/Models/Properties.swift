@@ -8,31 +8,26 @@
 import SwiftUI
 
 struct Properties {
-    static var empty: Properties {
-        .init(dict: [:])
-    }
-    
     let dict: [String : Any]
     
-    var urls: [URL] {
-        dict.values.compactMap { $0 as? String }.compactMap(URL.init)
-    }
-    
-    var string: String {
-        dict.map { key, value in
-            "\(key): \(value)"
-        }.joined(separator: "\n")
-    }
-    
     var title: String? {
-        (dict["title"] ?? dict["name"]) as? String
+        getStrings("title", "name").first
     }
-    
     var subtitle: String? {
-        (dict["subtitle"] ?? dict["description"] ?? dict["address"]) as? String
+        getStrings("subtitle", "description", "address").first
+    }
+    var color: UIColor? {
+        getStrings("color", "colour").first?.hexColor
     }
     
-    var color: UIColor? {
-        ((dict["color"] ?? dict["colour"]) as? String)?.hexColor
+    func getString(_ key: String) -> String? {
+        dict[key] as? String
+    }
+    func getStrings(_ keys: String...) -> [String] {
+        keys.compactMap(getString)
+    }
+    
+    static var empty: Properties {
+        .init(dict: [:])
     }
 }
