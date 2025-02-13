@@ -15,6 +15,11 @@ extension GPXRoute {
         dict["name"] = name
         dict["comment"] = comment
         dict["description"] = desc
+        dict["source"] = source
+        dict["number"] = number
+        links.enumerated().forEach { i, link in
+            dict["link\(i)"] = link.href
+        }
         return .init(dict: dict)
     }
 }

@@ -45,15 +45,15 @@ struct FileView: View {
         }
         .navigationTitle($file.name)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: .init(get: {
-            selectedAnnotation is Point || selectedAnnotation?.properties.dict.isNotEmpty ?? false
-        }, set: { isPresented in
+        .sheet(isPresented: Binding {
+            selectedAnnotation != nil
+        } set: { isPresented in
             if !isPresented {
                 selectedAnnotation = nil
             }
-        })) {
+        }) {
             if let selectedAnnotation {
-                AnnotationView(annotation: selectedAnnotation)
+                AnnotationView(file: file, annotation: selectedAnnotation)
             }
         }
         .onAppear {
@@ -62,4 +62,3 @@ struct FileView: View {
         .zoomChild(id: file.id, in: namespace)
     }
 }
-

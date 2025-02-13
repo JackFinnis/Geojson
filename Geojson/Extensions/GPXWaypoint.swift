@@ -20,6 +20,11 @@ extension GPXWaypoint {
         dict["name"] = name
         dict["comment"] = comment
         dict["description"] = desc
+        dict["elevation"] = elevation
+        dict["source"] = source
+        links.enumerated().forEach { i, link in
+            dict["link\(i)"] = link.href
+        }
         return .init(dict: dict)
     }
 }

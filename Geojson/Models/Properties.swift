@@ -21,7 +21,7 @@ struct Properties {
     }
     
     func getString(_ key: String) -> String? {
-        dict[key] as? String
+        dict[key].map(String.init(describing:))
     }
     func getStrings(_ keys: String...) -> [String] {
         keys.compactMap(getString)

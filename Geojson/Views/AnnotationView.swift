@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AnnotationView: View {
+    var file: File
     let annotation: Annotation
     
     @Environment(\.dismiss) var dismiss
@@ -17,20 +18,48 @@ struct AnnotationView: View {
         NavigationStack {
             List(annotation.properties.dict.sorted(using: SortDescriptor(\.key)), id: \.key) { key, value in
                 let string = "\(value)"
-                Button(key) {
+                let title = key == file.titleKey
+                Menu {
                     if let url = URL(string: string), UIApplication.shared.canOpenURL(url) {
-                        openURL(url)
-                    } else {
+                        Button {
+                            openURL(url)
+                        } label: {
+                            Label("Open", systemImage: "safari")
+                        }
+                    }
+                    Button {
                         UIPasteboard.general.string = string
                         Haptics.tap()
+                    } label: {
+                        Label("Copy", systemImage: "doc.on.doc")
+                    }
+                    if title {
+                        Button(role: .destructive) {
+                            file.titleKey = nil
+                        } label: {
+                            Label("Undo Title", systemImage: "star.slash")
+                        }
+                    } else {
+                        Button {
+                            file.titleKey = key
+                        } label: {
+                            Label("Set Title", systemImage: "star")
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text(key)
+                            .layoutPriority(1)
+                        Spacer()
+                        Text(string)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.trailing)
                     }
                 }
-                .lineLimit(1)
-                .badge(string)
-                .tint(.primary)
+                .tint(title ? Color.accentColor : .primary)
             }
             .listStyle(.plain)
-            .navigationTitle(annotation.properties.title ?? "")
+            .navigationTitle((file.titleKey.map(annotation.properties.getString) ?? nil) ?? annotation.properties.title ?? "")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

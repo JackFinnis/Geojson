@@ -17,6 +17,7 @@ class File {
     var date: Date
     var webURL: URL?
     var folder: Folder?
+    var titleKey: String?
     
     init(fileExtension: String, name: String, webURL: URL? = nil, folder: Folder? = nil) {
         self.fileExtension = fileExtension

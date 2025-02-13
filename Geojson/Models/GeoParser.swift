@@ -63,8 +63,8 @@ class GeoParser {
     
     func handleGeoJSONObject(_ object: MKGeoJSONObject, properties: Properties?) {
         if let feature = object as? MKGeoJSONFeature {
-            let object = try? JSONSerialization.jsonObject(with: feature.properties ?? .init()) as? [String : Any]
-            let properties = object.map(Properties.init)
+            let dict = try? JSONSerialization.jsonObject(with: feature.properties ?? .init()) as? [String : Any]
+            let properties = dict.map(Properties.init)
             feature.geometry.forEach { handleGeoJSONObject($0, properties: properties) }
         } else if let point = object as? MKPointAnnotation {
             points.append(Point(coordinate: point.coordinate, properties: properties))
