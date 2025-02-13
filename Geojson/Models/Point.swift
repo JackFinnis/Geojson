@@ -18,12 +18,6 @@ class Point: NSObject, Annotation, MKAnnotation {
     let subtitle: String?
     let color: UIColor?
     
-    var isDroppedPin: Bool {
-        title == Self.droppedPinTitle
-    }
-    
-    static let droppedPinTitle = "Dropped Pin"
-    
     init(coordinate: CLLocationCoordinate2D, properties: Properties?, index: Int?, title: String?, subtitle: String?, color: UIColor?) {
         self.coordinate = coordinate
         self.properties = properties ?? .empty
@@ -42,10 +36,6 @@ class Point: NSObject, Annotation, MKAnnotation {
 }
 
 extension Point {
-    static func droppedPin(coordindate: CLLocationCoordinate2D) -> Point {
-        Point(coordinate: coordindate, properties: nil, index: nil, title: Self.droppedPinTitle, subtitle: nil, color: nil)
-    }
-    
     convenience init?(waypoint: GPXWaypoint) {
         guard let coord = waypoint.coord else { return nil }
         var strings = [waypoint.name, waypoint.symbol, waypoint.comment, waypoint.desc].compactMap(\.self)

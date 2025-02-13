@@ -51,9 +51,6 @@ struct MapView: UIViewRepresentable {
             mapView.selectedAnnotations.forEach { annotation in
                 if let point = annotation as? Point {
                     mapView.deselectAnnotation(point, animated: true)
-                    if point.isDroppedPin {
-                        mapView.removeAnnotation(point)
-                    }
                 }
             }
         }
@@ -125,10 +122,13 @@ struct MapView: UIViewRepresentable {
             guard press.state == .began else { return }
             let location = press.location(in: mapView)
             let coord = mapView.convert(location, toCoordinateFrom: mapView)
-            let point = Point.droppedPin(coordindate: coord)
-            mapView.addAnnotation(point)
-            mapView.selectAnnotation(point, animated: true)
-            Haptics.tap()
+            let mapItem = MKMapItem(placemark: .init(coordinate: coord))
+            mapItem.name = "Dropped Pin"
+            if #available(iOS 18, *), let annotation = MKMapItemAnnotation(mapItem: mapItem) {
+                mapView.addAnnotation(annotation)
+                mapView.selectAnnotation(annotation, animated: true)
+                Haptics.tap()
+            }
         }
     }
 }
