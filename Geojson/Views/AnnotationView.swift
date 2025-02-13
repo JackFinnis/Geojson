@@ -21,8 +21,10 @@ class AnnotationView: MKAnnotationView {
         setup()
     }
     
-    override func prepareForReuse() {
-        label.text = nil
+    override var annotation: MKAnnotation? {
+        didSet {
+            label.text = annotation?.title ?? nil
+        }
     }
     
     func setup() {

@@ -7,19 +7,20 @@
 
 import MapKit
 
-class Annotation: NSObject {
+class Annotation: NSObject, MKAnnotation {
     let coordinate: CLLocationCoordinate2D
     let properties: Properties
     let color: UIColor?
+    var title: String?
     
     init(coordinate: CLLocationCoordinate2D, properties: Properties, color: UIColor?) {
         self.coordinate = coordinate
         self.properties = properties
         self.color = color
+        self.title = properties.title
     }
-}
-
-extension Annotation: MKAnnotation {
-    var title: String? { properties.title }
-    var subtitle: String? { properties.subtitle }
+    
+    func updateTitle(key: String?) {
+        title = properties.getTitle(key: key)
+    }
 }

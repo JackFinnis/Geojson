@@ -23,7 +23,7 @@ struct Properties {
         getStrings("color", "colour").first?.hexColor
     }
     
-    func getTitle(key: String? = nil) -> String? {
+    func getTitle(key: String?) -> String? {
         key.map(getString) ?? title
     }
     func getString(_ key: String) -> String? {

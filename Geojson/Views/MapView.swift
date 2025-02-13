@@ -35,8 +35,6 @@ struct MapView: UIViewRepresentable {
         mapView.register(AnnotationView.self, forAnnotationViewWithReuseIdentifier: AnnotationView.id)
         
         mapView.addAnnotations(data.points)
-        mapView.addAnnotations(data.polygons)
-        mapView.addAnnotations(data.polylines)
         mapView.addOverlays(data.multiPolylines, level: .aboveRoads)
         mapView.addOverlays(data.multiPolygons, level: .aboveRoads)
         mapView.setVisibleMapRect(data.rect, edgePadding: .init(length: preview ? 35 : 10), animated: false)
@@ -60,18 +58,20 @@ struct MapView: UIViewRepresentable {
             }
         }
         
-        if file.titleKey != context.coordinator.titleKey {
+        if !preview, file.titleKey != context.coordinator.titleKey {
             context.coordinator.titleKey = file.titleKey
             mapView.removeAnnotations(data.polylines)
             mapView.removeAnnotations(data.polygons)
+            mapView.removeAnnotations(data.points)
             mapView.addAnnotations(data.polylines)
             mapView.addAnnotations(data.polygons)
+            mapView.addAnnotations(data.points)
         }
     }
     
     class Coordinator: NSObject, MKMapViewDelegate {
         let parent: MapView
-        var titleKey: String?
+        var titleKey: String? = ""
         
         init(_ parent: MapView) {
             self.parent = parent
@@ -108,17 +108,18 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
-            if let point = annotation as? Point,
-               let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.id, for: annotation) as? MKMarkerAnnotationView {
-                marker.titleVisibility = parent.preview ? .hidden : .adaptive
-                marker.displayPriority = .required
-                marker.glyphText = point.properties.glyphText
-                marker.markerTintColor = point.color ?? UIColor(.orange)
-                return marker
-            } else if let annotation = annotation as? Annotation,
-                      let view = mapView.dequeueReusableAnnotationView(withIdentifier: AnnotationView.id, for: annotation) as? AnnotationView {
-                view.label.text = annotation.properties.getTitle(key: titleKey)
-                return view
+            if let annotation = annotation as? Annotation {
+                annotation.updateTitle(key: titleKey)
+                
+                if let point = annotation as? Point {
+                    let marker = mapView.dequeueReusableAnnotationView(withIdentifier: MKMarkerAnnotationView.id, for: point) as? MKMarkerAnnotationView
+                    marker?.titleVisibility = parent.preview ? .hidden : .adaptive
+                    marker?.displayPriority = .required
+                    marker?.glyphText = point.properties.glyphText
+                    marker?.markerTintColor = point.color ?? UIColor(.orange)
+                    return marker
+                }
+                return mapView.dequeueReusableAnnotationView(withIdentifier: AnnotationView.id, for: annotation) as? AnnotationView
             }
             return nil
         }
