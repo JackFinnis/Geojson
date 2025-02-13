@@ -27,6 +27,10 @@ class AnnotationView: MKAnnotationView {
         }
     }
     
+    override func prepareForReuse() {
+        label.text = nil
+    }
+    
     func setup() {
         frame = CGRect(x: 0, y: 0, width: 150, height: 50)
         
