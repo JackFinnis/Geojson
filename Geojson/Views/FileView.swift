@@ -45,8 +45,8 @@ struct FileView: View {
         }
         .navigationTitle($file.name)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: Binding {
-            selectedAnnotation != nil
+        .sheet(isPresented: .init {
+            selectedAnnotation is Point || selectedAnnotation?.properties.dict.isNotEmpty ?? false
         } set: { isPresented in
             if !isPresented {
                 selectedAnnotation = nil

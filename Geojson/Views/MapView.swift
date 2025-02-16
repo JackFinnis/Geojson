@@ -130,7 +130,7 @@ struct MapView: UIViewRepresentable {
             let location = tap.location(in: mapView)
             let coord = mapView.convert(location, toCoordinateFrom: mapView)
             let overlay = parent.data.closestOverlay(to: coord)
-            parent.selectedAnnotation = (overlay?.properties.dict.isEmpty ?? true) ? nil : overlay
+            parent.selectedAnnotation = overlay
         }
         
         @objc
