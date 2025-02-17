@@ -21,16 +21,6 @@ class AnnotationView: MKAnnotationView {
         setup()
     }
     
-    override var annotation: MKAnnotation? {
-        didSet {
-            label.text = annotation?.title ?? nil
-        }
-    }
-    
-    override func prepareForReuse() {
-        label.text = nil
-    }
-    
     func setup() {
         frame = CGRect(x: 0, y: 0, width: 150, height: 50)
         
@@ -42,6 +32,16 @@ class AnnotationView: MKAnnotationView {
         
         displayPriority = .defaultHigh
         collisionMode = .rectangle
+    }
+    
+    override var annotation: MKAnnotation? {
+        didSet {
+            label.text = annotation?.title ?? nil
+        }
+    }
+    
+    override func prepareForReuse() {
+        label.text = nil
     }
 }
 
